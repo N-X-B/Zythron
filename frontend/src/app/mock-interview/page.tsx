@@ -166,7 +166,7 @@ export default function UserFriendlyMockInterview() {
           </Link>
 
           {/* Feature Tabs */}
-          <nav className="hidden md:flex items-center gap-1 font-mono text-xs">
+          <nav className="hidden md:flex items-center gap-1 font-mono text-xs overflow-x-auto no-scrollbar">
             <Link
               href="/dashboard"
               className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
@@ -184,6 +184,18 @@ export default function UserFriendlyMockInterview() {
               className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
             >
               📹 RECORD MEETING
+            </Link>
+            <Link
+              href="/resume-analyzer"
+              className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
+            >
+              📄 RESUME SCANNER
+            </Link>
+            <Link
+              href="/salary-benchmark"
+              className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
+            >
+              📊 SALARY BENCHMARK
             </Link>
           </nav>
         </div>

@@ -283,7 +283,7 @@ export default function SleekExecutiveDashboard() {
           </Link>
 
           {/* Navigation Feature Tabs */}
-          <nav className="flex items-center gap-1 font-mono text-xs">
+          <nav className="flex items-center gap-1 font-mono text-xs overflow-x-auto no-scrollbar">
             <Link
               href="/dashboard"
               className="rounded-full px-3.5 py-1 font-semibold bg-white text-black transition-all"
@@ -301,6 +301,18 @@ export default function SleekExecutiveDashboard() {
               className="rounded-full px-3.5 py-1 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
             >
               (03) RECORD MEETING
+            </Link>
+            <Link
+              href="/resume-analyzer"
+              className="rounded-full px-3.5 py-1 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
+            >
+              (04) RESUME SCANNER
+            </Link>
+            <Link
+              href="/salary-benchmark"
+              className="rounded-full px-3.5 py-1 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
+            >
+              (05) SALARY BENCHMARK
             </Link>
           </nav>
         </div>
