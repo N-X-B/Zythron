@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { interviewerProfile } from "../../config/voiceProfile";
-import { LogOut, LayoutGrid, Zap } from "lucide-react";
+import { LogOut, ArrowRight, Zap } from "lucide-react";
 
 type InterviewState = "setup" | "interview" | "report";
 
@@ -25,7 +25,6 @@ export default function MockInterview() {
   const transcriptRef = useRef("");
 
   const [currentTab, setCurrentTab] = useState("Practice");
-  const [showHubsMenu, setShowHubsMenu] = useState(false);
 
   // Resume Scanner State
   const [resumeText, setResumeText] = useState("");
@@ -407,8 +406,14 @@ ${interviewerProfile.sensibility}`;
           <span>Zythron</span>
         </div>
 
-        {/* Center Pill Tabs: Resume, Practice, Interviews + Hubs Dropdown */}
-        <div className="hidden md:flex items-center gap-2 text-sm text-zinc-400 font-medium relative">
+        {/* Center Navigation Tabs in Hiregram minimal style */}
+        <div className="hidden md:flex items-center gap-2 text-sm text-zinc-400 font-medium">
+          <Link
+            href="/dashboard"
+            className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all"
+          >
+            Career Match
+          </Link>
           <button
             onClick={() => {
               setAppState("setup");
@@ -429,7 +434,7 @@ ${interviewerProfile.sensibility}`;
             }}
             className={`px-5 py-2.5 rounded-full transition-all duration-300 ${
               currentTab === "Practice" && appState === "setup"
-                ? "bg-zinc-800/60 text-zinc-200 border border-zinc-700/50 shadow-inner font-semibold"
+                ? "bg-zinc-800/60 text-zinc-200 border border-zinc-700/50 shadow-inner font-semibold text-white"
                 : "hover:text-zinc-200 hover:bg-white/5"
             }`}
           >
@@ -448,49 +453,18 @@ ${interviewerProfile.sensibility}`;
           >
             Interviews
           </button>
-
-          {/* More Hubs Dropdown for Career Match, Record Meeting, Job Listings */}
-          <div className="relative">
-            <button
-              onClick={() => setShowHubsMenu(!showHubsMenu)}
-              className="px-4 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all flex items-center gap-1.5 border border-white/10"
-            >
-              <LayoutGrid className="w-3.5 h-3.5 text-zinc-400" />
-              <span>More Hubs</span>
-            </button>
-            {showHubsMenu && (
-              <div className="absolute top-12 left-0 w-56 bg-zinc-900 border border-white/10 rounded-2xl p-2 shadow-2xl z-50 flex flex-col gap-1 text-xs">
-                <Link
-                  href="/dashboard"
-                  className="p-2.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white flex items-center justify-between"
-                >
-                  <span>(01) CAREER MATCH</span>
-                  <span className="text-[10px] text-emerald-400 font-mono">Roadmap</span>
-                </Link>
-                <Link
-                  href="/record-meeting"
-                  className="p-2.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white flex items-center justify-between"
-                >
-                  <span>(03) RECORD MEETING</span>
-                  <span className="text-[10px] text-cyan-400 font-mono">Notetaker</span>
-                </Link>
-                <Link
-                  href="/resume-analyzer"
-                  className="p-2.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white flex items-center justify-between"
-                >
-                  <span>(04) RESUME SCANNER</span>
-                  <span className="text-[10px] text-purple-400 font-mono">ATS Engine</span>
-                </Link>
-                <Link
-                  href="/job-listings"
-                  className="p-2.5 rounded-xl hover:bg-white/10 text-zinc-300 hover:text-white flex items-center justify-between"
-                >
-                  <span>(05) JOB LISTINGS</span>
-                  <span className="text-[10px] text-amber-400 font-mono">Vector Feed</span>
-                </Link>
-              </div>
-            )}
-          </div>
+          <Link
+            href="/job-listings"
+            className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all"
+          >
+            Job Feed
+          </Link>
+          <Link
+            href="/record-meeting"
+            className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all"
+          >
+            Record Meeting
+          </Link>
         </div>
 
         {/* Right User Badge & Sign Out */}
@@ -610,17 +584,38 @@ ${interviewerProfile.sensibility}`;
             </div>
           )}
 
-          {/* Practice Tab View (Matches User Screenshot 4 Cards Exactly) */}
+          {/* Practice Tab View (Full Cards Grid for Career Match, DSA, Resume, Fundamentals, MAANG, Job Feed, Record Meeting) */}
           {currentTab === "Practice" && (
             <div className="flex-1 flex items-center justify-center p-8">
-              <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                
+                {/* Career Match Card */}
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-100">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-emerald-400 transition-colors">
+                    Career Match
+                  </h2>
+                  <div className="flex-1 flex items-center justify-center mt-4">
+                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                      AI-orchestrated skill gap analysis, Quantum/tech domain match, and dynamic learning roadmap synthesis.
+                    </p>
+                  </div>
+                  <div className="flex justify-center mb-2">
+                    <Link
+                      href="/dashboard"
+                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center gap-2"
+                    >
+                      Start now <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+
                 {/* DSA Card */}
                 <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-100">
-                  <h2 className="text-3xl font-bold text-white text-center mt-6 group-hover:text-blue-400 transition-colors">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-blue-400 transition-colors">
                     DSA
                   </h2>
-                  <div className="flex-1 flex items-center justify-center mt-6">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-4 group-hover:text-zinc-300 transition-colors">
+                  <div className="flex-1 flex items-center justify-center mt-4">
+                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
                       A focused data structures & algorithms interview designed to assess problem-solving skills.
                     </p>
                   </div>
@@ -636,12 +631,12 @@ ${interviewerProfile.sensibility}`;
 
                 {/* Resume Card */}
                 <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-200">
-                  <h2 className="text-3xl font-bold text-white text-center mt-6 group-hover:text-purple-400 transition-colors">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-purple-400 transition-colors">
                     Resume
                   </h2>
-                  <div className="flex-1 flex items-center justify-center mt-6">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-4 group-hover:text-zinc-300 transition-colors">
-                      Guided conversation focused on your past experience and projects.
+                  <div className="flex-1 flex items-center justify-center mt-4">
+                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                      Guided conversation and ATS keyword scanner focused on your past experience and projects.
                     </p>
                   </div>
                   <div className="flex justify-center mb-2">
@@ -656,11 +651,11 @@ ${interviewerProfile.sensibility}`;
 
                 {/* Fundamentals Card */}
                 <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-300">
-                  <h2 className="text-3xl font-bold text-white text-center mt-6 group-hover:text-emerald-400 transition-colors">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-emerald-400 transition-colors">
                     Fundamentals
                   </h2>
-                  <div className="flex-1 flex items-center justify-center mt-6">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-4 group-hover:text-zinc-300 transition-colors">
+                  <div className="flex-1 flex items-center justify-center mt-4">
+                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
                       Configure a focused round across networking, OS, databases, and OOP.
                     </p>
                   </div>
@@ -676,11 +671,11 @@ ${interviewerProfile.sensibility}`;
 
                 {/* MAANG Card */}
                 <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-400">
-                  <h2 className="text-3xl font-bold text-white text-center mt-6 group-hover:text-orange-400 transition-colors">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-orange-400 transition-colors">
                     MAANG
                   </h2>
-                  <div className="flex-1 flex items-center justify-center mt-6">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-4 group-hover:text-zinc-300 transition-colors">
+                  <div className="flex-1 flex items-center justify-center mt-4">
+                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
                       Algorithmic and system design screening inspired by big tech interviews.
                     </p>
                   </div>
@@ -693,6 +688,47 @@ ${interviewerProfile.sensibility}`;
                     </button>
                   </div>
                 </div>
+
+                {/* Job Listings Feed Card */}
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-amber-400 transition-colors">
+                    Job Feed
+                  </h2>
+                  <div className="flex-1 flex items-center justify-center mt-4">
+                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                      Verified engineering job postings with Pinecone vector RAG matching and salary benchmarks.
+                    </p>
+                  </div>
+                  <div className="flex justify-center mb-2">
+                    <Link
+                      href="/job-listings"
+                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center gap-2"
+                    >
+                      Explore Jobs <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Record Meeting Notetaker Card */}
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-cyan-400 transition-colors">
+                    Notetaker
+                  </h2>
+                  <div className="flex-1 flex items-center justify-center mt-4">
+                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                      Autonomous notetaker bot to join live technical calls and transcribe meeting notes.
+                    </p>
+                  </div>
+                  <div className="flex justify-center mb-2">
+                    <Link
+                      href="/record-meeting"
+                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center gap-2"
+                    >
+                      Launch Bot <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+
               </div>
             </div>
           )}
