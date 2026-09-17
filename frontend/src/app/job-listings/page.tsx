@@ -150,6 +150,9 @@ export default function AestheticJobListingsPage() {
           <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-semibold bg-white text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]">
             (05) JOB LISTINGS
           </Link>
+          <Link href="/code-arena" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (06) CODE ARENA
+          </Link>
         </nav>
 
         {/* Right: Actions */}

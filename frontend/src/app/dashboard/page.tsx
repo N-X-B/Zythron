@@ -795,6 +795,9 @@ export default function HyperPersonalizedCareerGuidance() {
           <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
             (05) JOB LISTINGS
           </Link>
+          <Link href="/code-arena" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (06) CODE ARENA
+          </Link>
         </nav>
 
         {/* Right: Actions */}
