@@ -264,8 +264,8 @@ export default function UserFriendlyRecordMeeting() {
           {/* Header Card */}
           <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 p-6 rounded-2xl shadow-xl">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs uppercase tracking-widest text-emerald-400 font-semibold px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/50 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs uppercase tracking-widest text-zinc-300 font-semibold px-2.5 py-1 rounded-full bg-white/5 border border-white/10 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                 {isBotConnected ? "Bot Active in Session" : "Bot Standby"}
               </span>
               <span className="text-xs text-zinc-500 font-mono">{meetingPlatform}</span>
@@ -327,7 +327,7 @@ export default function UserFriendlyRecordMeeting() {
           {/* Bot Telemetry Card */}
           <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-2xl space-y-3">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-              <Activity className="h-4 w-4 text-emerald-400" />
+              <Activity className="h-4 w-4 text-white" />
               Live Telemetry
             </h3>
 
@@ -338,11 +338,11 @@ export default function UserFriendlyRecordMeeting() {
               </div>
               <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                 <span className="text-[10px] text-zinc-500 uppercase block">Encryption</span>
-                <span className="text-emerald-400 font-semibold">TLS 1.3 / SRTP</span>
+                <span className="text-white font-semibold">TLS 1.3 / SRTP</span>
               </div>
               <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                 <span className="text-[10px] text-zinc-500 uppercase block">Packets Ingested</span>
-                <span className="text-cyan-400 font-semibold">{packetCount.toLocaleString()}</span>
+                <span className="text-white font-semibold">{packetCount.toLocaleString()}</span>
               </div>
             </div>
           </div>

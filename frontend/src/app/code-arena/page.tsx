@@ -363,80 +363,65 @@ export default function LeetCodeArenaPage() {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_70%)] pointer-events-none" />
 
       {/* ─── TOP NAVBAR ─── */}
-      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/90 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between relative">
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2.5 font-mono group">
-            <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors">
-              <Zap className="h-4 w-4 text-white group-hover:text-cyan-300 transition-colors" />
-            </div>
-            <span>ZYTHRON</span>
-            <span className="flex items-center gap-0.5 ml-1">
-              <span className="w-1 h-3 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-1 h-4 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-            </span>
+      <nav className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-[#0a0a0a] sticky top-0 z-50">
+        <Link href="/dashboard" className="flex items-center gap-3 font-bold text-xl tracking-tighter cursor-pointer hover:opacity-80 transition-opacity">
+          <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-white" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="4 7 20 7 4 17 20 17" />
+          </svg>
+          <span className="text-white">Zythron</span>
+        </Link>
+
+        {/* Center Navigation Tabs in Hiregram minimal style */}
+        <div className="hidden md:flex items-center gap-2 text-sm text-zinc-400 font-medium">
+          <Link href="/dashboard" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
+            Career Match
+          </Link>
+          <Link href="/resume-analyzer" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
+            Resume
+          </Link>
+          <Link href="/mock-interview" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
+            Practice
+          </Link>
+          <Link href="/mock-interview" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
+            Interviews
+          </Link>
+          <Link href="/job-listings" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
+            Job Feed
+          </Link>
+          <Link href="/record-meeting" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
+            Record Meeting
           </Link>
         </div>
 
-        {/* Center: Perfectly Centered Symmetrical Navigation */}
-        <nav className="hidden xl:flex items-center gap-1.5 font-mono text-xs absolute left-1/2 -translate-x-1/2">
-          <Link href="/dashboard" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-            (01) CAREER MATCH
-          </Link>
-          <Link href="/mock-interview" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-            (02) MOCK INTERVIEW
-          </Link>
-          <Link href="/record-meeting" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-            (03) RECORD MEETING
-          </Link>
-          <Link href="/resume-analyzer" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-            (04) RESUME SCANNER
-          </Link>
-          <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-            (05) JOB LISTINGS
-          </Link>
-        </nav>
-
-        {/* Right: Actions */}
-        <div className="flex items-center gap-2.5">
-          <Link
-            href="/dashboard"
-            className="hidden sm:flex items-center gap-2 h-9 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
-          >
-            <Search className="h-3.5 w-3.5 text-zinc-400" />
-            <span>Search</span>
-            <kbd className="text-[9px] bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded border border-white/20">⌘K</kbd>
-          </Link>
-
-          <div className="hidden sm:flex items-center gap-2 h-9 px-3.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono">
-            <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="text-zinc-300 font-medium">{userName}</span>
+        {/* Right User Badge & Sign Out */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 px-4 py-1.5 border border-white/10 rounded-full text-sm font-medium hover:bg-white/10 transition-all cursor-pointer bg-zinc-900/50 hover:scale-105 active:scale-95">
+            <span className="text-zinc-300">{userName}</span>
+            <div className="w-7 h-7 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full shadow-inner border border-white/10" />
           </div>
-
-          <button onClick={handleSignOut} className="h-9 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full transition-colors cursor-pointer font-mono">
-            <LogOut className="h-3.5 w-3.5" />
-            Sign out
+          <button onClick={handleSignOut} className="p-2 text-zinc-500 hover:text-zinc-200 transition-colors" title="Sign Out">
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
-      </header>
+      </nav>
 
       {/* ─── MAIN LEETCODE ARENA LAYOUT ─── */}
       <main className="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-6 relative z-10 flex-1 flex flex-col">
 
         {/* Skill Verification Banner / Target Context */}
         {(targetSkill || verifiedSuccess) && (
-          <div className="bg-gradient-to-r from-emerald-950/60 via-zinc-900 to-cyan-950/60 border border-emerald-500/40 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono shadow-xl animate-fade-in">
+          <div className="bg-zinc-900/60 border border-white/10 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono shadow-xl animate-fade-in">
             <div className="flex items-center gap-3 text-xs">
-              <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              <div className="p-2 rounded-xl bg-white/10 text-white border border-white/10">
                 <Sparkles className="h-4 w-4" />
               </div>
               <div>
                 <span className="text-[10px] text-zinc-400 uppercase tracking-wider block">Zythron Skill Verification Pipeline</span>
                 <p className="text-white font-semibold">
                   {verifiedSuccess ? (
-                    <span className="text-emerald-400">🎉 Skill Verified! +100 XP awarded to your Diagnostic Header.</span>
+                    <span className="text-white">🎉 Skill Verified! +100 XP awarded to your Diagnostic Header.</span>
                   ) : (
-                    <span>Verifying Skill Gap: <strong className="text-amber-300">{targetSkill}</strong> — Run test suite to earn +100 XP.</span>
+                    <span>Verifying Skill Gap: <strong className="text-white">{targetSkill}</strong> — Run test suite to earn +100 XP.</span>
                   )}
                 </p>
               </div>

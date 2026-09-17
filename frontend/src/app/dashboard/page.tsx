@@ -1057,21 +1057,21 @@ export default function HyperPersonalizedCareerGuidance() {
       <main className="w-full max-w-[1720px] mx-auto p-6 md:p-10 space-y-10 relative z-10">
 
         {/* ─── 1. HYPER-PERSONALIZED DIAGNOSTIC HEADER BANNER ─── */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-emerald-950/20 via-white/[0.03] to-cyan-950/20 p-8 md:p-10 backdrop-blur-2xl shadow-2xl">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-8 md:p-10 backdrop-blur-2xl shadow-2xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="text-xs uppercase font-mono tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs uppercase font-mono tracking-widest text-zinc-300 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                   Synced Profile: {userName}
                 </span>
-                <span className="text-xs uppercase font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 font-bold">
-                  <Award className="h-4 w-4 text-cyan-300" />
+                <span className="text-xs uppercase font-mono text-zinc-300 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 font-bold">
+                  <Award className="h-4 w-4 text-zinc-300" />
                   Level 3 Trajectory Rank (450 XP)
                 </span>
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-                Career Trajectory: <span className="text-cyan-300">{formattedRoleTitle}</span>
+                Career Trajectory: <span className="text-white font-extrabold">{formattedRoleTitle}</span>
               </h1>
               <p className="text-sm text-zinc-300 font-sans leading-relaxed">
                 Targeting <span className="text-white font-semibold">{targetCompanyTier}</span> • <span className="text-white font-semibold">{experienceLevel} Tier</span> • <span className="text-white font-semibold">{weeklyCommitmentHours}h/week</span> Commitment Horizon
@@ -1082,7 +1082,7 @@ export default function HyperPersonalizedCareerGuidance() {
             <div className="grid grid-cols-3 gap-4 font-mono text-center shrink-0">
               <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
                 <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Skill Match</span>
-                <span className="text-2xl md:text-3xl font-extrabold text-emerald-400">{skillMatchPercent}%</span>
+                <span className="text-2xl md:text-3xl font-extrabold text-white">{skillMatchPercent}%</span>
               </div>
               <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
                 <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Milestones</span>
@@ -1090,7 +1090,7 @@ export default function HyperPersonalizedCareerGuidance() {
               </div>
               <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
                 <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Salary Uplift</span>
-                <span className="text-xl md:text-2xl font-extrabold text-cyan-300">+${estimatedSalaryUplift / 1000}k</span>
+                <span className="text-xl md:text-2xl font-extrabold text-white">+${estimatedSalaryUplift / 1000}k</span>
               </div>
             </div>
           </div>
@@ -1207,16 +1207,16 @@ export default function HyperPersonalizedCareerGuidance() {
 
               {/* Live AI RAG Vector-Synthesized Roadmap Result */}
               {aiRoadmapOutput && (
-                <div className="bg-gradient-to-br from-emerald-950/40 via-zinc-950 to-cyan-950/40 border border-emerald-500/40 p-4 rounded-2xl space-y-3 font-mono text-xs shadow-xl animate-fade-in">
-                  <div className="flex items-center justify-between border-b border-emerald-500/30 pb-2">
+                <div className="bg-zinc-900/60 border border-white/10 p-4 rounded-2xl space-y-3 font-mono text-xs shadow-xl animate-fade-in">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
                     <div className="flex items-center gap-2">
-                      <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                      <Sparkles className="h-3.5 w-3.5 text-white" />
                       <span className="font-bold text-white uppercase tracking-wider text-[11px]">
                         Live AI RAG Vector Synthesis
                       </span>
                     </div>
                     {topJobMatch && (
-                      <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                      <span className="text-[9px] bg-white/10 text-zinc-300 border border-white/10 px-2 py-0.5 rounded-full">
                         Matched: {topJobMatch.title} ({Math.round((topJobMatch.match_score || 0.85) * 100)}%)
                       </span>
                     )}
@@ -1232,17 +1232,17 @@ export default function HyperPersonalizedCareerGuidance() {
             {/* Personalized Skill Gap Analysis Matrix */}
             <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-xl space-y-4 shadow-xl">
               <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-emerald-400" />
+                <BarChart3 className="h-4 w-4 text-white" />
                 Personalized Competency Matrix
               </h3>
 
               {/* Acquired vs Missing */}
               <div className="space-y-3 font-mono text-xs">
                 <div>
-                  <span className="text-[10px] text-emerald-400 uppercase tracking-wider block mb-1 font-semibold">Acquired Strengths ({acquiredSkills.length})</span>
+                  <span className="text-[10px] text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Acquired Strengths ({acquiredSkills.length})</span>
                   <div className="flex flex-wrap gap-1">
                     {acquiredSkills.map((sk) => (
-                      <span key={sk} className="text-[10px] bg-emerald-950/60 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-800/50">
+                      <span key={sk} className="text-[10px] bg-white/5 text-zinc-300 px-2.5 py-0.5 rounded-full border border-white/10">
                         ✓ {sk}
                       </span>
                     ))}
@@ -1251,7 +1251,7 @@ export default function HyperPersonalizedCareerGuidance() {
 
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-[10px] text-amber-400 uppercase tracking-wider font-semibold">Target Gaps ({missingSkills.length})</span>
+                    <span className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Target Gaps ({missingSkills.length})</span>
                     <span className="text-[9px] text-zinc-500 font-mono">Verify skill in Code Arena</span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
@@ -1263,19 +1263,19 @@ export default function HyperPersonalizedCareerGuidance() {
                           href={`/code-arena?skill=${encodeURIComponent(sk)}`}
                           className={`text-[10px] px-2.5 py-1 rounded-full border transition-all flex items-center gap-1 font-mono ${
                             isVerified
-                              ? "bg-emerald-950/80 text-emerald-300 border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]"
-                              : "bg-amber-950/60 text-amber-300 border-amber-800/50 hover:bg-amber-900/80 hover:border-amber-400/60"
+                              ? "bg-white/10 text-white border-white/20 shadow-sm"
+                              : "bg-zinc-900 text-zinc-300 border-zinc-700 hover:bg-zinc-800 hover:border-zinc-500"
                           }`}
                         >
                           {isVerified ? (
                             <>
-                              <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                              <CheckCircle2 className="h-3 w-3 text-white" />
                               <span>{sk} [VERIFIED]</span>
                             </>
                           ) : (
                             <>
                               <span>+ {sk}</span>
-                              <span className="text-[9px] bg-amber-400/20 text-amber-200 px-1 py-0.5 rounded font-bold hover:bg-amber-400 hover:text-black transition-colors ml-0.5">
+                              <span className="text-[9px] bg-white/10 text-zinc-200 px-1 py-0.5 rounded font-bold hover:bg-white hover:text-black transition-colors ml-0.5">
                                 Verify ⚡
                               </span>
                             </>
@@ -1294,16 +1294,16 @@ export default function HyperPersonalizedCareerGuidance() {
           <div className="lg:col-span-8 space-y-6">
 
             {/* 🚀 PROMINENT CODE ARENA WORKSTATION CARD */}
-            <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-cyan-950/40 p-7 md:p-8 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 font-mono relative overflow-hidden group">
+            <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-7 md:p-8 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 font-mono relative overflow-hidden group">
               <div className="space-y-2 z-10">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+                  <span className="text-xs uppercase font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
                     Interactive IDE Workstation
                   </span>
                   <span className="text-xs text-zinc-300 font-sans">Python & TypeScript Sandbox</span>
                 </div>
                 <h3 className="text-xl md:text-2xl font-black text-white flex items-center gap-2.5 tracking-tight">
-                  <Code2 className="h-6 w-6 text-cyan-400" />
+                  <Code2 className="h-6 w-6 text-white" />
                   LeetCode & System Design Code Arena
                 </h3>
                 <p className="text-sm text-zinc-300 font-sans max-w-xl leading-relaxed">
@@ -1332,12 +1332,12 @@ export default function HyperPersonalizedCareerGuidance() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowAddPhaseModal(true)}
-                  className="px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-lg shadow-cyan-500/10 active:scale-95 cursor-pointer"
+                  className="px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/10 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-lg active:scale-95 cursor-pointer"
                 >
-                  <Plus className="h-4 w-4 text-cyan-400" />
+                  <Plus className="h-4 w-4 text-white" />
                   Add Specialized Phase
                 </button>
-                <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full">
+                <span className="text-xs font-mono font-bold text-white bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
                   {progressPercent}% Complete ({completedCount}/{totalMilestones})
                 </span>
               </div>
@@ -1351,21 +1351,21 @@ export default function HyperPersonalizedCareerGuidance() {
                   <div
                     key={phase.id}
                     onClick={() => setActiveModalPhase(phase)}
-                    className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6 space-y-5 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-cyan-500/40 transition-all cursor-pointer group relative min-h-[340px]"
+                    className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6 space-y-5 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-white/30 transition-all cursor-pointer group relative min-h-[340px]"
                   >
                     <div>
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-mono uppercase tracking-widest px-3 py-1 rounded-full bg-white/10 text-zinc-200 border border-white/10 font-bold">
                           {phase.badge}
                         </span>
-                        <div className="flex items-center gap-1.5 text-zinc-400 group-hover:text-cyan-300 transition-colors">
+                        <div className="flex items-center gap-1.5 text-zinc-400 group-hover:text-white transition-colors">
                           <span className="text-xs font-medium">Overview</span>
                           <PhaseIcon className="h-4.5 w-4.5" />
                         </div>
                       </div>
-                      <h3 className="text-sm md:text-base font-extrabold text-white group-hover:text-cyan-300 transition-colors leading-snug mb-1.5 flex items-center justify-between">
+                      <h3 className="text-sm md:text-base font-extrabold text-white group-hover:text-zinc-200 transition-colors leading-snug mb-1.5 flex items-center justify-between">
                         <span>{phase.title}</span>
-                        <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-cyan-300 transition-colors shrink-0 ml-1" />
+                        <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors shrink-0 ml-1" />
                       </h3>
                       <p className="text-xs md:text-sm text-zinc-300 leading-relaxed line-clamp-3">{phase.description}</p>
                     </div>
@@ -1391,13 +1391,13 @@ export default function HyperPersonalizedCareerGuidance() {
                                     toggleMilestone(m.id);
                                   }}
                                   className={`mt-0.5 h-4.5 w-4.5 rounded-md flex items-center justify-center transition-colors ${
-                                    isDone ? "bg-emerald-400 text-black" : "border border-zinc-600 hover:border-zinc-300"
+                                    isDone ? "bg-white text-black font-bold" : "border border-zinc-600 hover:border-zinc-300"
                                   }`}
                                 >
                                   {isDone && <Check className="h-3.5 w-3.5 stroke-[3]" />}
                                 </button>
                                 <div>
-                                  <h4 className="text-xs md:text-sm font-bold text-white group-hover/m:text-cyan-300 transition-colors leading-snug">
+                                  <h4 className="text-xs md:text-sm font-bold text-white group-hover/m:text-zinc-200 transition-colors leading-snug">
                                     {m.title}
                                   </h4>
                                   <span className="text-xs font-mono text-zinc-400">{m.workloadHours}h study hours</span>
@@ -1422,7 +1422,7 @@ export default function HyperPersonalizedCareerGuidance() {
                     <Sparkles className="h-4 w-4 text-white" />
                     Gemini Vector RAG Roadmap Response
                   </h3>
-                  <span className="text-[10px] font-mono text-emerald-400">Live AI Synthesis</span>
+                  <span className="text-[10px] font-mono text-zinc-300">Live AI Synthesis</span>
                 </div>
                 <pre className="whitespace-pre-wrap font-mono text-xs text-zinc-300 bg-black/50 p-4 rounded-2xl border border-white/10 leading-relaxed overflow-x-auto">
                   {aiRoadmapOutput}
@@ -1450,7 +1450,7 @@ export default function HyperPersonalizedCareerGuidance() {
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono uppercase text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-full font-bold">
+                  <span className="text-[10px] font-mono uppercase text-zinc-300 bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-full font-bold">
                     {activeModalPhase.badge} • Comprehensive Phase Blueprint
                   </span>
                   <span className="text-xs font-mono text-zinc-400">
@@ -1467,7 +1467,7 @@ export default function HyperPersonalizedCareerGuidance() {
             {/* Executive Strategy Overview */}
             <div className="bg-white/[0.03] border border-white/10 p-5 rounded-2xl space-y-2">
               <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <Compass className="h-4 w-4 text-emerald-400" />
+                <Compass className="h-4 w-4 text-white" />
                 Phase Executive Strategy & Core Objectives
               </h4>
               <p className="text-xs text-zinc-300 leading-relaxed">
@@ -1478,7 +1478,7 @@ export default function HyperPersonalizedCareerGuidance() {
             {/* Consolidated Reference Library */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-cyan-400" />
+                <BookOpen className="h-4 w-4 text-white" />
                 Phase Reference Library & Primary Documentation
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
@@ -1490,26 +1490,26 @@ export default function HyperPersonalizedCareerGuidance() {
                       href={res.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="bg-black/50 border border-white/10 p-3.5 rounded-xl hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center justify-between group cursor-pointer"
+                      className="bg-black/50 border border-white/10 p-3.5 rounded-xl hover:border-white/30 hover:bg-white/5 transition-all flex items-center justify-between group cursor-pointer"
                     >
                       <div>
-                        <span className="text-xs text-cyan-300 group-hover:underline font-semibold block">{res.name}</span>
+                        <span className="text-xs text-white group-hover:underline font-semibold block">{res.name}</span>
                         <span className="text-[10px] text-zinc-500 uppercase">{res.category} Guide & Docs</span>
                       </div>
-                      <ExternalLink className="h-4 w-4 text-zinc-500 group-hover:text-cyan-300" />
+                      <ExternalLink className="h-4 w-4 text-zinc-500 group-hover:text-white" />
                     </a>
                   ))}
               </div>
             </div>
 
             {/* Phase Capstone Project Blueprint */}
-            <div className="bg-cyan-950/20 border border-cyan-500/30 p-5 rounded-2xl space-y-4">
+            <div className="bg-zinc-900/60 border border-white/10 p-5 rounded-2xl space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-cyan-300 uppercase tracking-wider font-mono flex items-center gap-2">
-                  <Laptop className="h-4 w-4 text-cyan-400" />
+                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                  <Laptop className="h-4 w-4 text-white" />
                   Phase Capstone Project Specifications & Requirements
                 </h4>
-                <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded border border-cyan-500/20">
+                <span className="text-[10px] font-mono text-zinc-300 bg-white/10 px-2.5 py-0.5 rounded border border-white/10">
                   Hands-On Capstone
                 </span>
               </div>
@@ -1518,7 +1518,7 @@ export default function HyperPersonalizedCareerGuidance() {
                 {activeModalPhase.milestones.map((m, idx) => (
                   <div key={m.id} className="bg-black/50 p-4 rounded-xl border border-white/10 space-y-1">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] text-cyan-400 font-bold uppercase">
+                      <span className="text-[10px] text-zinc-300 font-bold uppercase">
                         Module {idx + 1}: {m.title}
                       </span>
                       <span className="text-[10px] text-zinc-500">{m.workloadHours} Study Hours</span>
@@ -1532,7 +1532,7 @@ export default function HyperPersonalizedCareerGuidance() {
             {/* All Syllabus Competencies */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <FileText className="h-4 w-4 text-emerald-400" />
+                <FileText className="h-4 w-4 text-white" />
                 Syllabus Topics & Technical Competencies
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
@@ -1554,7 +1554,7 @@ export default function HyperPersonalizedCareerGuidance() {
             {/* Action Footer */}
             <div className="pt-4 border-t border-white/10 flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <CheckCircle2 className="h-4 w-4 text-white" />
                 <span>Phase setup complete • Select individual milestone cards for direct topic checks</span>
               </div>
               <button
@@ -1581,7 +1581,7 @@ export default function HyperPersonalizedCareerGuidance() {
           >
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
               <div>
-                <span className="text-[10px] font-mono uppercase text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                <span className="text-[10px] font-mono uppercase text-zinc-300 bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-full">
                   {activeModalMilestone.workloadHours} Estimated Study Hours
                 </span>
                 <h3 className="text-xl font-bold text-white mt-1">{activeModalMilestone.title}</h3>
@@ -1597,7 +1597,7 @@ export default function HyperPersonalizedCareerGuidance() {
             {activeModalMilestone.syllabusPoints && (
               <div className="bg-black/40 p-4 rounded-2xl border border-white/10 space-y-2">
                 <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 font-mono">
-                  <FileText className="h-4 w-4 text-cyan-400" />
+                  <FileText className="h-4 w-4 text-white" />
                   Syllabus Competencies
                 </h4>
                 <ul className="text-xs text-zinc-300 space-y-1 list-disc pl-5 font-mono">
@@ -1610,43 +1610,43 @@ export default function HyperPersonalizedCareerGuidance() {
 
             {/* Granular Micro-Nuances & Production Anti-Patterns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
-              <div className="bg-amber-950/20 border border-amber-500/30 p-3.5 rounded-2xl space-y-2">
-                <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Zap className="h-3.5 w-3.5 text-amber-400" />
+              <div className="bg-zinc-900/60 border border-white/10 p-3.5 rounded-2xl space-y-2">
+                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Zap className="h-3.5 w-3.5 text-white" />
                   Granular Technical Nuances & Edge Cases
                 </span>
                 <ul className="space-y-1 text-zinc-300 text-[11px] leading-relaxed">
                   <li className="flex items-start gap-1.5">
-                    <span className="text-amber-400 font-bold">•</span>
+                    <span className="text-white font-bold">•</span>
                     <span>Exact memory allocation bounds, stack vs heap lifetime, & GC pause profiling</span>
                   </li>
                   <li className="flex items-start gap-1.5">
-                    <span className="text-amber-400 font-bold">•</span>
+                    <span className="text-white font-bold">•</span>
                     <span>Discriminated union state machines with zero runtime `any` assertions</span>
                   </li>
                   <li className="flex items-start gap-1.5">
-                    <span className="text-amber-400 font-bold">•</span>
+                    <span className="text-white font-bold">•</span>
                     <span>EXPLAIN ANALYZE query plans, B-Tree vs GIN indexing, & WAL log flushes</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-red-950/20 border border-red-500/30 p-3.5 rounded-2xl space-y-2">
-                <span className="text-[10px] font-bold text-red-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-red-400" />
+              <div className="bg-zinc-900/60 border border-white/10 p-3.5 rounded-2xl space-y-2">
+                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-white" />
                   Production Anti-Patterns to Avoid
                 </span>
                 <ul className="space-y-1 text-zinc-300 text-[11px] leading-relaxed">
                   <li className="flex items-start gap-1.5">
-                    <span className="text-red-400 font-bold">•</span>
+                    <span className="text-white font-bold">•</span>
                     <span>N+1 ORM query cascades from unindexed foreign key relationships</span>
                   </li>
                   <li className="flex items-start gap-1.5">
-                    <span className="text-red-400 font-bold">•</span>
+                    <span className="text-white font-bold">•</span>
                     <span>Unbounded Context Provider re-render loops without memoization</span>
                   </li>
                   <li className="flex items-start gap-1.5">
-                    <span className="text-red-400 font-bold">•</span>
+                    <span className="text-white font-bold">•</span>
                     <span>Split-brain stale cache overwrites during concurrent mutation races</span>
                   </li>
                 </ul>
@@ -1654,9 +1654,9 @@ export default function HyperPersonalizedCareerGuidance() {
             </div>
 
             {/* Capstone Challenge */}
-            <div className="bg-cyan-950/30 border border-cyan-500/20 p-4 rounded-2xl space-y-1">
-              <h4 className="text-xs font-bold text-cyan-300 uppercase flex items-center gap-2 font-mono">
-                <Laptop className="h-4 w-4 text-cyan-400" />
+            <div className="bg-zinc-900/60 border border-white/10 p-4 rounded-2xl space-y-1">
+              <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2 font-mono">
+                <Laptop className="h-4 w-4 text-white" />
                 Hands-On Capstone Challenge
               </h4>
               <p className="text-xs text-zinc-200 leading-relaxed">{activeModalMilestone.projectPrompt}</p>
@@ -1666,10 +1666,10 @@ export default function HyperPersonalizedCareerGuidance() {
             <div className="bg-black/60 border border-white/10 p-4 rounded-2xl space-y-3 font-mono">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Code2 className="h-4 w-4 text-emerald-400" />
+                  <Code2 className="h-4 w-4 text-white" />
                   Proof-of-Skill Capstone Auto-Grader Sandbox
                 </h4>
-                <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                <span className="text-[10px] text-zinc-300 bg-white/10 px-2 py-0.5 rounded border border-white/10">
                   AST & Complexity Audit
                 </span>
               </div>
@@ -1679,7 +1679,7 @@ export default function HyperPersonalizedCareerGuidance() {
                 onChange={(e) => setCapstoneCodeInput(e.target.value)}
                 placeholder="// Paste your TypeScript, Python, or SQL implementation code here to trigger AI static analysis & edge case verification..."
                 rows={3}
-                className="w-full bg-black/80 border border-white/10 p-3 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-emerald-400/50"
+                className="w-full bg-black/80 border border-white/10 p-3 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-white/30"
               />
 
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -1687,7 +1687,7 @@ export default function HyperPersonalizedCareerGuidance() {
                   <button
                     onClick={handleAuditCapstoneCode}
                     disabled={isAuditingCode || !capstoneCodeInput.trim()}
-                    className="bg-emerald-400 text-black font-semibold px-4 py-2 rounded-xl text-xs hover:bg-emerald-300 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    className="bg-white text-black font-semibold px-4 py-2 rounded-xl text-xs hover:bg-zinc-200 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                   >
                     {isAuditingCode ? (
                       <>
@@ -1707,21 +1707,21 @@ export default function HyperPersonalizedCareerGuidance() {
                     onClick={() => setActiveModalMilestone(null)}
                     className="bg-white/10 hover:bg-white/20 text-white font-mono px-3.5 py-2 rounded-xl text-xs border border-white/20 transition-all flex items-center gap-1.5"
                   >
-                    <Code2 className="h-3.5 w-3.5 text-cyan-400" />
+                    <Code2 className="h-3.5 w-3.5 text-white" />
                     <span>Practice in Code Arena ⚡</span>
                   </Link>
                 </div>
 
                 {codeAuditResult && (
-                  <span className="text-xs font-bold text-emerald-400">
+                  <span className="text-xs font-bold text-white">
                     Score: {codeAuditResult.score}/100 ({codeAuditResult.verdict})
                   </span>
                 )}
               </div>
 
               {codeAuditResult && (
-                <div className="bg-emerald-950/30 border border-emerald-500/30 p-3 rounded-xl space-y-1 text-xs text-zinc-200">
-                  <div className="flex justify-between text-[10px] text-emerald-300 font-bold uppercase">
+                <div className="bg-zinc-900/80 border border-white/10 p-3 rounded-xl space-y-1 text-xs text-zinc-200">
+                  <div className="flex justify-between text-[10px] text-zinc-300 font-bold uppercase">
                     <span>Complexity: {codeAuditResult.complexity}</span>
                     <span>Verified Proof Badge Issued</span>
                   </div>
@@ -1745,7 +1745,7 @@ export default function HyperPersonalizedCareerGuidance() {
               <div className="bg-black/40 p-3 rounded-xl border border-white/10">
                 <span className="text-[10px] text-zinc-500 uppercase block mb-1">Primary Documentation:</span>
                 {activeModalMilestone.resources.map((r) => (
-                  <a key={r.name} href={r.url} target="_blank" rel="noreferrer" className="text-xs text-cyan-400 hover:underline block truncate">
+                  <a key={r.name} href={r.url} target="_blank" rel="noreferrer" className="text-xs text-white hover:underline block truncate">
                     {r.name}
                   </a>
                 ))}
@@ -1853,14 +1853,14 @@ export default function HyperPersonalizedCareerGuidance() {
               >
                 <div className="flex items-center gap-3 text-white">
                   <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Zap className="h-4 w-4 text-cyan-400" />
+                    <Zap className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <span className="font-bold block">(01) Career Match Workstation</span>
                     <span className="text-[10px] text-zinc-400">RAG Roadmaps, Skill Matrix & Auto-Grader</span>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-cyan-300" />
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
               </Link>
 
               <Link
@@ -1870,14 +1870,14 @@ export default function HyperPersonalizedCareerGuidance() {
               >
                 <div className="flex items-center gap-3 text-white">
                   <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Terminal className="h-4 w-4 text-emerald-400" />
+                    <Terminal className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <span className="font-bold block">(02) Voice AI Technical Interview</span>
                     <span className="text-[10px] text-zinc-400">0-100 Score Gauge & Feedback Rubric</span>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-emerald-300" />
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
               </Link>
 
               <Link
@@ -1887,14 +1887,14 @@ export default function HyperPersonalizedCareerGuidance() {
               >
                 <div className="flex items-center gap-3 text-white">
                   <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Activity className="h-4 w-4 text-purple-400" />
+                    <Activity className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <span className="font-bold block">(03) Autonomous Meeting Recorder Bot</span>
                     <span className="text-[10px] text-zinc-400">Live Notetaker & Action Item Extractor</span>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-purple-300" />
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
               </Link>
 
               <Link
@@ -1904,14 +1904,14 @@ export default function HyperPersonalizedCareerGuidance() {
               >
                 <div className="flex items-center gap-3 text-white">
                   <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <FileText className="h-4 w-4 text-amber-400" />
+                    <FileText className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <span className="font-bold block">(04) AI ATS Resume Scanner</span>
                     <span className="text-[10px] text-zinc-400">Metric Density & Keyword Gap Analysis</span>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-amber-300" />
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
               </Link>
 
               <Link
@@ -1921,14 +1921,14 @@ export default function HyperPersonalizedCareerGuidance() {
               >
                 <div className="flex items-center gap-3 text-white">
                   <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Briefcase className="h-4 w-4 text-cyan-300" />
+                    <Briefcase className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <span className="font-bold block">(05) Job Listings & Salary Benchmarks</span>
                     <span className="text-[10px] text-zinc-400">Market Rates & High-Value Skill Boosts</span>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-cyan-300" />
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
               </Link>
 
               <Link
@@ -1938,14 +1938,14 @@ export default function HyperPersonalizedCareerGuidance() {
               >
                 <div className="flex items-center gap-3 text-white">
                   <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Code2 className="h-4 w-4 text-emerald-400" />
+                    <Code2 className="h-4 w-4 text-white" />
                   </div>
                   <div>
                     <span className="font-bold block">Code Arena IDE Workstation</span>
                     <span className="text-[10px] text-zinc-400">Multi-Language Code Runner & Big-O Profiler</span>
                   </div>
                 </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-emerald-300" />
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
               </Link>
             </div>
 
@@ -1963,7 +1963,7 @@ export default function HyperPersonalizedCareerGuidance() {
           <div className="bg-zinc-900 border border-white/20 rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+                <div className="p-2 rounded-xl bg-white/10 border border-white/10 text-white">
                   <Sparkles className="h-5 w-5" />
                 </div>
                 <div>
@@ -1989,7 +1989,7 @@ export default function HyperPersonalizedCareerGuidance() {
                   placeholder="e.g. LLM Fine-Tuning & Quantization Engineering"
                   value={newPhaseTitle}
                   onChange={(e) => setNewPhaseTitle(e.target.value)}
-                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors"
                 />
               </div>
 
@@ -2003,7 +2003,7 @@ export default function HyperPersonalizedCareerGuidance() {
                     placeholder="e.g. AI / ML"
                     value={newPhaseBadge}
                     onChange={(e) => setNewPhaseBadge(e.target.value)}
-                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors"
                   />
                 </div>
                 <div>
@@ -2015,7 +2015,7 @@ export default function HyperPersonalizedCareerGuidance() {
                     placeholder="e.g. PyTorch / LoRA"
                     value={newPhaseSkill}
                     onChange={(e) => setNewPhaseSkill(e.target.value)}
-                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors"
                   />
                 </div>
               </div>
@@ -2029,7 +2029,7 @@ export default function HyperPersonalizedCareerGuidance() {
                   placeholder="Deep dive into parameter-efficient fine-tuning (PEFT), GGML/GGUF quantization, and vLLM inference acceleration."
                   value={newPhaseDesc}
                   onChange={(e) => setNewPhaseDesc(e.target.value)}
-                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors resize-none"
+                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors resize-none"
                 />
               </div>
             </div>
@@ -2044,7 +2044,7 @@ export default function HyperPersonalizedCareerGuidance() {
               <button
                 onClick={handleAddCustomPhase}
                 disabled={!newPhaseTitle.trim()}
-                className="w-1/2 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xs font-mono transition-all shadow-lg shadow-cyan-500/20"
+                className="w-1/2 py-2.5 rounded-xl bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold text-xs font-mono transition-all shadow-lg"
               >
                 Add to Roadmap ⚡
               </button>

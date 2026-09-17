@@ -191,7 +191,7 @@ export default function AestheticJobListingsPage() {
           
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
             <div>
-              <div className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full mb-3">
+              <div className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full mb-3">
                 <Globe className="h-3 w-3" />
                 Pinecone Vector Job Feed • Live Market Benchmarks
               </div>
@@ -243,9 +243,9 @@ export default function AestheticJobListingsPage() {
                 </div>
 
                 {/* Match Rating Badge */}
-                <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl self-start md:self-auto">
-                  <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest font-semibold">AI Match</span>
-                  <span className="text-lg font-bold font-mono text-emerald-400">{job.matchScore}%</span>
+                <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-2 rounded-2xl self-start md:self-auto">
+                  <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest font-semibold">AI Match</span>
+                  <span className="text-lg font-bold font-mono text-white">{job.matchScore}%</span>
                 </div>
               </div>
 
@@ -266,7 +266,7 @@ export default function AestheticJobListingsPage() {
                 </div>
                 <div>
                   <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1">Skill Premium Boost</span>
-                  <span className="text-xs font-bold text-emerald-400">{job.skillPremium}</span>
+                  <span className="text-xs font-bold text-white">{job.skillPremium}</span>
                 </div>
               </div>
 
