@@ -137,15 +137,41 @@ export default function MockInterview() {
     );
   };
 
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+
   const requestCameraPermission = async () => {
-    if (typeof window === "undefined" || !navigator.mediaDevices) return;
+    if (typeof window === "undefined") return;
+
+    if (mediaStreamRef.current) {
+      try {
+        mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      } catch (e) {}
+      mediaStreamRef.current = null;
+    }
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Camera API not supported in this browser context.");
       }
+
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" },
+          audio: false,
+        });
+      } catch (err) {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      }
+
+      mediaStreamRef.current = stream;
       setCameraPermissionStatus("granted");
       setCameraErrorMessage("");
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play().catch((e) => console.warn("Video playback warning:", e));
+      }
     } catch (err: any) {
       console.warn("Camera permission denied or refused:", err);
       setCameraPermissionStatus("denied");
@@ -164,7 +190,6 @@ export default function MockInterview() {
         } catch (e) {}
       }
 
-      // Always request camera permission whenever the site loads
       requestCameraPermission();
 
       const SpeechRecognition =
@@ -259,10 +284,15 @@ export default function MockInterview() {
   }, [messages, isListening, aiTranscript]);
 
   useEffect(() => {
-    if (appState === "interview") {
-      requestCameraPermission();
+    if (appState === "interview" || videoRef.current) {
+      if (mediaStreamRef.current && videoRef.current) {
+        videoRef.current.srcObject = mediaStreamRef.current;
+        videoRef.current.play().catch((e) => console.warn("Video playback warning:", e));
+      } else {
+        requestCameraPermission();
+      }
     }
-  }, [appState]);
+  }, [appState, cameraPermissionStatus]);
 
   const sendToAI = async (message: string) => {
     if (isAiThinking) return;
