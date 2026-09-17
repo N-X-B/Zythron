@@ -28,7 +28,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="overflow-y-auto overflow-x-hidden h-full bg-zinc-950 text-white font-sans">
+    <div className="overflow-y-auto overflow-x-hidden h-full bg-[#0e0e12] text-white font-sans">
       {/* ─── INLINE STYLES ─── */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,-40px) scale(1.05)} }
