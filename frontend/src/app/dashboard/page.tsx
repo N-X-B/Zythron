@@ -182,58 +182,6 @@ const ROADMAP_PHASES: RoadmapPhase[] = [
       },
     ],
   },
-  {
-    id: 4,
-    title: "Phase 4: High Availability & Chaos Engineering",
-    description: "Distributed consensus (Raft/Paxos), multi-region replication, fault-injection chaos testing, and disaster recovery.",
-    badge: "Resilience",
-    icon: ShieldCheck,
-    milestones: [
-      {
-        id: "fs6",
-        title: "Raft Consensus & Distributed Fault Injection",
-        description: "Leader election leases, split-brain mitigation, chaos mesh latency injection, and automated failover.",
-        workloadHours: 40,
-        requiredSkills: ["Kubernetes", "System Design"],
-        syllabusPoints: [
-          "Raft leader lease mechanics and monotonic heartbeat timers",
-          "Multi-DC async database replication lag monitoring",
-          "Chaos Mesh network partition fault-injection drills",
-          "Automated RTO/RPO disaster recovery procedures"
-        ],
-        resources: [
-          { name: "Raft Consensus Protocol", url: "https://raft.github.io/", category: "Paper" },
-        ],
-        projectPrompt: "Implement a 3-node Raft consensus cluster simulation handling node network partitions gracefully.",
-      },
-    ],
-  },
-  {
-    id: 5,
-    title: "Phase 5: Staff Engineering & System Design Drills",
-    description: "Principal-level trade-off analysis, capacity planning for 10M QPS, and harsh architectural reviews.",
-    badge: "Leadership",
-    icon: Award,
-    milestones: [
-      {
-        id: "fs7",
-        title: "10M QPS System Architecture & Cost Optimization",
-        description: "Designing global CDN edge caches, database sharding strategies, and cloud infrastructure cost reduction.",
-        workloadHours: 45,
-        requiredSkills: ["System Design", "Cloud Architecture"],
-        syllabusPoints: [
-          "Consistent hashing ring partitioning & virtual node rebalancing",
-          "Global CDN edge compute workers & stale-while-revalidate caches",
-          "Cloud cost optimization & reserved instance capacity planning",
-          "Harsh architectural review presentation to VP of Engineering"
-        ],
-        resources: [
-          { name: "System Design Primer", url: "https://github.com/donnemartin/system-design-primer", category: "Guide" },
-        ],
-        projectPrompt: "Design an end-to-end multi-region e-commerce platform architecture handling 10M QPS with zero downtime.",
-      },
-    ],
-  },
 ];
 
 const ROLE_SKILL_MAP: Record<string, string[]> = {
@@ -972,9 +920,9 @@ export default function HyperPersonalizedCareerGuidance() {
   const missingSkills = requiredRoleSkills.filter((s) => !userSkillNames.has(s.toLowerCase()));
   const skillMatchPercent = Math.min(100, Math.round((userSkills.filter(s => requiredRoleSkills.map(r => r.toLowerCase()).includes(s.name.toLowerCase())).length / Math.max(1, requiredRoleSkills.length)) * 100));
 
-  const totalMilestones = 5;
+  const totalMilestones = useMemo(() => activeRoadmapPhases.flatMap((p) => p.milestones).length || 3, [activeRoadmapPhases]);
   const completedCount = Object.values(completedMilestones).filter(Boolean).length;
-  const progressPercent = Math.round((completedCount / totalMilestones) * 100);
+  const progressPercent = Math.min(100, Math.round((completedCount / totalMilestones) * 100));
 
   // Dynamic Salary Uplift Estimate based on missing skills & tier
   const estimatedSalaryUplift = useMemo(() => {
@@ -1124,7 +1072,7 @@ export default function HyperPersonalizedCareerGuidance() {
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-8 relative z-10">
+      <main className="max-w-[1536px] w-full mx-auto p-6 md:p-8 space-y-8 relative z-10">
 
         {/* ─── 1. HYPER-PERSONALIZED DIAGNOSTIC HEADER BANNER ─── */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-emerald-950/20 via-white/[0.03] to-cyan-950/20 p-6 md:p-8 backdrop-blur-2xl shadow-2xl">
@@ -1150,15 +1098,15 @@ export default function HyperPersonalizedCareerGuidance() {
 
             {/* Diagnostic Metrics */}
             <div className="grid grid-cols-3 gap-3 font-mono text-center shrink-0">
-              <div className="w-28 sm:w-32 h-20 bg-black/60 border border-white/10 p-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
+              <div className="min-w-[110px] bg-black/60 border border-white/10 px-4 py-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
                 <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Skill Match</span>
                 <span className="text-xl font-bold text-emerald-400">{skillMatchPercent}%</span>
               </div>
-              <div className="w-28 sm:w-32 h-20 bg-black/60 border border-white/10 p-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
+              <div className="min-w-[110px] bg-black/60 border border-white/10 px-4 py-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
                 <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Milestones</span>
-                <span className="text-xl font-bold text-white">{completedCount}/5</span>
+                <span className="text-xl font-bold text-white">{completedCount}/{totalMilestones}</span>
               </div>
-              <div className="w-28 sm:w-32 h-20 bg-black/60 border border-white/10 p-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
+              <div className="min-w-[110px] bg-black/60 border border-white/10 px-4 py-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
                 <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Salary Uplift</span>
                 <span className="text-base font-bold text-cyan-300">+${estimatedSalaryUplift / 1000}k</span>
               </div>
