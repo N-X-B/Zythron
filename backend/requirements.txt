@@ -3,3 +3,4 @@ uvicorn
 pinecone-client
 twilio
 python-dotenv
+google-generativeai

@@ -6,13 +6,12 @@ import uvicorn
 import os
 from dotenv import load_dotenv
 from pinecone import Pinecone
+import google.generativeai as genai
 
-# Load environment variables
 load_dotenv()
 
 app = FastAPI(title="Career & Livelihood Agent API", version="1.0")
 
-# Setup CORS for Frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,15 +20,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- INITIALIZE VECTOR DB ---
+# --- INITIALIZE DATABASES & AI ---
 try:
     pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-    # The name of the index Member 2 will upload to
     pinecone_index = pc.Index("hackathon-jobs") 
-    print("✅ Successfully connected to Pinecone!")
 except Exception as e:
-    print(f"⚠️ Pinecone Connection Error: {e}")
+    print(f"Pinecone Error: {e}")
 
+# Configure Gemini
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+llm_model = genai.GenerativeModel('gemini-1.5-flash')
 
 # --- DATA MODELS ---
 class UserProfile(BaseModel):
@@ -58,12 +58,6 @@ def health_check():
 
 @app.post("/api/match-jobs", response_model=List[JobRecommendation])
 def match_jobs(profile: UserProfile):
-    """
-    Called by Frontend to generate the Adaptive Roadmap.
-    """
-    # TODO: Turn profile.skills into a vector and query Pinecone
-    
-    # Mock data to unblock frontend
     return [
         JobRecommendation(
             title="Junior Frontend Developer", company="TechCorp India",
@@ -75,26 +69,47 @@ def match_jobs(profile: UserProfile):
 
 @app.post("/api/chat")
 def chat_with_agent(request: ChatRequest):
-    """
-    Core AI Logic: RAG Pipeline
-    1. Turn user message into vector
-    2. Search Pinecone for relevant jobs/schemes
-    3. Send job data + user message to LLM (Gemini)
-    """
-    
-    # --- RAG PIPELINE PLACEHOLDER ---
-    # Once Member 2 pushes data to Pinecone, we will uncomment this logic:
-    
-    # 1. user_vector = get_gemini_embedding(request.message)
-    # 2. search_results = pinecone_index.query(vector=user_vector, top_k=3, include_metadata=True)
-    # 3. context = format_results(search_results)
-    # 4. final_reply = call_gemini_agent(prompt=request.message, context=context)
-    
-    return {
-        "reply": f"Hello! You said: '{request.message}'. I have successfully connected to our Vector Database. I am waiting for Member 2 to upload the job data, and for our Gemini API key to activate my brain!",
-        "language_detected": request.language
-    }
+    try:
+        # 1. Turn user message into a vector using Gemini Embeddings
+        embedding_resp = genai.embed_content(
+            model="models/text-embedding-004",
+            content=request.message,
+            task_type="retrieval_query"
+        )
+        vector = embedding_resp['embedding']
+
+        # 2. Search Pinecone for jobs that match the vector
+        # (This will safely return empty if Member 2 hasn't uploaded data yet)
+        search_results = pinecone_index.query(vector=vector, top_k=3, include_metadata=True)
+        
+        # 3. Format the retrieved job data into a context string
+        context = "Here are some relevant jobs from our database:\n"
+        if 'matches' in search_results and len(search_results['matches']) > 0:
+            for match in search_results['matches']:
+                meta = match.get('metadata', {})
+                context += f"- Job: {meta.get('title', 'Unknown')} at {meta.get('company', 'Unknown')}. Skills: {meta.get('skills', 'N/A')}\n"
+        else:
+            context = "No specific jobs found in the database yet. Give general career advice."
+
+        # 4. Generate the AI Response
+        prompt = f"""You are a helpful, professional Career Guidance Agent for a hackathon project. 
+        Use the following job database context to answer the user's question. 
+        If the context doesn't have relevant jobs, offer general, encouraging career advice.
+        
+        Context from our Database:
+        {context}
+        
+        User's Message: {request.message}
+        """
+        
+        response = llm_model.generate_content(prompt)
+        
+        return {
+            "reply": response.text,
+            "language_detected": request.language
+        }
+    except Exception as e:
+        return {"reply": f"AI Engine Error: {str(e)}", "language_detected": request.language}
 
 if __name__ == "__main__":
-    print("Starting the Core Engine API on port 8000...")
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
