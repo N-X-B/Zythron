@@ -79,6 +79,17 @@ export default function OnboardingPage() {
       timeline,
     };
     localStorage.setItem("zythron_profile", JSON.stringify(profileData));
+
+    // Mark user as onboarded in the database
+    if (user) {
+      const db = JSON.parse(localStorage.getItem("zythron_db") || "{}");
+      if (db[user.email]) {
+        db[user.email].onboarded = true;
+        db[user.email].profile = profileData;
+        localStorage.setItem("zythron_db", JSON.stringify(db));
+      }
+    }
+
     router.push("/dashboard");
   };
 

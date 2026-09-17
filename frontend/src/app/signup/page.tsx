@@ -10,16 +10,37 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [error, setError] = useState("");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) return;
-    
-    const user = {
+    setError("");
+
+    // Load existing user database
+    const db = JSON.parse(localStorage.getItem("zythron_db") || "{}");
+
+    // Check if email already exists
+    if (db[email]) {
+      setError("An account with this email already exists. Please sign in.");
+      return;
+    }
+
+    // Create user entry in database
+    db[email] = {
       name,
       email,
-      loggedIn: true,
+      password,
+      onboarded: false,
+      createdAt: new Date().toISOString(),
     };
+    localStorage.setItem("zythron_db", JSON.stringify(db));
+
+    // Set active session
+    const user = { name, email, loggedIn: true };
     localStorage.setItem("zythron_user", JSON.stringify(user));
+
+    // New user → go to onboarding
     router.push("/onboarding");
   };
 
@@ -37,6 +58,11 @@ export default function SignUpPage() {
         </p>
 
         <div className="bg-zinc-900/50 backdrop-blur-sm py-8 px-4 shadow-xl sm:rounded-xl sm:px-10 border border-zinc-800">
+          {error && (
+            <div className="mb-4 p-3 rounded-md bg-red-950/50 border border-red-900/50 text-red-400 text-sm">
+              {error}
+            </div>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label

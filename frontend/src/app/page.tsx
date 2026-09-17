@@ -132,10 +132,24 @@ export default function LandingPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight leading-[0.9] mb-8">
-              Career growth,
+            <h1 className="text-6xl sm:text-8xl md:text-[7rem] font-extrabold tracking-[-0.04em] leading-[0.85] mb-8">
+              <span style={{
+                background: "linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>
+                Career growth,
+              </span>
               <br />
-              <span className="text-zinc-500">engineered.</span>
+              <span style={{
+                background: "linear-gradient(180deg, #a1a1aa 0%, #52525b 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>
+                engineered.
+              </span>
             </h1>
           </Reveal>
 

@@ -8,18 +8,41 @@ export default function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
-    
-    const user = {
-      email,
-      name: email.split("@")[0],
-      loggedIn: true,
-    };
+    setError("");
+
+    // Look up user in database
+    const db = JSON.parse(localStorage.getItem("zythron_db") || "{}");
+    const userRecord = db[email];
+
+    if (!userRecord) {
+      setError("No account found with this email. Please sign up first.");
+      return;
+    }
+
+    if (userRecord.password !== password) {
+      setError("Incorrect password. Please try again.");
+      return;
+    }
+
+    // Set active session
+    const user = { name: userRecord.name, email, loggedIn: true };
     localStorage.setItem("zythron_user", JSON.stringify(user));
-    router.push("/onboarding");
+
+    // If already onboarded → go straight to dashboard, otherwise → onboarding
+    if (userRecord.onboarded) {
+      // Restore their saved profile too
+      if (userRecord.profile) {
+        localStorage.setItem("zythron_profile", JSON.stringify(userRecord.profile));
+      }
+      router.push("/dashboard");
+    } else {
+      router.push("/onboarding");
+    }
   };
 
   return (
@@ -36,6 +59,11 @@ export default function SignInPage() {
         </p>
 
         <div className="bg-zinc-900/50 backdrop-blur-sm py-8 px-4 shadow-xl sm:rounded-xl sm:px-10 border border-zinc-800">
+          {error && (
+            <div className="mb-4 p-3 rounded-md bg-red-950/50 border border-red-900/50 text-red-400 text-sm">
+              {error}
+            </div>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
