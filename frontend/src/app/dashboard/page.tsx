@@ -480,6 +480,120 @@ function getDynamicPhases(roleText: string): RoadmapPhase[] {
     ];
   }
 
+  if (r.includes("backend") || r.includes("microservices") || r.includes("python") || r.includes("golang") || r.includes("node")) {
+    return [
+      {
+        id: 1,
+        title: "Phase 1: Asynchronous Handlers & Pydantic Validation",
+        description: "Event loop concurrency, Pydantic v2 schemas, Dependency Injection, and JWT authentication.",
+        badge: "Async APIs",
+        icon: Server,
+        milestones: [
+          {
+            id: "be1",
+            title: "Async I/O Multiplexing & OAuth2 Security",
+            description: "High-throughput route handlers, password hashing with bcrypt, and rate-limiting middleware.",
+            workloadHours: 45,
+            requiredSkills: ["Python", "FastAPI"],
+            syllabusPoints: [
+              "Async event loop blocking avoidance & threadpool delegators",
+              "OAuth2 Bearer token verification & Scopes authorization",
+              "Pydantic v2 model field validators & JSON schema export",
+              "FastAPI yield dependency injection teardowns"
+            ],
+            resources: [
+              { name: "FastAPI Documentation", url: "https://fastapi.tiangolo.com/", category: "Docs" }
+            ],
+            projectPrompt: "Develop an asynchronous REST microservice with rate limiting, JWT auth, and structured logging."
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "Phase 2: Relational Schema & Query Plan Optimization",
+        description: "PostgreSQL normalization, EXPLAIN ANALYZE profiling, B-Tree/GIN indexes, and connection pooling.",
+        badge: "PostgreSQL",
+        icon: Database,
+        milestones: [
+          {
+            id: "be2",
+            title: "Database Performance & Connection Pool Sizing",
+            description: "ACID transaction isolation levels, PgBouncer pool configuration, and zero-downtime migrations.",
+            workloadHours: 50,
+            requiredSkills: ["PostgreSQL", "Redis"],
+            syllabusPoints: [
+              "Partial indexes, composite index column order, and GIN JSONB indexing",
+              "Alembic auto-generated schema migration scripts",
+              "PgBouncer transaction-level connection pooling under high concurrency",
+              "Redis Token Bucket rate limiting and TTL caching invalidation"
+            ],
+            resources: [
+              { name: "PostgreSQL Docs", url: "https://www.postgresql.org/docs/", category: "Docs" }
+            ],
+            projectPrompt: "Design an audit-logged transaction database schema capable of handling high-frequency mutations."
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "Phase 3: Microservices Communication & Event Streams",
+        description: "Kafka event streams, gRPC Protobuf serialization, Docker orchestration, and Redis caching.",
+        badge: "Distributed",
+        icon: Terminal,
+        milestones: [
+          {
+            id: "be3",
+            title: "Event-Driven Architecture with Kafka & gRPC",
+            description: "Publish/subscribe messaging, consumer groups, dead letter queues, and protocol buffers.",
+            workloadHours: 40,
+            requiredSkills: ["Docker", "Kubernetes"],
+            syllabusPoints: [
+              "Kafka partition keys, consumer group rebalancing, and ISR replication",
+              "gRPC HTTP/2 bidirectional streaming & Protobuf message contracts",
+              "Distributed tracing with OpenTelemetry and Jaeger",
+              "Docker Compose local cluster orchestration for microservices"
+            ],
+            resources: [
+              { name: "Apache Kafka Docs", url: "https://kafka.apache.org/documentation/", category: "Docs" }
+            ],
+            projectPrompt: "Build an event-driven payment processing pipeline with Kafka dead-letter queue recovery."
+          }
+        ]
+      }
+    ];
+  }
+
+  if (r.includes("security") || r.includes("pentest") || r.includes("cyber") || r.includes("infosec")) {
+    return [
+      {
+        id: 1,
+        title: "Phase 1: Network Security & Vulnerability Auditing",
+        description: "TCP/IP handshake analysis, Wireshark packet dissection, Nmap scanning, and OWASP Top 10.",
+        badge: "Network Sec",
+        icon: ShieldCheck,
+        milestones: [
+          {
+            id: "sec1",
+            title: "OWASP Vulnerability Assessment & Penetration Testing",
+            description: "SQL injection, XSS, SSRF, IDOR, and broken access control exploits.",
+            workloadHours: 45,
+            requiredSkills: ["Linux", "Networking"],
+            syllabusPoints: [
+              "Burp Suite HTTP request intercepting and payload fuzzing",
+              "Blind SQL injection and parameterized query mitigations",
+              "SSRF internal metadata endpoint exploitation & VPC defense",
+              "Content Security Policy (CSP) header enforcement"
+            ],
+            resources: [
+              { name: "OWASP Top 10", url: "https://owasp.org/www-project-top-ten/", category: "Reference" }
+            ],
+            projectPrompt: "Conduct a full security audit against a vulnerable web application and draft a CVE remediation report."
+          }
+        ]
+      }
+    ];
+  }
+
   return ROADMAP_PHASES;
 }
 
@@ -980,6 +1094,29 @@ export default function HyperPersonalizedCareerGuidance() {
                   </>
                 )}
               </button>
+
+              {/* Live AI RAG Vector-Synthesized Roadmap Result */}
+              {aiRoadmapOutput && (
+                <div className="bg-gradient-to-br from-emerald-950/40 via-zinc-950 to-cyan-950/40 border border-emerald-500/40 p-4 rounded-2xl space-y-3 font-mono text-xs shadow-xl animate-fade-in">
+                  <div className="flex items-center justify-between border-b border-emerald-500/30 pb-2">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                      <span className="font-bold text-white uppercase tracking-wider text-[11px]">
+                        Live AI RAG Vector Synthesis
+                      </span>
+                    </div>
+                    {topJobMatch && (
+                      <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                        Matched: {topJobMatch.title} ({Math.round((topJobMatch.match_score || 0.85) * 100)}%)
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="max-h-60 overflow-y-auto space-y-2 text-zinc-300 text-[11px] leading-relaxed whitespace-pre-wrap font-mono pr-1">
+                    {aiRoadmapOutput}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Personalized Skill Gap Analysis Matrix */}
