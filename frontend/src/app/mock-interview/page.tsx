@@ -58,7 +58,7 @@ const PRESET_QUESTIONS: QuestionPreset[] = [
   },
 ];
 
-const AI_CHAT_ENDPOINT = "http://10.1.171.141:8000/api/chat";
+const AI_CHAT_ENDPOINT = "http://localhost:8000/api/chat";
 
 export default function MockInterviewPage() {
   const [mounted, setMounted] = useState<boolean>(false);
@@ -225,7 +225,7 @@ export default function MockInterviewPage() {
         {/* Live Node Heartbeat */}
         <div className="hidden sm:flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.02] px-2.5 py-1 text-[10px] font-mono text-zinc-400">
           <span className="h-1.5 w-1.5 rounded-sm bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-          <span>NODE 10.1.171.141:8000 LIVE</span>
+          <span>NODE localhost:8000 LIVE</span>
         </div>
       </header>
 
@@ -486,7 +486,7 @@ export default function MockInterviewPage() {
           <span>STAFF CALIBRATION MATRIX</span>
         </div>
         <div className="flex items-center gap-3">
-          <span>BACKEND: 10.1.171.141:8000</span>
+          <span>BACKEND: localhost:8000</span>
           <span>//</span>
           <span className="text-emerald-400">AUDIT READY</span>
         </div>
