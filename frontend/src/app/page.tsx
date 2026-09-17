@@ -877,8 +877,11 @@ export default function CareerGuidanceDashboard() {
         </div>
 
         {/* DOMAIN NAVIGATION TABS */}
-        <div className="border-t border-white/[0.06] bg-zinc-950/60 backdrop-blur-md">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 overflow-x-auto no-scrollbar py-2 text-xs">
+        <div className="border-t border-white/[0.06] bg-zinc-950/70 backdrop-blur-md">
+          <div
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1.5 text-xs"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 shrink-0 mr-1">
               DOMAINS:
             </span>
@@ -889,13 +892,13 @@ export default function CareerGuidanceDashboard() {
                 <button
                   key={domain.id}
                   onClick={() => setSelectedDomainId(domain.id)}
-                  className={`flex items-center gap-2 rounded-md px-3 py-1.5 font-medium transition-all shrink-0 cursor-pointer text-xs ${
+                  className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-all shrink-0 cursor-pointer text-xs ${
                     isSelected
-                      ? "bg-white text-zinc-950 font-semibold shadow-md shadow-black/30"
+                      ? "bg-white text-zinc-950 font-semibold shadow-sm shadow-black/40"
                       : "border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] hover:border-white/20"
                   }`}
                 >
-                  <span className={`text-[10px] font-mono ${isSelected ? "text-zinc-600" : "text-zinc-500"}`}>
+                  <span className={`text-[9px] font-mono ${isSelected ? "text-zinc-600" : "text-zinc-500"}`}>
                     {domain.code}
                   </span>
                   <DomainIcon className="h-3.5 w-3.5" />
@@ -908,9 +911,12 @@ export default function CareerGuidanceDashboard() {
       </header>
 
       {/* TRACK SELECTOR SUB-NAV */}
-      <div className="w-full border-b border-white/[0.08] bg-zinc-900/40 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-4 text-xs">
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+      <div className="w-full border-b border-white/[0.08] bg-zinc-900/30 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between gap-3 text-xs">
+          <div
+            className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             <span className="font-mono text-zinc-500 uppercase text-[10px] tracking-wider shrink-0">
               {currentDomain.name} Tracks:
             </span>
@@ -920,7 +926,7 @@ export default function CareerGuidanceDashboard() {
                 <button
                   key={track.id}
                   onClick={() => setSelectedTrackId(track.id)}
-                  className={`rounded-md px-3 py-1 text-xs font-medium transition-all cursor-pointer shrink-0 ${
+                  className={`rounded-md px-2.5 py-0.5 text-xs font-medium transition-all cursor-pointer shrink-0 ${
                     isCurrent
                       ? "bg-zinc-800 text-cyan-400 border border-zinc-700 shadow-sm"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40"
@@ -934,7 +940,7 @@ export default function CareerGuidanceDashboard() {
 
           <button
             onClick={() => setChatDrawerOpen(true)}
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-cyan-950/20 px-3 py-1 text-xs font-semibold text-cyan-300 hover:bg-cyan-900/30 transition-all cursor-pointer shrink-0"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-cyan-950/20 px-2.5 py-1 text-xs font-semibold text-cyan-300 hover:bg-cyan-900/30 transition-all cursor-pointer shrink-0"
           >
             <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
             <span>Consult AI Advisor</span>
@@ -942,53 +948,53 @@ export default function CareerGuidanceDashboard() {
         </div>
       </div>
 
-      {/* HERO SECTION: EDITORIAL TYPOGRAPHY & INTERACTIVE 3D IMPOSSIBLE GEOMETRY */}
+      {/* HERO SECTION: COMPACT FIT-TO-SCREEN EDITORIAL WORKSTATION */}
       <section
         onMouseMove={handleMouseMoveHero}
         onMouseLeave={handleMouseLeaveHero}
-        className="relative px-4 sm:px-6 lg:px-8 py-12 sm:py-16 border-b border-white/[0.08] bg-zinc-950/50 backdrop-blur-md overflow-hidden select-none"
+        className="relative px-4 sm:px-6 lg:px-8 py-5 sm:py-6 border-b border-white/[0.08] bg-zinc-950/40 backdrop-blur-md overflow-hidden select-none"
       >
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Left Editorial Copy */}
-          <div className="space-y-4 max-w-2xl z-10">
-            <div className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/[0.05] px-3 py-1 text-xs font-mono text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+          <div className="space-y-2.5 max-w-xl z-10">
+            <div className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/[0.05] px-2.5 py-0.5 text-[11px] font-mono text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
               <span>(01)</span>
               <span>/</span>
               <span>EXECUTIVE CURRICULUM ARCHITECTURE</span>
             </div>
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tighter text-white uppercase leading-[0.95]">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tighter text-white uppercase leading-[0.95]">
               UNLIMITED <br />
               <span className="text-zinc-500">HORIZONS.</span>
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans max-w-lg">
+            <p className="text-xs text-zinc-400 leading-relaxed font-sans max-w-md">
               Precision engineering for trajectories once deemed inaccessible. We formulate verified prerequisite sequences, capstone engineering challenges, and technical checkpoints across 6 foundational industries.
             </p>
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+            <div className="pt-1 flex flex-wrap items-center gap-2.5">
               <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
                 ACTIVE DOMAIN TRACK:
               </span>
-              <div className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/40 bg-cyan-950/40 px-3 py-1 text-xs font-semibold text-cyan-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+              <div className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/40 bg-cyan-950/40 px-2.5 py-0.5 text-xs font-semibold text-cyan-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                 <Target className="h-3.5 w-3.5 text-cyan-400" />
                 <span>{activeTrack.role}</span>
               </div>
             </div>
           </div>
 
-          {/* Right: Interactive 3D Impossible Triangle (Penrose Geometry) */}
+          {/* Right: Interactive 3D Impossible Triangle (Scaled to fit screen gracefully) */}
           <div
-            className="relative flex items-center justify-center transition-transform duration-150 ease-out cursor-grab active:cursor-grabbing p-8 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]"
+            className="relative flex items-center justify-center transition-transform duration-150 ease-out cursor-grab active:cursor-grabbing p-4 sm:p-5 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)] shrink-0"
             style={{
               perspective: "1000px",
               transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
             }}
           >
             {/* Isometric Cast Shadow */}
-            <div className="absolute -bottom-4 w-56 h-12 bg-black/80 blur-xl rounded-2xl transform scale-y-50 -skew-x-12 pointer-events-none" />
+            <div className="absolute -bottom-2 w-36 h-6 bg-black/80 blur-md rounded-2xl transform scale-y-50 -skew-x-12 pointer-events-none" />
 
             {/* Impossible Triangle SVG */}
             <svg
-              width="280"
-              height="280"
+              width="170"
+              height="170"
               viewBox="0 0 320 320"
               className="drop-shadow-2xl transition-all"
               fill="none"
@@ -1034,7 +1040,7 @@ export default function CareerGuidanceDashboard() {
         </div>
 
         {/* Bottom Meta Bar */}
-        <div className="max-w-7xl mx-auto mt-10 pt-4 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-zinc-500 gap-2">
+        <div className="max-w-7xl mx-auto mt-4 pt-2.5 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-[10px] font-mono text-zinc-500 gap-2">
           <span>PRECISION TECHNICAL CURRICULUM // CROSS-DOMAIN WORKSTATION</span>
           <span>001 CLICK ANY MILESTONE CARD TO INSPECT SYLLABUS SPECIFICATIONS</span>
         </div>
