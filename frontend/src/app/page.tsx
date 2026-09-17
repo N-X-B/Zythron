@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 /* ───────────────────────────── REVEAL WRAPPER ───────────────────────────── */
 function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -45,9 +46,25 @@ const ROUND_TYPES = [
 
 /* ───────────────────────────────── MAIN PAGE ───────────────────────────────────── */
 export default function LandingPage() {
+  const router = useRouter();
   const [scrollY, setScrollY] = useState(0);
   const [activeRound, setActiveRound] = useState(ROUND_TYPES[0]);
-  const [isAudioSimulating, setIsAudioSimulating] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem("zythron_user");
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        if (user && user.loggedIn) {
+          setIsLoggedIn(true);
+          router.push("/dashboard");
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [router]);
 
   useEffect(() => {
     const h = () => setScrollY(window.scrollY);

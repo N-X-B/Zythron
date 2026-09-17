@@ -943,7 +943,7 @@ export default function CareerGuidanceDashboard() {
         {/* 3 CORE BACKEND FEATURES SWITCHER */}
         <div className="hidden lg:flex items-center gap-1 font-mono text-xs select-none">
           <Link
-            href="/"
+            href="/dashboard"
             className="rounded-md px-2.5 py-1 text-xs font-semibold bg-white text-zinc-950 transition-all shadow-sm"
           >
             (01) CAREER MATCH

@@ -140,7 +140,7 @@ export default function RecordMeetingPage() {
         {/* 3 CORE BACKEND FEATURES SWITCHER */}
         <div className="flex items-center gap-1 font-mono text-xs select-none">
           <Link
-            href="/"
+            href="/dashboard"
             className="rounded-md px-2.5 py-1 text-xs font-medium border border-white/10 bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all"
           >
             (01) CAREER MATCH
