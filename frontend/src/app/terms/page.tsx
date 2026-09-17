@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import Link from "next/link";
 import { ArrowLeft, FileText, CheckSquare, AlertCircle } from "lucide-react";
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased">
+    <div className="h-full overflow-y-auto bg-zinc-950 text-zinc-100 font-sans antialiased">
       {/* Header */}
       <header className="border-b border-zinc-800 bg-zinc-900/80 px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">

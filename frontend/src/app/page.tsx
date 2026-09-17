@@ -853,792 +853,545 @@ export default function CareerGuidanceDashboard() {
   }
 
   return (
-    <div suppressHydrationWarning className="min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-white selection:text-black relative overflow-x-hidden">
+    <div suppressHydrationWarning className="h-screen max-h-screen w-screen overflow-hidden flex flex-col bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-white selection:text-black relative">
       {/* ATMOSPHERIC AMBIENT GLOW & ARCHITECTURAL GRID */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(0,56,255,0.18),transparent_55%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
-      {/* TOP EXECUTIVE WORKSTATION NAVIGATION */}
-      <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-zinc-950/80 backdrop-blur-xl select-none shadow-[inset_0_-1px_0_rgba(255,255,255,0.03)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-          {/* Brand & Workspace Indicator */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-md bg-white/[0.08] border border-white/20 flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
-                <Layers className="h-3.5 w-3.5 text-white" />
-              </div>
-              <span className="font-bold tracking-wider text-sm text-white font-mono">ZYTHRON</span>
+      {/* TOP EXECUTIVE WORKSTATION NAVIGATION (FIXED 44px) */}
+      <header className="h-11 shrink-0 z-40 w-full border-b border-white/[0.08] bg-zinc-950/90 backdrop-blur-xl select-none px-3 sm:px-4 flex items-center justify-between shadow-[inset_0_-1px_0_rgba(255,255,255,0.03)]">
+        {/* Brand & Workspace Indicator */}
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            <div className="h-6 w-6 rounded-md bg-white/[0.08] border border-white/20 flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+              <Layers className="h-3.5 w-3.5 text-white" />
             </div>
-            <span className="hidden sm:inline text-zinc-600">//</span>
-            <span className="hidden sm:inline-block rounded border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
-              CURRICULUM WORKSTATION
-            </span>
+            <span className="font-bold tracking-wider text-xs text-white font-mono">ZYTHRON</span>
           </div>
-
-          {/* Active Domain Breadcrumb */}
-          <div className="hidden md:flex items-center gap-2 text-xs font-mono text-zinc-400">
+          <span className="text-zinc-600 font-mono text-xs">//</span>
+          <span className="hidden sm:inline-block rounded border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[9px] font-mono uppercase tracking-widest text-zinc-400">
+            EXECUTIVE WORKSTATION
+          </span>
+          <span className="hidden md:inline text-zinc-600 font-mono text-xs">/</span>
+          <div className="hidden md:flex items-center gap-1.5 text-xs font-mono text-zinc-400">
             <span className="text-zinc-500">{currentDomain.code}</span>
-            <span>/</span>
-            <span className="text-zinc-200 font-semibold">{currentDomain.name}</span>
-          </div>
-
-          {/* Right Status Actions & Terminal Launcher */}
-          <div className="flex items-center gap-3">
-            {/* Live Backend Connection Indicator */}
-            <div className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.02] px-2.5 py-1 text-[11px] font-mono text-zinc-400">
-              <span className="h-2 w-2 rounded-sm bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-              <span className="hidden lg:inline text-zinc-300">NODE 10.1.171.141:8000</span>
-              <span className="lg:hidden text-zinc-300">ONLINE</span>
-            </div>
-
-            {/* Glassy Terminal Action Button */}
-            <button suppressHydrationWarning
-              type="button"
-              onClick={() => setChatDrawerOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/[0.06] hover:bg-white/[0.12] hover:border-white/25 px-3 py-1.5 text-xs font-medium text-white transition-all active:scale-95 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] cursor-pointer"
-            >
-              <Terminal className="h-3.5 w-3.5 text-cyan-400" />
-              <span className="font-mono text-xs">Advisory Terminal</span>
-            </button>
+            <span>:</span>
+            <span className="text-zinc-200 font-medium truncate max-w-[200px]">{currentDomain.name}</span>
           </div>
         </div>
 
-        {/* DOMAIN NAVIGATION TABS */}
-        <div className="border-t border-white/[0.06] bg-zinc-950/70 backdrop-blur-md">
-          <div
-            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1.5 text-xs"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 shrink-0 mr-1">
-              DOMAINS:
-            </span>
-            {CAREER_DOMAINS.map((domain) => {
-              const isSelected = domain.id === selectedDomainId;
-              const DomainIcon = domain.icon;
-              return (
-                <button suppressHydrationWarning
-                  type="button"
-                  key={domain.id}
-                  onClick={() => setSelectedDomainId(domain.id)}
-                  className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-all shrink-0 cursor-pointer text-xs ${
-                    isSelected
-                      ? "bg-white text-zinc-950 font-semibold shadow-sm shadow-black/40"
-                      : "border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06] hover:border-white/20"
-                  }`}
-                >
-                  <span className={`text-[9px] font-mono ${isSelected ? "text-zinc-600" : "text-zinc-500"}`}>
-                    {domain.code}
-                  </span>
-                  <DomainIcon className="h-3.5 w-3.5" />
-                  <span>{domain.name}</span>
-                </button>
-              );
-            })}
+        {/* Right Status Actions & Terminal Launcher */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Live Backend Connection Indicator */}
+          <div className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[10px] font-mono text-zinc-400">
+            <span className="h-1.5 w-1.5 rounded-sm bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+            <span className="hidden lg:inline text-zinc-300">NODE 10.1.171.141:8000</span>
+            <span className="lg:hidden text-zinc-300">ONLINE</span>
           </div>
+
+          {/* Glassy Terminal Action Button */}
+          <button
+            suppressHydrationWarning
+            type="button"
+            onClick={() => setChatDrawerOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/[0.06] hover:bg-white/[0.12] hover:border-white/25 px-2.5 py-1 text-xs font-medium text-white transition-all active:scale-95 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] cursor-pointer"
+          >
+            <Terminal className="h-3 w-3 text-cyan-400" />
+            <span className="font-mono text-xs">Advisory Terminal</span>
+          </button>
         </div>
       </header>
 
-      {/* TRACK SELECTOR SUB-NAV */}
-      <div className="w-full border-b border-white/[0.08] bg-zinc-900/30 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-1.5 flex items-center justify-between gap-3 text-xs">
-          <div
-            className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            <span className="font-mono text-zinc-500 uppercase text-[10px] tracking-wider shrink-0">
-              {currentDomain.name} Tracks:
-            </span>
-            {currentDomain.tracks.map((track) => {
-              const isCurrent = track.id === selectedTrackId;
-              return (
-                <button suppressHydrationWarning
-                  type="button"
-                  key={track.id}
-                  onClick={() => setSelectedTrackId(track.id)}
-                  className={`rounded-md px-2.5 py-0.5 text-xs font-medium transition-all cursor-pointer shrink-0 ${
-                    isCurrent
-                      ? "bg-zinc-800 text-cyan-400 border border-zinc-700 shadow-sm"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40"
-                  }`}
-                >
-                  {track.role}
-                </button>
-              );
-            })}
-          </div>
+      {/* UNIFIED DOMAIN & TRACK SUBNAV RIBBON (FIXED 36px) */}
+      <div className="h-9 shrink-0 z-30 w-full border-b border-white/[0.08] bg-zinc-950/70 backdrop-blur-md px-3 sm:px-4 flex items-center justify-between gap-3 overflow-hidden select-none">
+        {/* Domain Tabs with Hidden Scrollbars */}
+        <div
+          className="flex items-center gap-1 overflow-x-auto no-scrollbar py-1 text-xs"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 shrink-0 mr-1 hidden sm:inline">
+            DOMAINS:
+          </span>
+          {CAREER_DOMAINS.map((domain) => {
+            const isSelected = domain.id === selectedDomainId;
+            const DomainIcon = domain.icon;
+            return (
+              <button
+                suppressHydrationWarning
+                type="button"
+                key={domain.id}
+                onClick={() => setSelectedDomainId(domain.id)}
+                className={`flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium transition-all shrink-0 cursor-pointer ${
+                  isSelected
+                    ? "bg-white text-zinc-950 font-semibold shadow-sm"
+                    : "border border-white/[0.08] bg-white/[0.02] text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.06]"
+                }`}
+              >
+                <span className={`text-[9px] font-mono ${isSelected ? "text-zinc-600" : "text-zinc-500"}`}>
+                  {domain.code}
+                </span>
+                <DomainIcon className="h-3 w-3" />
+                <span className="text-[11px] whitespace-nowrap">{domain.name}</span>
+              </button>
+            );
+          })}
+        </div>
 
-          <button suppressHydrationWarning
+        {/* Track Switcher for Active Domain */}
+        <div
+          className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 shrink-0"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {currentDomain.tracks.map((track) => {
+            const isCurrent = track.id === selectedTrackId;
+            return (
+              <button
+                suppressHydrationWarning
+                type="button"
+                key={track.id}
+                onClick={() => setSelectedTrackId(track.id)}
+                className={`rounded-md px-2 py-0.5 text-[11px] font-medium transition-all cursor-pointer shrink-0 whitespace-nowrap ${
+                  isCurrent
+                    ? "bg-zinc-800 text-cyan-300 border border-zinc-700 shadow-sm"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40"
+                }`}
+              >
+                {track.role}
+              </button>
+            );
+          })}
+          <button
+            suppressHydrationWarning
+            type="button"
             onClick={() => setChatDrawerOpen(true)}
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-cyan-950/20 px-2.5 py-1 text-xs font-semibold text-cyan-300 hover:bg-cyan-900/30 transition-all cursor-pointer shrink-0"
+            className="hidden xl:inline-flex items-center gap-1 rounded-md border border-cyan-500/30 bg-cyan-950/30 px-2 py-0.5 text-[10px] font-semibold text-cyan-300 hover:bg-cyan-900/40 transition-all cursor-pointer shrink-0"
           >
-            <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
-            <span>Consult AI Advisor</span>
+            <Sparkles className="h-3 w-3 text-cyan-400" />
+            <span>Consult AI</span>
           </button>
         </div>
       </div>
 
-      {/* HERO SECTION: COMPACT FIT-TO-SCREEN EDITORIAL WORKSTATION */}
-      <section
-        onMouseMove={handleMouseMoveHero}
-        onMouseLeave={handleMouseLeaveHero}
-        className="relative px-4 sm:px-6 lg:px-8 py-5 sm:py-6 border-b border-white/[0.08] bg-zinc-950/40 backdrop-blur-md overflow-hidden select-none"
-      >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Left Editorial Copy */}
-          <div className="space-y-2.5 max-w-xl z-10">
-            <div className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/[0.05] px-2.5 py-0.5 text-[11px] font-mono text-zinc-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-              <span>(01)</span>
-              <span>/</span>
-              <span>EXECUTIVE CURRICULUM ARCHITECTURE</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tighter text-white uppercase leading-[0.95]">
-              UNLIMITED <br />
-              <span className="text-zinc-500">HORIZONS.</span>
-            </h1>
-            <p className="text-xs text-zinc-400 leading-relaxed font-sans max-w-md">
-              Precision engineering for trajectories once deemed inaccessible. We formulate verified prerequisite sequences, capstone engineering challenges, and technical checkpoints across 6 foundational industries.
-            </p>
-            <div className="pt-1 flex flex-wrap items-center gap-2.5">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
-                ACTIVE DOMAIN TRACK:
-              </span>
-              <div className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/40 bg-cyan-950/40 px-2.5 py-0.5 text-xs font-semibold text-cyan-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                <Target className="h-3.5 w-3.5 text-cyan-400" />
-                <span>{activeTrack.role}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: Interactive 3D Impossible Triangle (Scaled to fit screen gracefully) */}
+      {/* MAIN SCREEN-FITTING WORKSTATION BODY (FLEX-1 MIN-H-0) */}
+      <main className="flex-1 min-h-0 grid grid-cols-12 gap-2.5 p-2.5 sm:p-3 overflow-hidden max-w-[1920px] mx-auto w-full">
+        {/* LEFT DECK: 3D GEOMETRY, SKILLS MATRIX & TRAJECTORY PARAMETERS */}
+        <div className="col-span-12 lg:col-span-4 xl:col-span-3.5 flex flex-col gap-2 min-h-0 overflow-y-auto no-scrollbar pr-0.5">
+          {/* CARD 1: 3D IMPOSSIBLE GEOMETRY & TRACK TELEMETRY */}
           <div
-            className="relative flex items-center justify-center transition-transform duration-150 ease-out cursor-grab active:cursor-grabbing p-4 sm:p-5 rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)] shrink-0"
-            style={{
-              perspective: "1000px",
-              transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
-            }}
+            onMouseMove={handleMouseMoveHero}
+            onMouseLeave={handleMouseLeaveHero}
+            className="rounded-xl border border-white/[0.1] bg-zinc-900/50 backdrop-blur-xl p-3 shadow-lg flex items-center justify-between gap-3 relative overflow-hidden select-none shrink-0"
           >
-            {/* Isometric Cast Shadow */}
-            <div className="absolute -bottom-2 w-36 h-6 bg-black/80 blur-md rounded-2xl transform scale-y-50 -skew-x-12 pointer-events-none" />
+            <div className="space-y-1.5 z-10 max-w-[180px] sm:max-w-[210px]">
+              <div className="inline-flex items-center gap-1.5 rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[9px] font-mono text-zinc-300">
+                <span>{currentDomain.code}</span>
+                <span>//</span>
+                <span>{activeTrack.department}</span>
+              </div>
+              <h2 className="text-sm sm:text-base font-bold text-white tracking-tight leading-tight">
+                {activeTrack.role}
+              </h2>
+              <div className="flex items-center gap-2 pt-0.5">
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-mono text-zinc-500 uppercase">Skill Match</span>
+                  <span className="text-xs font-mono font-bold text-emerald-400">{calculation.matchPercentage}%</span>
+                </div>
+                <div className="h-6 w-px bg-white/10" />
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-mono text-zinc-500 uppercase">Volume</span>
+                  <span className="text-xs font-mono font-bold text-zinc-200">{calculation.totalWorkloadHours}h</span>
+                </div>
+                <div className="h-6 w-px bg-white/10" />
+                <div className="flex flex-col">
+                  <span className="text-[9px] font-mono text-zinc-500 uppercase">Progress</span>
+                  <span className="text-xs font-mono font-bold text-cyan-300">{calculation.milestonePercentage}%</span>
+                </div>
+              </div>
+            </div>
 
-            {/* Impossible Triangle SVG */}
-            <svg
-              width="170"
-              height="170"
-              viewBox="0 0 320 320"
-              className="drop-shadow-2xl transition-all"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            {/* Interactive 3D Impossible Triangle */}
+            <div
+              className="relative flex items-center justify-center transition-transform duration-150 ease-out cursor-grab active:cursor-grabbing shrink-0"
+              style={{
+                perspective: "800px",
+                transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+              }}
             >
-              {/* Back Outer Isometric Loop */}
-              <path
-                d="M160 20 L280 230 L225 230 L160 115 L95 230 L40 230 Z"
-                fill="#18181b"
-                stroke="#27272a"
-                strokeWidth="1.5"
-              />
-              {/* Left Side Face */}
-              <path
-                d="M160 20 L185 65 L95 230 L40 230 Z"
-                fill="#09090b"
-              />
-              {/* Impossible Loop Overlap */}
-              <path
-                d="M160 115 L225 230 L115 230 L80 170 L140 65 Z"
-                fill="#27272a"
-                stroke="#3f3f46"
-                strokeWidth="1"
-              />
-              {/* Right Outer Face */}
-              <path
-                d="M160 20 L280 230 L250 230 L160 65 Z"
-                fill="#121215"
-              />
-              {/* Bottom Base Face */}
-              <path
-                d="M40 230 L280 230 L240 260 L75 260 Z"
-                fill="#09090b"
-              />
-              {/* Blue Accent Cube Block */}
-              <g transform="translate(68, 150)">
-                <polygon points="20,0 40,10 20,20 0,10" fill="#2563eb" />
-                <polygon points="0,10 20,20 20,40 0,30" fill="#0038ff" />
-                <polygon points="20,20 40,10 40,30 20,40" fill="#1d4ed8" />
-              </g>
-            </svg>
-          </div>
-        </div>
-
-        {/* Bottom Meta Bar */}
-        <div className="max-w-7xl mx-auto mt-4 pt-2.5 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between text-[10px] font-mono text-zinc-500 gap-2">
-          <span>PRECISION TECHNICAL CURRICULUM // CROSS-DOMAIN WORKSTATION</span>
-          <span>001 CLICK ANY MILESTONE CARD TO INSPECT SYLLABUS SPECIFICATIONS</span>
-        </div>
-      </section>
-
-      {/* MAIN BODY CONTAINER */}
-      <main className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
-          {/* TRACK OVERVIEW BANNER & REAL-TIME PACING SUMMARY */}
-          <div className="rounded-xl border border-white/[0.12] bg-zinc-900/60 p-6 shadow-2xl backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]">
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-              <div className="space-y-2 max-w-2xl">
-                <div className="flex items-center gap-2">
-                  <span className="rounded-md border border-white/15 bg-white/5 px-2.5 py-0.5 text-xs font-mono font-medium text-zinc-300">
-                    {activeTrack.department}
-                  </span>
-                  <span className="text-xs font-mono text-zinc-400">
-                    Volume: {calculation.totalWorkloadHours} Total Curriculum Study Hours
-                  </span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-                  {activeTrack.role}
-                </h2>
-                <p className="text-xs text-zinc-400 leading-relaxed max-w-xl">
-                  {activeTrack.description}
-                </p>
-              </div>
-
-              {/* Progress Summary Cards */}
-              <div className="flex items-center gap-4 bg-zinc-950/80 p-4 rounded-xl border border-white/[0.08] shrink-0 backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyan-400">
-                    {calculation.matchPercentage}%
-                  </div>
-                  <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">
-                    Skills Covered
-                  </div>
-                </div>
-
-                <div className="h-8 w-[1px] bg-zinc-800" />
-
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-white">
-                    {calculation.completedCount}/{calculation.totalMilestones}
-                  </div>
-                  <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">
-                    Milestones Done
-                  </div>
-                </div>
-
-                <div className="h-8 w-[1px] bg-zinc-800" />
-
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-zinc-200">
-                    {calculation.weeksNeeded}w
-                  </div>
-                  <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider mt-0.5">
-                    Est. Duration
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="mt-6 space-y-1.5">
-              <div className="flex justify-between text-xs font-mono">
-                <span className="text-zinc-400">
-                  Curriculum Progress: {calculation.completedHours} of {calculation.totalWorkloadHours} Hours Completed
-                </span>
-                <span className="text-cyan-400 font-semibold">{calculation.milestonePercentage}%</span>
-              </div>
-              <div className="h-2 w-full rounded-md bg-zinc-800 overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300"
-                  style={{ width: `${calculation.milestonePercentage}%` }}
-                />
-              </div>
+              <div className="absolute -bottom-1 w-24 h-4 bg-black/80 blur-sm rounded-xl transform scale-y-50 -skew-x-12 pointer-events-none" />
+              <svg
+                width="105"
+                height="105"
+                viewBox="0 0 320 320"
+                className="drop-shadow-xl transition-all"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M160 20 L280 230 L225 230 L160 115 L95 230 L40 230 Z" fill="#18181b" stroke="#27272a" strokeWidth="1.5" />
+                <path d="M160 20 L185 65 L95 230 L40 230 Z" fill="#09090b" />
+                <path d="M160 115 L225 230 L115 230 L80 170 L140 65 Z" fill="#27272a" stroke="#3f3f46" strokeWidth="1" />
+                <path d="M160 20 L280 230 L250 230 L160 65 Z" fill="#121215" />
+                <path d="M40 230 L280 230 L240 260 L75 260 Z" fill="#09090b" />
+                <g transform="translate(68, 150)">
+                  <polygon points="20,0 40,10 20,20 0,10" fill="#2563eb" />
+                  <polygon points="0,10 20,20 20,40 0,30" fill="#0038ff" />
+                  <polygon points="20,20 40,10 40,30 20,40" fill="#1d4ed8" />
+                </g>
+              </svg>
             </div>
           </div>
 
-          {/* GUIDANCE PARAMETERS PANEL */}
-          <div className="rounded-xl border border-white/[0.08] bg-zinc-900/50 p-5 space-y-4 shadow-xl backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <Sliders className="h-4 w-4 text-cyan-400" />
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                  Personalized Roadmap Parameters
+          {/* CARD 2: CANDIDATE SKILLS MATRIX */}
+          <div className="rounded-xl border border-white/[0.08] bg-zinc-900/40 backdrop-blur-md p-3 space-y-2.5 shrink-0">
+            <div className="flex items-center justify-between pb-1.5 border-b border-white/[0.06]">
+              <div className="flex items-center gap-1.5">
+                <Code2 className="h-3.5 w-3.5 text-cyan-400" />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                  Candidate Competency Matrix
                 </h3>
               </div>
-              <span className="text-xs font-mono text-zinc-400">
-                Pacing: {weeklyCommitmentHours} Hours / Week
+              <span className="text-[10px] font-mono text-zinc-400">
+                {userSkills.length} Verified Skills
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-              {/* Parameter 1: Weekly Hours */}
-              <div className="space-y-1.5">
-                <label className="text-zinc-300 font-medium flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5 text-zinc-400" />
-                  Weekly Commitment
-                </label>
-                <div className="flex flex-wrap gap-1">
-                  {[5, 10, 15, 20, 30, 40].map((hrs) => (
-                    <button suppressHydrationWarning
-                      key={hrs}
+            {/* Quick Add Form */}
+            <form onSubmit={handleAddSkill} className="space-y-1.5">
+              <div className="flex gap-1.5">
+                <input
+                  suppressHydrationWarning
+                  type="text"
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  placeholder="Add skill (e.g. Docker, Rust)..."
+                  className="flex-1 min-w-0 rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
+                />
+                <select
+                  suppressHydrationWarning
+                  value={skillLevel}
+                  onChange={(e) => setSkillLevel(e.target.value as any)}
+                  className="rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
+                >
+                  <option value="Beginner">Beg</option>
+                  <option value="Intermediate">Int</option>
+                  <option value="Advanced">Adv</option>
+                </select>
+                <button
+                  suppressHydrationWarning
+                  type="button"
+                  onClick={handleAddSkill}
+                  className="flex items-center justify-center rounded-md bg-white text-zinc-950 px-2.5 py-1 text-xs font-bold hover:bg-zinc-200 transition-colors cursor-pointer shrink-0"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </form>
+
+            {/* Skills Tag Cloud */}
+            <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto no-scrollbar">
+              {userSkills.map((skill) => (
+                <span
+                  key={skill.name}
+                  className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-zinc-950/80 px-2 py-0.5 text-[10px] font-mono text-zinc-200"
+                >
+                  <span className="font-semibold">{skill.name}</span>
+                  <span className="text-[9px] text-zinc-500">[{skill.level[0]}]</span>
+                  <button
+                    suppressHydrationWarning
+                    type="button"
+                    onClick={() => handleRemoveSkill(skill.name)}
+                    className="text-zinc-500 hover:text-red-400 transition-colors ml-0.5 cursor-pointer"
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
+                </span>
+              ))}
+            </div>
+
+            {/* Suggested Prerequisites Row */}
+            <div className="pt-1.5 border-t border-white/[0.06] space-y-1">
+              <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                Track Prerequisites:
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {activeTrack.suggestedPrereqs.map((item) => {
+                  const exists = userSkills.some((us) => us.name.toLowerCase() === item.toLowerCase());
+                  return (
+                    <button
+                      suppressHydrationWarning
                       type="button"
-                      onClick={() => setWeeklyCommitmentHours(hrs)}
-                      className={`rounded-md px-2.5 py-1 font-mono transition-all cursor-pointer ${
-                        weeklyCommitmentHours === hrs
-                          ? "bg-white text-zinc-950 font-bold shadow"
-                          : "bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                      key={item}
+                      disabled={exists}
+                      onClick={() => handleQuickAdd(item)}
+                      className={`rounded px-1.5 py-0.5 text-[10px] font-mono transition-colors ${
+                        exists
+                          ? "bg-zinc-950 text-zinc-600 border border-zinc-800 cursor-default line-through"
+                          : "bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-zinc-700 hover:text-white cursor-pointer"
                       }`}
                     >
-                      {hrs}h
+                      {!exists && "+ "}
+                      {item}
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
+            </div>
+          </div>
 
-              {/* Parameter 2: Background Baseline */}
-              <div className="space-y-1.5">
-                <label className="text-zinc-300 font-medium flex items-center gap-1.5">
-                  <UserCheck className="h-3.5 w-3.5 text-zinc-400" />
-                  Current Background
-                </label>
+          {/* CARD 3: TRAJECTORY PARAMETERS & PACING */}
+          <div className="rounded-xl border border-white/[0.08] bg-zinc-900/40 backdrop-blur-md p-3 space-y-2.5 shrink-0">
+            <div className="flex items-center justify-between pb-1.5 border-b border-white/[0.06]">
+              <div className="flex items-center gap-1.5">
+                <Sliders className="h-3.5 w-3.5 text-cyan-400" />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                  Trajectory & Pacing Settings
+                </h3>
+              </div>
+              <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                calculation.isPaceRealistic
+                  ? "border-emerald-800/60 bg-emerald-950/40 text-emerald-400"
+                  : "border-amber-800/60 bg-amber-950/40 text-amber-300"
+              }`}>
+                {calculation.isPaceRealistic ? "PACING REALISTIC" : "INTENSIVE PACE"}
+              </span>
+            </div>
+
+            {/* Hours Buttons */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
+                <span>WEEKLY COMMITMENT</span>
+                <span className="text-white font-bold">{weeklyCommitmentHours} hrs/week</span>
+              </div>
+              <div className="grid grid-cols-5 gap-1 text-[10px]">
+                {[10, 15, 20, 30, 40].map((hrs) => (
+                  <button
+                    suppressHydrationWarning
+                    type="button"
+                    key={hrs}
+                    onClick={() => setWeeklyCommitmentHours(hrs)}
+                    className={`rounded px-1.5 py-1 font-mono transition-all cursor-pointer text-center ${
+                      weeklyCommitmentHours === hrs
+                        ? "bg-white text-zinc-950 font-bold"
+                        : "bg-zinc-950 text-zinc-400 hover:bg-zinc-800 border border-zinc-800"
+                    }`}
+                  >
+                    {hrs}h
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Target Timeline & Modality Controls */}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="space-y-1">
+                <label className="text-[10px] font-mono text-zinc-400 uppercase">Target Horizon</label>
                 <select
-                  value={userBackground}
-                  onChange={(e) => setUserBackground(e.target.value)}
-                  suppressHydrationWarning className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
-                >
-                  <option value="Degree Candidate / Recent Graduate">University Degree / Graduate</option>
-                  <option value="Self-Taught Practitioner">Self-Taught Practitioner</option>
-                  <option value="Working Professional Upskilling">Working Professional</option>
-                  <option value="Cross-Domain Switcher">Career Switcher</option>
-                </select>
-              </div>
-
-              {/* Parameter 3: Target Timeline */}
-              <div className="space-y-1.5">
-                <label className="text-zinc-300 font-medium flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5 text-zinc-400" />
-                  Target Completion Window
-                </label>
-                <select suppressHydrationWarning
+                  suppressHydrationWarning
                   value={targetTimelineMonths}
                   onChange={(e) => setTargetTimelineMonths(Number(e.target.value))}
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
                 >
-                  <option value={3}>3 Months (Intensive)</option>
+                  <option value={3}>3 Months (Sprint)</option>
                   <option value={6}>6 Months (Balanced)</option>
                   <option value={9}>9 Months (Extended)</option>
                   <option value={12}>12 Months (Paced)</option>
                 </select>
               </div>
 
-              {/* Parameter 4: Learning Preference */}
-              <div className="space-y-1.5">
-                <label className="text-zinc-300 font-medium flex items-center gap-1.5">
-                  <BookOpen className="h-3.5 w-3.5 text-zinc-400" />
-                  Primary Learning Modality
-                </label>
-                <select suppressHydrationWarning
+              <div className="space-y-1">
+                <label className="text-[10px] font-mono text-zinc-400 uppercase">Primary Modality</label>
+                <select
+                  suppressHydrationWarning
                   value={learningPreference}
                   onChange={(e) => setLearningPreference(e.target.value)}
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
                 >
-                  <option value="Project-Based (Hands-on)">Project-Based Capstone Specs</option>
-                  <option value="Official Documentation">Official Manuals & Framework Docs</option>
-                  <option value="Academic Specifications">Research RFCs & Academic Papers</option>
+                  <option value="Project-Based (Hands-on)">Project-Based</option>
+                  <option value="Official Documentation">Official Manuals</option>
+                  <option value="Academic Specifications">Research RFCs</option>
                 </select>
               </div>
             </div>
 
-            {/* Pacing Assessment Banner */}
-            <div className="pt-2 border-t border-white/10 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div className="text-zinc-300">
-                Pacing calculation: At <strong className="text-white">{weeklyCommitmentHours} hours per week</strong>, you will complete the remaining <strong className="text-white">{calculation.remainingHours} curriculum hours</strong> in approximately <strong className="text-cyan-400">{calculation.weeksNeeded} weeks (~{calculation.monthsNeeded} months)</strong>.
-              </div>
-              <div>
-                {calculation.isPaceRealistic ? (
-                  <span className="inline-flex items-center gap-1 rounded-md border border-emerald-800/60 bg-emerald-950/40 px-2 py-0.5 text-[11px] font-mono text-emerald-400">
-                    <Check className="h-3 w-3" /> Target Window Feasible
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 rounded-md border border-amber-800/60 bg-amber-950/40 px-2 py-0.5 text-[11px] font-mono text-amber-400">
-                    <Clock className="h-3 w-3" /> Additional Weekly Hours Recommended
-                  </span>
-                )}
-              </div>
+            {/* Projection Output */}
+            <div className="rounded-md border border-white/[0.06] bg-zinc-950/60 p-2 flex items-center justify-between text-[11px] font-mono">
+              <span className="text-zinc-400">Est. Completion:</span>
+              <span className="text-cyan-300 font-semibold">{calculation.monthsNeeded} Months ({calculation.weeksNeeded} Weeks)</span>
             </div>
           </div>
+        </div>
 
-          {/* TWO COLUMN SECTION: SKILL INVENTORY + GAP ANALYSIS */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* COLUMN 1: SKILL INPUT */}
-            <div className="lg:col-span-1 rounded-xl border border-white/10 bg-zinc-900/60 p-5 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                <div className="flex items-center gap-2">
-                  <Code2 className="h-4 w-4 text-cyan-400" />
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                    Current Skill Inventory
-                  </h3>
-                </div>
-                <span className="text-xs font-mono text-zinc-400">
-                  {userSkills.length} entries
-                </span>
-              </div>
-
-              {/* Form */}
-              <form onSubmit={handleAddSkill} className="space-y-3">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-zinc-300">
-                    Add Technical Competency
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={skillInput}
-                      onChange={(e) => setSkillInput(e.target.value)}
-                      placeholder="e.g. PyTorch, DCF Valuation, Unity"
-                      suppressHydrationWarning className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
-                    />
-                    <button suppressHydrationWarning
-                      type="submit"
-                      className="flex items-center justify-center rounded-md bg-white text-zinc-950 px-3 py-1.5 text-xs font-bold hover:bg-zinc-200 transition-colors cursor-pointer"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-xs">
-                  <label className="text-zinc-400">Proficiency:</label>
-                  <div className="flex rounded-md border border-zinc-800 bg-zinc-950 p-0.5">
-                    {(["Beginner", "Intermediate", "Advanced"] as const).map((lvl) => (
-                      <button suppressHydrationWarning
-                        key={lvl}
-                        type="button"
-                        onClick={() => setSkillLevel(lvl)}
-                        className={`rounded px-2 py-0.5 transition-colors cursor-pointer ${
-                          skillLevel === lvl
-                            ? "bg-zinc-800 text-cyan-400 font-semibold"
-                            : "text-zinc-400 hover:text-zinc-200"
-                        }`}
-                      >
-                        {lvl}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </form>
-
-              {/* Tag list */}
-              <div className="space-y-2">
-                <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block">
-                  Active Items
-                </span>
-                <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto">
-                  {userSkills.map((s) => (
-                    <span
-                      key={s.name}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs text-zinc-200"
-                    >
-                      <span>{s.name}</span>
-                      <span className="text-[10px] font-mono text-zinc-400">[{s.level[0]}]</span>
-                      <button suppressHydrationWarning
-                        type="button"
-                        onClick={() => handleRemoveSkill(s.name)}
-                        className="text-zinc-400 hover:text-red-400 transition-colors ml-0.5 cursor-pointer"
-                        title="Remove"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  ))}
-                  {userSkills.length === 0 && (
-                    <p className="text-xs text-zinc-500 italic py-1">
-                      No skills listed. Add your competencies above.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Suggested Prerequisites for Current Track */}
-              <div className="pt-3 border-t border-white/10 space-y-2">
-                <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block">
-                  Recommended for {activeTrack.role}
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {activeTrack.suggestedPrereqs.map((item) => {
-                    const exists = userSkills.some((us) => us.name.toLowerCase() === item.toLowerCase());
-                    return (
-                      <button suppressHydrationWarning
-                        type="button"
-                        key={item}
-                        disabled={exists}
-                        onClick={() => handleQuickAdd(item)}
-                        className={`rounded-md px-2 py-0.5 text-xs transition-colors ${
-                          exists
-                            ? "bg-zinc-950 text-zinc-600 border border-zinc-800 cursor-default line-through"
-                            : "bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-zinc-700 hover:text-white cursor-pointer"
-                        }`}
-                      >
-                        {!exists && "+ "}
-                        {item}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* COLUMN 2: GAP ANALYSIS & TRACK REQUIREMENTS */}
-            <div className="lg:col-span-2 rounded-xl border border-white/[0.08] bg-zinc-900/50 p-5 space-y-4 shadow-xl backdrop-blur-xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]">
-              <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-cyan-400" />
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                    Curriculum Match Analysis
-                  </h3>
-                </div>
-                <span className="text-xs font-mono text-cyan-400">
-                  {calculation.matched.length} of {activeTrack.coreSkills.length} Core Requirements Met
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Matched */}
-                <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3.5 space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    <span>Verified Prerequisites ({calculation.matched.length})</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {calculation.matched.map((s) => (
-                      <span
-                        key={s}
-                        className="rounded-md border border-emerald-800/60 bg-emerald-950/40 px-2 py-0.5 text-xs font-mono text-emerald-300"
-                      >
-                        {s}
-                      </span>
-                    ))}
-                    {calculation.matched.length === 0 && (
-                      <span className="text-xs text-zinc-500">None registered yet.</span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Missing */}
-                <div className="rounded-md border border-zinc-800 bg-zinc-950 p-3.5 space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-400">
-                    <Target className="h-3.5 w-3.5" />
-                    <span>Missing Track Skills ({calculation.missing.length})</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {calculation.missing.map((s) => (
-                      <button suppressHydrationWarning
-                        type="button"
-                        key={s}
-                        onClick={() => handleQuickAdd(s)}
-                        className="rounded-md border border-amber-800/60 bg-amber-950/40 px-2 py-0.5 text-xs font-mono text-amber-300 hover:bg-amber-900/60 transition-colors cursor-pointer"
-                        title="Click to add to your skills"
-                      >
-                        + {s}
-                      </button>
-                    ))}
-                    {calculation.missing.length === 0 && (
-                      <span className="text-xs text-emerald-400 font-medium">All core prerequisites covered.</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Technical Assessment Summary */}
-              <div className="rounded-md border border-zinc-800 bg-zinc-950 p-4 space-y-1.5">
-                <div className="text-xs font-semibold text-white uppercase tracking-wider">
-                  Curriculum Assessment
-                </div>
-                <p className="text-xs text-zinc-300 leading-relaxed">
-                  {calculation.missing.length > 0 ? (
-                    <>
-                      The active track requires {activeTrack.coreSkills.length} core competencies. To reach full prerequisite coverage, prioritize the modules covering{" "}
-                      <strong className="text-white">{calculation.missing.slice(0, 3).join(", ")}</strong>. Click on any milestone below to inspect full syllabus breakdowns and practical project prompts.
-                    </>
-                  ) : (
-                    <>
-                      All defined core requirements for this track are satisfied in your skill inventory. Proceed to milestone checkpoint verification below.
-                    </>
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* MAIN ROADMAP AREA (Clickable Milestones with Glassy Inspector Modal) */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-white/10">
-              <div>
-                <h3 className="text-xl font-bold text-white tracking-tight">
-                  Syllabus & Milestone Progression
-                </h3>
-                <p className="text-xs text-zinc-400">
-                  Click any milestone card to open the Glassy Syllabus Inspector and practical project rubric.
-                </p>
-              </div>
-              <span className="text-xs font-mono text-zinc-400">
-                {activeTrack.phases.length} Total Phases ({calculation.totalWorkloadHours} Hours)
+        {/* RIGHT STAGE: 3-PHASE MILESTONE COMMAND BOARD */}
+        <div className="col-span-12 lg:col-span-8 xl:col-span-8.5 flex flex-col min-h-0 gap-2 overflow-hidden">
+          {/* STAGE HEADER BAR */}
+          <div className="h-9 shrink-0 flex items-center justify-between px-3 rounded-xl border border-white/10 bg-zinc-900/60 backdrop-blur-md">
+            <div className="flex items-center gap-2 text-xs truncate">
+              <span className="font-bold text-white uppercase tracking-wide font-mono">
+                {activeTrack.role}
+              </span>
+              <span className="text-zinc-600 font-mono">//</span>
+              <span className="text-zinc-400 text-[11px] hidden sm:inline truncate max-w-sm">
+                {activeTrack.description}
               </span>
             </div>
 
-            {/* Phases */}
-            <div className="space-y-4">
-              {activeTrack.phases.map((phase) => {
-                const PhaseIcon = phase.icon;
-                const isComplete = phase.milestones.every((m) => completedMilestones[m.id]);
+            <div className="flex items-center gap-2 text-xs font-mono shrink-0">
+              <span className="text-[10px] text-zinc-400">
+                {calculation.completedCount}/{calculation.totalMilestones} Verified
+              </span>
+              <div className="w-16 sm:w-24 h-1.5 rounded-sm bg-zinc-800 overflow-hidden">
+                <div
+                  className="h-full bg-cyan-400 transition-all duration-300"
+                  style={{ width: `${calculation.milestonePercentage}%` }}
+                />
+              </div>
+              <span className="text-[10px] font-bold text-cyan-300">
+                {calculation.milestonePercentage}%
+              </span>
+            </div>
+          </div>
 
-                return (
-                  <div
-                    key={phase.id}
-                    className="rounded-xl border border-white/10 bg-zinc-900/60 p-5 space-y-4"
-                  >
-                    {/* Phase Header */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-white/10">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white/5 text-zinc-300">
-                          <PhaseIcon className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-sm font-bold text-white">
-                              {phase.title}
-                            </h4>
-                            <span className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-mono text-zinc-300">
-                              {phase.badge}
-                            </span>
-                          </div>
-                          <p className="text-xs text-zinc-400 mt-0.5">{phase.description}</p>
-                        </div>
+          {/* 3-PHASE PARALLEL COLUMNS GRID (FLEX-1 MIN-H-0) */}
+          <div className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-3 gap-2 overflow-hidden">
+            {activeTrack.phases.map((phase, phaseIndex) => {
+              const PhaseIcon = phase.icon;
+              const isComplete = phase.milestones.every((m) => completedMilestones[m.id]);
+              const phaseDoneCount = phase.milestones.filter((m) => completedMilestones[m.id]).length;
+
+              return (
+                <div
+                  key={phase.id}
+                  className="rounded-xl border border-white/10 bg-zinc-900/40 backdrop-blur-md flex flex-col min-h-0 overflow-hidden"
+                >
+                  {/* Phase Column Header */}
+                  <div className="shrink-0 p-2.5 border-b border-white/10 bg-zinc-950/60 flex items-center justify-between">
+                    <div className="flex items-center gap-2 truncate">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-white/15 bg-white/5 text-zinc-300">
+                        <PhaseIcon className="h-3 w-3" />
                       </div>
-
-                      <div>
-                        {isComplete ? (
-                          <span className="inline-flex items-center gap-1 rounded-md border border-emerald-800/60 bg-emerald-950/40 px-2.5 py-1 text-xs font-medium text-emerald-400">
-                            <Check className="h-3 w-3" /> Phase Complete
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-800 px-2.5 py-1 text-xs font-medium text-zinc-400">
-                            <Clock className="h-3 w-3" /> In Progress
-                          </span>
-                        )}
+                      <div className="truncate">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] font-mono text-zinc-400 uppercase">{phase.badge}</span>
+                          <span className="text-[11px] font-bold text-white truncate">{phase.title}</span>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Milestones inside Phase */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {phase.milestones.map((m) => {
-                        const isDone = completedMilestones[m.id];
-                        return (
-                          <div
-                            key={m.id}
-                            onClick={() => setActiveModalMilestone(m)}
-                            className={`group relative cursor-pointer rounded-xl border p-4 space-y-3 transition-all duration-200 ${
-                              isDone
-                                ? "border-emerald-500/30 bg-zinc-950/90 text-zinc-300 hover:border-emerald-500/50"
-                                : "border-white/10 bg-zinc-950/60 hover:border-white/25 hover:bg-zinc-950/90"
-                            }`}
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="flex items-start gap-3">
-                                <button suppressHydrationWarning
-                                  type="button"
-                                  onClick={(e) => toggleMilestone(m.id, e)}
-                                  title={isDone ? "Mark Incomplete" : "Mark Complete"}
-                                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors cursor-pointer ${
-                                    isDone
-                                      ? "border-emerald-500 bg-emerald-500 text-zinc-950"
-                                      : "border-zinc-600 bg-zinc-900 text-transparent hover:border-white"
-                                  }`}
-                                >
-                                  <Check className="h-3 w-3 stroke-[3]" />
-                                </button>
-                                <div className="space-y-1">
-                                  <h5
-                                    className={`text-xs font-bold transition-colors ${
-                                      isDone ? "text-zinc-400 line-through decoration-zinc-600" : "text-white group-hover:text-cyan-300"
-                                    }`}
-                                  >
-                                    {m.title}
-                                  </h5>
-                                  <p className="text-xs text-zinc-400 leading-relaxed">
-                                    {m.description}
-                                  </p>
-                                </div>
-                              </div>
-                              <ArrowUpRight className="h-3.5 w-3.5 text-zinc-500 group-hover:text-white transition-colors shrink-0" />
-                            </div>
-
-                            {/* Required Skills */}
-                            <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
-                              <span className="text-zinc-500 font-mono text-[10px]">Skills:</span>
-                              {m.requiredSkills.map((req) => {
-                                const hasSkill = userSkills.some(
-                                  (us) => us.name.toLowerCase() === req.toLowerCase()
-                                );
-                                return (
-                                  <span
-                                    key={req}
-                                    className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-mono border ${
-                                      hasSkill
-                                        ? "border-emerald-800/60 bg-emerald-950/40 text-emerald-300"
-                                        : "border-zinc-800 bg-zinc-900 text-zinc-400"
-                                    }`}
-                                  >
-                                    {hasSkill && <Check className="h-2.5 w-2.5 inline mr-1 text-emerald-400" />}
-                                    {req}
-                                  </span>
-                                );
-                              })}
-                              <span className="ml-auto text-[10px] font-mono text-zinc-400">
-                                {m.workloadHours} Hours
-                              </span>
-                            </div>
-
-                            {/* Project Spec Prompt Preview */}
-                            <div className="rounded-md border border-white/10 bg-zinc-900/80 p-2 text-xs text-zinc-300 space-y-0.5">
-                              <div className="flex items-center gap-1 font-semibold text-zinc-200 text-[10px]">
-                                <Laptop className="h-3 w-3 text-cyan-400" /> Capstone Challenge:
-                              </div>
-                              <p className="text-[11px] text-zinc-400 line-clamp-1 italic">
-                                &quot;{m.projectPrompt}&quot;
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })}
+                    <div className="shrink-0 ml-1">
+                      {isComplete ? (
+                        <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[9px] font-mono font-medium border border-emerald-800/60 bg-emerald-950/40 text-emerald-400">
+                          <Check className="h-2.5 w-2.5" /> Complete
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[9px] font-mono text-zinc-400 border border-zinc-800 bg-zinc-900">
+                          {phaseDoneCount}/{phase.milestones.length}
+                        </span>
+                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
 
-        </main>
+                  {/* Scrollable Milestone List for this Phase */}
+                  <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar p-2 space-y-2">
+                    {phase.milestones.map((m) => {
+                      const isDone = completedMilestones[m.id];
+                      return (
+                        <div
+                          key={m.id}
+                          onClick={() => setActiveModalMilestone(m)}
+                          className={`group relative cursor-pointer rounded-lg border p-2.5 space-y-2 transition-all duration-150 ${
+                            isDone
+                              ? "border-emerald-500/30 bg-zinc-950/90 text-zinc-300 hover:border-emerald-500/50"
+                              : "border-white/10 bg-zinc-950/60 hover:border-white/25 hover:bg-zinc-950/90"
+                          }`}
+                        >
+                          {/* Top Row: Checkbox, Title, Hours */}
+                          <div className="flex items-start justify-between gap-1.5">
+                            <div className="flex items-start gap-2 min-w-0">
+                              <button
+                                suppressHydrationWarning
+                                type="button"
+                                onClick={(e) => toggleMilestone(m.id, e)}
+                                title={isDone ? "Mark Incomplete" : "Mark Complete"}
+                                className={`mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border transition-colors cursor-pointer ${
+                                  isDone
+                                    ? "border-emerald-500 bg-emerald-500 text-zinc-950"
+                                    : "border-zinc-600 bg-zinc-900 text-transparent hover:border-white"
+                                }`}
+                              >
+                                <Check className="h-2.5 w-2.5 stroke-[3]" />
+                              </button>
+                              <div className="min-w-0">
+                                <h4
+                                  className={`text-xs font-bold leading-tight transition-colors ${
+                                    isDone ? "text-zinc-400 line-through decoration-zinc-600" : "text-white group-hover:text-cyan-300"
+                                  }`}
+                                >
+                                  {m.title}
+                                </h4>
+                              </div>
+                            </div>
+                            <span className="text-[9px] font-mono text-zinc-400 shrink-0 border border-white/[0.06] bg-white/[0.02] px-1 rounded">
+                              {m.workloadHours}h
+                            </span>
+                          </div>
 
-        {/* SITE FOOTER */}
-        <footer className="border-t border-white/[0.08] bg-zinc-950 py-8 px-4 sm:px-6 lg:px-8 mt-12">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-white font-mono">ZYTHRON</span>
-              <span className="text-zinc-600">/</span>
-              <span>EXECUTIVE CURRICULUM ARCHITECTURE</span>
-            </div>
-            <div className="flex items-center gap-6">
-              <Link href="/privacy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="hover:text-white transition-colors">
-                Terms & Conditions
-              </Link>
-              <a
-                href="https://github.com/N-X-B/Zythron"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-white transition-colors inline-flex items-center gap-1"
-              >
-                GitHub <ExternalLink className="h-3 w-3" />
-              </a>
-            </div>
+                          {/* Description Snippet */}
+                          <p className="text-[11px] text-zinc-400 leading-snug line-clamp-2">
+                            {m.description}
+                          </p>
+
+                          {/* Required Skills Chips */}
+                          <div className="flex flex-wrap items-center gap-1 text-[10px]">
+                            {m.requiredSkills.map((req) => {
+                              const hasSkill = userSkills.some(
+                                (us) => us.name.toLowerCase() === req.toLowerCase()
+                              );
+                              return (
+                                <span
+                                  key={req}
+                                  className={`inline-flex items-center rounded px-1 py-0.2 text-[9px] font-mono border ${
+                                    hasSkill
+                                      ? "border-emerald-800/60 bg-emerald-950/40 text-emerald-300"
+                                      : "border-zinc-800 bg-zinc-900 text-zinc-400"
+                                  }`}
+                                >
+                                  {hasSkill && <Check className="h-2 w-2 mr-0.5 text-emerald-400" />}
+                                  {req}
+                                </span>
+                              );
+                            })}
+                          </div>
+
+                          {/* Capstone Challenge Snippet */}
+                          <div className="rounded border border-white/[0.06] bg-zinc-900/80 px-2 py-1 text-[10px] text-zinc-300 flex items-center justify-between gap-1">
+                            <span className="text-zinc-400 truncate italic">
+                              {m.projectPrompt}
+                            </span>
+                            <ArrowUpRight className="h-3 w-3 text-zinc-500 group-hover:text-cyan-300 transition-colors shrink-0" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </footer>
+        </div>
+      </main>
+
+      {/* FIXED BOTTOM STATUS BAR (20px) */}
+      <footer className="h-5 shrink-0 z-40 w-full border-t border-white/[0.08] bg-zinc-950 px-3 flex items-center justify-between text-[10px] font-mono text-zinc-500 select-none">
+        <div className="flex items-center gap-3">
+          <span>[ZYTHRON OS v2.4]</span>
+          <span className="hidden sm:inline text-zinc-600">//</span>
+          <span className="hidden sm:inline text-zinc-400">BACKEND NODE: 10.1.171.141:8000 (CONNECTED)</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="hidden md:inline">LATENCY: 12ms</span>
+          <span className="hidden md:inline text-zinc-600">//</span>
+          <span className="text-emerald-400">STATUS: NOMINAL</span>
+        </div>
+      </footer>
 
       {/* AMAZING GLASSY POPUP MODAL: MILESTONE INSPECTOR */}
       {activeModalMilestone && (
