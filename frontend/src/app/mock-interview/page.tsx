@@ -618,30 +618,6 @@ ${interviewerProfile.sensibility}`;
         </div>
       </nav>
 
-      {/* Camera Access Refused Alert Banner */}
-      {cameraPermissionStatus === "denied" && (
-        <div className="bg-amber-500/10 border-b border-amber-500/20 px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-3 animate-fade-up z-40">
-          <div className="flex items-center gap-3 text-amber-200 text-sm font-medium">
-            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>Camera access is blocked by browser permissions. Allow camera in site settings to enable video.</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={requestCameraPermission}
-              className="px-3.5 py-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-full border border-white/15 transition-all flex items-center gap-1.5 cursor-pointer"
-            >
-              <Camera className="w-3.5 h-3.5" /> Retry Request
-            </button>
-            <button
-              onClick={() => setShowCameraGuideModal(true)}
-              className="px-4 py-1.5 bg-amber-400 text-black font-extrabold text-xs rounded-full hover:bg-amber-300 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
-            >
-              ⚙️ How to Allow Manually
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Interactive Camera Unblock Guide Modal */}
       {showCameraGuideModal && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fade-up">
