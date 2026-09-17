@@ -1173,39 +1173,39 @@ export default function HyperPersonalizedCareerGuidance() {
         </div>
 
         {/* ─── 2-COLUMN WORKSTATION GRID ─── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
           {/* ─── LEFT COLUMN: PERSONALIZED CONTROLS & SKILL MATRIX (4 Cols) ─── */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-5">
 
             {/* Parameter Adjustment Panel */}
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-7 backdrop-blur-xl space-y-6 shadow-xl">
-              <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08]">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Sliders className="h-4 w-4 text-white" />
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 backdrop-blur-xl space-y-4 shadow-xl">
+              <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.08]">
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <Sliders className="h-3.5 w-3.5 text-white" />
                   Career Controls
                 </h3>
-                <span className="text-xs font-mono text-zinc-400">Live Tweak</span>
+                <span className="text-[10px] font-mono text-zinc-400">Live Tweak</span>
               </div>
 
               {/* Target Role Input */}
               <div>
-                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Target Role</label>
+                <label className="text-[11px] text-zinc-300 block mb-1 font-semibold">Target Role</label>
                 <input
                   type="text"
                   value={preferredRole}
                   onChange={(e) => setPreferredRole(e.target.value)}
-                  className="w-full bg-black/50 border border-white/15 px-4 py-3 rounded-xl text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                  className="w-full bg-black/50 border border-white/15 px-3 py-2 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-400 transition-colors"
                 />
               </div>
 
               {/* Experience Level Selector */}
               <div>
-                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Experience Level</label>
+                <label className="text-[11px] text-zinc-300 block mb-1 font-semibold">Experience Level</label>
                 <select
                   value={experienceLevel}
                   onChange={(e) => setExperienceLevel(e.target.value as any)}
-                  className="w-full bg-black/50 border border-white/15 px-4 py-3 rounded-xl text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
+                  className="w-full bg-black/50 border border-white/15 px-3 py-2 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-400 transition-colors"
                 >
                   <option value="Junior">Junior Tier (0-2 YOE)</option>
                   <option value="Mid">Mid-Level Tier (2-5 YOE)</option>
@@ -1215,13 +1215,13 @@ export default function HyperPersonalizedCareerGuidance() {
 
               {/* Target Company Tier Selector */}
               <div>
-                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Target Employer Tier</label>
-                <div className="grid grid-cols-3 gap-2 text-xs">
+                <label className="text-[11px] text-zinc-300 block mb-1 font-semibold">Target Employer Tier</label>
+                <div className="grid grid-cols-3 gap-1.5 text-[11px]">
                   {(["Tier 1 Big Tech", "AI Unicorn", "High-Growth"] as const).map((tier) => (
                     <button
                       key={tier}
                       onClick={() => setTargetCompanyTier(tier)}
-                      className={`py-2.5 px-2 rounded-xl border text-center font-medium transition-all ${
+                      className={`py-1.5 px-1.5 rounded-lg border text-center font-medium transition-all text-[11px] ${
                         targetCompanyTier === tier
                           ? "bg-white text-black font-bold border-white shadow-md"
                           : "bg-black/40 border-white/10 text-zinc-400 hover:text-white"
@@ -1235,27 +1235,27 @@ export default function HyperPersonalizedCareerGuidance() {
 
               {/* Interactive Skill Chips Editor */}
               <div>
-                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Your Current Skills ({userSkills.length})</label>
-                <div className="flex gap-2 mb-2.5">
+                <label className="text-[11px] text-zinc-300 block mb-1 font-semibold">Your Current Skills ({userSkills.length})</label>
+                <div className="flex gap-2 mb-2">
                   <input
                     type="text"
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
                     placeholder="Add skill (e.g. Docker)..."
-                    className="flex-1 bg-black/50 border border-white/15 px-4 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-cyan-400"
+                    className="flex-1 bg-black/50 border border-white/15 px-3 py-2 rounded-lg text-xs text-white focus:outline-none focus:border-cyan-400"
                   />
-                  <button onClick={handleAddSkill} className="bg-white text-black px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-zinc-200 transition-colors">
-                    <Plus className="h-4 w-4" />
+                  <button onClick={handleAddSkill} className="bg-white text-black px-3 py-2 rounded-lg text-xs font-bold hover:bg-zinc-200 transition-colors">
+                    <Plus className="h-3.5 w-3.5" />
                   </button>
                 </div>
 
-                <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto">
+                <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
                   {userSkills.map((s) => (
-                    <span key={s.name} className="inline-flex items-center gap-2 text-xs bg-white/[0.06] text-zinc-200 px-3.5 py-1.5 rounded-full border border-white/15 font-medium">
+                    <span key={s.name} className="inline-flex items-center gap-1.5 text-[11px] bg-white/[0.06] text-zinc-200 px-2.5 py-1 rounded-full border border-white/15 font-medium">
                       {s.name}
                       <button onClick={() => handleRemoveSkill(s.name)} className="text-zinc-400 hover:text-white">
-                        <X className="h-3.5 w-3.5" />
+                        <X className="h-3 w-3" />
                       </button>
                     </span>
                   ))}
@@ -1266,16 +1266,16 @@ export default function HyperPersonalizedCareerGuidance() {
               <button
                 onClick={handleSynthesizeAIRoadmap}
                 disabled={isGeneratingRoadmap}
-                className="w-full bg-white text-black font-extrabold py-4 rounded-2xl text-sm hover:bg-zinc-200 transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-xl disabled:opacity-50"
+                className="w-full bg-white text-black font-bold py-3 rounded-xl text-xs hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
               >
                 {isGeneratingRoadmap ? (
                   <>
-                    <Sparkles className="h-4 w-4 animate-spin text-black" />
+                    <Sparkles className="h-3.5 w-3.5 animate-spin text-black" />
                     Querying Pinecone Vector Data...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-4 w-4 text-black" />
+                    <Sparkles className="h-3.5 w-3.5 text-black" />
                     Synthesize Personalized AI Roadmap
                   </>
                 )}
@@ -1283,18 +1283,18 @@ export default function HyperPersonalizedCareerGuidance() {
 
               {/* Live AI RAG Vector-Synthesized Roadmap Result */}
               {aiRoadmapOutput && (
-                <div className="bg-[#0f0f0f] border border-white/10 p-5 rounded-2xl space-y-4 font-sans text-xs shadow-2xl animate-fade-in">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 gap-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-                        <Sparkles className="h-4 w-4 text-white" />
+                <div className="bg-[#0f0f0f] border border-white/10 p-4 rounded-xl space-y-3 font-sans text-xs shadow-2xl animate-fade-in">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-2.5 gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-md bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                        <Sparkles className="h-3.5 w-3.5 text-white" />
                       </div>
                       <div>
-                        <span className="font-bold text-white uppercase tracking-wider text-xs font-mono block">
+                        <span className="font-bold text-white uppercase tracking-wider text-[11px] font-mono block">
                           Live AI RAG Vector Synthesis
                         </span>
                         {topJobMatch && (
-                          <span className="text-[11px] text-zinc-400 font-mono block truncate max-w-[280px]">
+                          <span className="text-[10px] text-zinc-400 font-mono block truncate max-w-[220px]">
                             Matched: <span className="text-zinc-200 font-semibold">{topJobMatch.title}</span>
                           </span>
                         )}
@@ -1302,13 +1302,13 @@ export default function HyperPersonalizedCareerGuidance() {
                     </div>
 
                     {topJobMatch && (
-                      <span className="text-[10px] font-mono bg-white/10 text-white px-3 py-1 rounded-full border border-white/10 font-bold shrink-0 self-start sm:self-auto">
+                      <span className="text-[10px] font-mono bg-white/10 text-white px-2.5 py-0.5 rounded-full border border-white/10 font-bold shrink-0 self-start sm:self-auto">
                         {Math.round((topJobMatch.match_score || 0.85) * 100)}% Match
                       </span>
                     )}
                   </div>
 
-                  <div className="max-h-80 overflow-y-auto space-y-2 pr-1.5 scrollbar-thin scrollbar-thumb-white/10">
+                  <div className="max-h-72 overflow-y-auto space-y-2 pr-1 scrollbar-thin scrollbar-thumb-white/10">
                     {renderFormattedRoadmap(aiRoadmapOutput)}
                   </div>
                 </div>
@@ -1316,19 +1316,19 @@ export default function HyperPersonalizedCareerGuidance() {
             </div>
 
             {/* Personalized Skill Gap Analysis Matrix */}
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-xl space-y-4 shadow-xl">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 backdrop-blur-xl space-y-3.5 shadow-xl">
               <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-white" />
+                <BarChart3 className="h-3.5 w-3.5 text-white" />
                 Personalized Competency Matrix
               </h3>
 
               {/* Acquired vs Missing */}
-              <div className="space-y-3 font-mono text-xs">
+              <div className="space-y-2.5 font-mono text-xs">
                 <div>
                   <span className="text-[10px] text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Acquired Strengths ({acquiredSkills.length})</span>
                   <div className="flex flex-wrap gap-1">
                     {acquiredSkills.map((sk) => (
-                      <span key={sk} className="text-[10px] bg-white/5 text-zinc-300 px-2.5 py-0.5 rounded-full border border-white/10">
+                      <span key={sk} className="text-[10px] bg-white/5 text-zinc-300 px-2 py-0.5 rounded-md border border-white/10">
                         ✓ {sk}
                       </span>
                     ))}
@@ -1336,18 +1336,18 @@ export default function HyperPersonalizedCareerGuidance() {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">Target Gaps ({missingSkills.length})</span>
-                    <span className="text-[9px] text-zinc-500 font-mono">Verify skill in Code Arena</span>
+                    <span className="text-[9px] text-zinc-500 font-mono">Verify in Code Arena</span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1">
                     {missingSkills.map((sk) => {
                       const isVerified = verifiedSkills.includes(sk);
                       return (
                         <Link
                           key={sk}
                           href={`/code-arena?skill=${encodeURIComponent(sk)}`}
-                          className={`text-[10px] px-2.5 py-1 rounded-full border transition-all flex items-center gap-1 font-mono ${
+                          className={`text-[10px] px-2 py-0.5 rounded-md border transition-all flex items-center gap-1 font-mono ${
                             isVerified
                               ? "bg-white/10 text-white border-white/20 shadow-sm"
                               : "bg-zinc-900 text-zinc-300 border-zinc-700 hover:bg-zinc-800 hover:border-zinc-500"
@@ -1361,7 +1361,7 @@ export default function HyperPersonalizedCareerGuidance() {
                           ) : (
                             <>
                               <span>+ {sk}</span>
-                              <span className="text-[9px] bg-white/10 text-zinc-200 px-1 py-0.5 rounded font-bold hover:bg-white hover:text-black transition-colors ml-0.5">
+                              <span className="text-[9px] bg-white/10 text-zinc-200 px-1 py-0.2 rounded font-bold hover:bg-white hover:text-black transition-colors ml-0.5">
                                 Verify ⚡
                               </span>
                             </>
@@ -1377,87 +1377,98 @@ export default function HyperPersonalizedCareerGuidance() {
           </div>
 
           {/* ─── RIGHT COLUMN: 3-PHASE CURRICULUM & CODE ARENA WORKSTATION (8 Cols) ─── */}
-          <div className="lg:col-span-8 space-y-6">
+          <div className="lg:col-span-8 space-y-5">
 
             {/* 🚀 PROMINENT CODE ARENA WORKSTATION CARD */}
-            <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-7 md:p-8 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 font-mono relative overflow-hidden group">
-              <div className="space-y-2 z-10">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs uppercase font-bold text-zinc-300 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
+            <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-5 md:p-6 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 font-mono relative overflow-hidden group">
+              <div className="space-y-1.5 z-10">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-bold text-zinc-300 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full">
                     Interactive IDE Workstation
                   </span>
-                  <span className="text-xs text-zinc-300 font-sans">Python & TypeScript Sandbox</span>
+                  <span className="text-[11px] text-zinc-400 font-sans">Python & TypeScript Sandbox</span>
                 </div>
-                <h3 className="text-xl md:text-2xl font-black text-white flex items-center gap-2.5 tracking-tight">
-                  <Code2 className="h-6 w-6 text-white" />
+                <h3 className="text-lg md:text-xl font-bold text-white flex items-center gap-2 tracking-tight">
+                  <Code2 className="h-5 w-5 text-white" />
                   LeetCode & System Design Code Arena
                 </h3>
-                <p className="text-sm text-zinc-300 font-sans max-w-xl leading-relaxed">
+                <p className="text-xs text-zinc-300 font-sans max-w-xl leading-relaxed">
                   Practice live data structure algorithms, token bucket rate limiters, and vector similarity metrics with AI test runners and Big-O complexity profiling.
                 </p>
               </div>
 
               <Link
                 href="/code-arena"
-                className="z-10 bg-white text-black font-extrabold px-6 py-3.5 rounded-2xl text-sm hover:bg-zinc-200 transition-all flex items-center gap-2 shrink-0 shadow-xl group-hover:scale-105"
+                className="z-10 bg-white text-black font-extrabold px-5 py-2.5 rounded-xl text-xs hover:bg-zinc-200 transition-all flex items-center gap-1.5 shrink-0 shadow-xl group-hover:scale-105"
               >
                 <span>Launch Code Arena</span>
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
 
             {/* 3 Phase Cards Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Compass className="h-5 w-5 text-white" />
+                <h2 className="text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <Compass className="h-4.5 w-4.5 text-white" />
                   Adaptive Custom Curriculum
                 </h2>
-                <p className="text-xs text-zinc-300">Click any milestone card to inspect syllabus topics, capstones & docs</p>
+                <p className="text-[11px] text-zinc-400">Click any milestone card to inspect syllabus topics, capstones & docs</p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <button
                   onClick={() => setShowAddPhaseModal(true)}
-                  className="px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/10 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-lg active:scale-95 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-white border border-white/10 text-xs font-semibold transition-all flex items-center gap-1 shadow-lg active:scale-95 cursor-pointer"
                 >
-                  <Plus className="h-4 w-4 text-white" />
+                  <Plus className="h-3.5 w-3.5 text-white" />
                   Add Specialized Phase
                 </button>
-                <span className="text-xs font-mono font-bold text-white bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full">
+                <span className="text-xs font-mono font-bold text-white bg-white/5 border border-white/10 px-3 py-1 rounded-full">
                   {progressPercent}% Complete ({completedCount}/{totalMilestones})
                 </span>
               </div>
             </div>
 
             {/* 3 Phase Parallel Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {activeRoadmapPhases.map((phase) => {
                 const PhaseIcon = phase.icon;
+                const titleParts = phase.title.includes(":") ? phase.title.split(": ") : ["", phase.title];
+                const phasePrefix = titleParts[0];
+                const phaseCleanTitle = titleParts.length > 1 ? titleParts.slice(1).join(": ") : phase.title;
+
                 return (
                   <div
                     key={phase.id}
                     onClick={() => setActiveModalPhase(phase)}
-                    className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6 space-y-5 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-white/30 transition-all cursor-pointer group relative min-h-[340px]"
+                    className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-4 space-y-4 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-white/20 transition-all cursor-pointer group relative min-h-[300px]"
                   >
                     <div>
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs font-mono uppercase tracking-widest px-3 py-1 rounded-full bg-white/10 text-zinc-200 border border-white/10 font-bold">
-                          {phase.badge}
-                        </span>
-                        <div className="flex items-center gap-1.5 text-zinc-400 group-hover:text-white transition-colors">
-                          <span className="text-xs font-medium">Overview</span>
-                          <PhaseIcon className="h-4.5 w-4.5" />
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          {phasePrefix && (
+                            <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-white/10 text-white border border-white/15 font-bold">
+                              {phasePrefix}
+                            </span>
+                          )}
+                          <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md bg-white/5 text-zinc-400 border border-white/10">
+                            {phase.badge}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 text-zinc-400 group-hover:text-white transition-colors">
+                          <span className="text-[11px] font-medium">Overview</span>
+                          <PhaseIcon className="h-3.5 w-3.5" />
                         </div>
                       </div>
-                      <h3 className="text-sm md:text-base font-extrabold text-white group-hover:text-zinc-200 transition-colors leading-snug mb-1.5 flex items-center justify-between">
-                        <span>{phase.title}</span>
-                        <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors shrink-0 ml-1" />
+                      <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-zinc-200 transition-colors leading-snug mb-1 flex items-center justify-between">
+                        <span>{phaseCleanTitle}</span>
+                        <ChevronRight className="h-3.5 w-3.5 text-zinc-400 group-hover:text-white transition-colors shrink-0 ml-1" />
                       </h3>
-                      <p className="text-xs md:text-sm text-zinc-300 leading-relaxed line-clamp-3">{phase.description}</p>
+                      <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">{phase.description}</p>
                     </div>
 
                     {/* Milestones inside Phase */}
-                    <div className="space-y-2.5 pt-4 border-t border-white/[0.08]">
+                    <div className="space-y-2 pt-3 border-t border-white/[0.08]">
                       {phase.milestones.map((m) => {
                         const isDone = completedMilestones[m.id];
                         return (
@@ -1467,29 +1478,29 @@ export default function HyperPersonalizedCareerGuidance() {
                               e.stopPropagation();
                               setActiveModalMilestone(m);
                             }}
-                            className="p-3.5 rounded-2xl border bg-black/40 border-white/10 hover:border-white/30 transition-all cursor-pointer group/m"
+                            className="p-2.5 rounded-xl border bg-black/40 border-white/10 hover:border-white/25 transition-all cursor-pointer group/m"
                           >
-                            <div className="flex items-start justify-between gap-2.5">
-                              <div className="flex items-start gap-2.5">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex items-start gap-2 min-w-0">
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleMilestone(m.id);
                                   }}
-                                  className={`mt-0.5 h-4.5 w-4.5 rounded-md flex items-center justify-center transition-colors ${
+                                  className={`mt-0.5 h-4 w-4 rounded flex items-center justify-center shrink-0 transition-colors ${
                                     isDone ? "bg-white text-black font-bold" : "border border-zinc-600 hover:border-zinc-300"
                                   }`}
                                 >
-                                  {isDone && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                                  {isDone && <Check className="h-3 w-3 stroke-[3]" />}
                                 </button>
-                                <div>
-                                  <h4 className="text-xs md:text-sm font-bold text-white group-hover/m:text-zinc-200 transition-colors leading-snug">
+                                <div className="min-w-0">
+                                  <h4 className="text-xs font-semibold text-white group-hover/m:text-zinc-200 transition-colors leading-tight line-clamp-2">
                                     {m.title}
                                   </h4>
-                                  <span className="text-xs font-mono text-zinc-400">{m.workloadHours}h study hours</span>
+                                  <span className="text-[10px] font-mono text-zinc-400 block mt-0.5">{m.workloadHours}h study hours</span>
                                 </div>
                               </div>
-                              <ChevronRight className="h-4 w-4 text-zinc-400 group-hover/m:text-white transition-colors shrink-0 mt-0.5" />
+                              <ChevronRight className="h-3.5 w-3.5 text-zinc-400 group-hover/m:text-white transition-colors shrink-0 mt-0.5" />
                             </div>
                           </div>
                         );
