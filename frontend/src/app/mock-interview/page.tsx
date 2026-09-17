@@ -58,6 +58,7 @@ export default function MockInterview() {
   const [cameraPermissionStatus, setCameraPermissionStatus] = useState<"prompt" | "granted" | "denied">("prompt");
   const [cameraErrorMessage, setCameraErrorMessage] = useState<string>("");
   const [showCameraGuideModal, setShowCameraGuideModal] = useState<boolean>(false);
+  const [guideTab, setGuideTab] = useState<"mac" | "browser">("mac");
 
   const [aiTranscript, setAiTranscript] = useState(
     "Hello! I'm your AI interviewer. Whenever you're ready, select a domain track to begin."
@@ -654,56 +655,125 @@ ${interviewerProfile.sensibility}`;
 
             <div className="space-y-2 border-b border-white/10 pb-4 pr-8">
               <div className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full font-bold">
-                <AlertTriangle className="h-3 w-3" /> Browser Security Unblock Guide
+                <AlertTriangle className="h-3 w-3" /> Camera Privacy & Security Guide
               </div>
               <h2 className="text-2xl font-extrabold text-white">How to Allow Camera Access</h2>
               <p className="text-xs text-zinc-400">
-                When a browser blocks camera permission once, JavaScript cannot force prompt again until you enable it in site settings.
+                Camera access must be granted both at the macOS System Privacy level and the Browser level.
               </p>
             </div>
 
-            <div className="space-y-4 font-sans text-xs">
-              
-              {/* Step 1 */}
-              <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
-                <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
-                  1
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-sm">Click the Lock / Site Settings Icon</h3>
-                  <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
-                    Look at your browser address bar at the top left (next to <code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">http://localhost:3002</code>). Click the <strong>🔒 Lock</strong> or <strong>tune/settings icon</strong>.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 2 */}
-              <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
-                <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
-                  2
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-sm">Change Camera Permission to "Allow"</h3>
-                  <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
-                    In the dropdown menu, locate <strong>Camera</strong> and toggle it from <strong>Block / Ask</strong> to <strong>Allow</strong>.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
-                <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
-                  3
-                </div>
-                <div>
-                  <h3 className="font-bold text-white text-sm">Reload Page</h3>
-                  <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
-                    Click the <strong>Reload Page</strong> button below or press <code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">Cmd + R</code> (<code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">Ctrl + R</code>).
-                  </p>
-                </div>
-              </div>
-
+            {/* Tab Switcher: macOS Privacy vs Browser Site Settings */}
+            <div className="flex bg-black/60 p-1 rounded-2xl border border-white/10 font-mono text-xs">
+              <button
+                onClick={() => setGuideTab("mac")}
+                className={`flex-1 py-2 rounded-xl transition-all cursor-pointer font-bold ${
+                  guideTab === "mac" ? "bg-white text-black shadow-lg" : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                 macOS System Settings
+              </button>
+              <button
+                onClick={() => setGuideTab("browser")}
+                className={`flex-1 py-2 rounded-xl transition-all cursor-pointer font-bold ${
+                  guideTab === "browser" ? "bg-white text-black shadow-lg" : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                🔒 Browser Address Bar
+              </button>
             </div>
+
+            {/* TAB 1: macOS System Settings */}
+            {guideTab === "mac" && (
+              <div className="space-y-4 font-sans text-xs animate-fade-in">
+                
+                {/* Step 1 */}
+                <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                  <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-sm">Open macOS System Settings</h3>
+                    <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                      Click the <strong> Apple Icon</strong> in top-left Mac bar → <strong>System Settings...</strong>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                  <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-sm">Select Privacy & Security → Camera</h3>
+                    <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                      In the left sidebar, click <strong>Privacy & Security</strong> (🔒 icon). Scroll down and click <strong>Camera</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                  <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-sm">Turn ON your Browser Toggle</h3>
+                    <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                      Turn the toggle switch <strong>ON</strong> next to <strong>Google Chrome</strong>, <strong>Safari</strong>, <strong>Brave</strong>, or <strong>Arc</strong>.
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            )}
+
+            {/* TAB 2: Browser Site Settings */}
+            {guideTab === "browser" && (
+              <div className="space-y-4 font-sans text-xs animate-fade-in">
+                
+                {/* Step 1 */}
+                <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                  <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-sm">Click the 🔒 Lock Icon in Address Bar</h3>
+                    <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                      At top left next to <code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">http://localhost:3002</code>, click <strong>🔒 Lock / Site Settings</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                  <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-sm">Change Camera to "Allow"</h3>
+                    <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                      Find <strong>Camera</strong> in the list and toggle it from <strong>Block</strong> to <strong>Allow</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                  <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-sm">Reload Page</h3>
+                    <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                      Click <strong>Reload Page</strong> below or press <code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">Cmd + R</code>.
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            )}
 
             <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-3">
               <button
