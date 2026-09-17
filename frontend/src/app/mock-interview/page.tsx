@@ -4,9 +4,47 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { interviewerProfile } from "../../config/voiceProfile";
-import { LogOut, ArrowRight, Zap } from "lucide-react";
+import { LogOut, ArrowRight, Zap, Camera, CameraOff, AlertTriangle } from "lucide-react";
 
 type InterviewState = "setup" | "interview" | "report";
+
+const DOMAIN_PREFACES: Record<string, { preface: string; starter: string }> = {
+  "DSA": {
+    preface: "Focus strictly on Data Structures & Algorithms, Big-O time and space complexity, edge cases, recursion vs iteration, pointer management, and optimal execution.",
+    starter: "Welcome to your DSA Technical Interview. Let's evaluate your algorithmic problem-solving and Big-O trade-offs. To kick off: How would you detect a cycle in a directed graph, and what are the time and space complexity trade-offs between BFS and Tarjan's DFS algorithm?"
+  },
+  "System Design": {
+    preface: "Focus strictly on High-Scale Distributed Systems Architecture, microservices, throughput (QPS), DB partitioning, Redis caching, Kafka message streaming, Raft consensus, p99 SLAs, and fault tolerance.",
+    starter: "Welcome to your System Design Interview. Today we're building a real-time global vector search pipeline handling 100,000 QPS with sub-50ms latency. How would you architect the ingestion pipeline, index partitioning, and Redis caching layer to ensure zero single-point-of-failure?"
+  },
+  "Fundamentals": {
+    preface: "Focus strictly on CS Core Fundamentals: OS internals (processes/threads, virtual memory, locks/mutexes, race conditions), Networking (TCP 4-way handshake, HTTP/3 QUIC, TLS 1.3), Database ACID isolation, and OOP paradigms.",
+    starter: "Welcome to your CS Fundamentals Interview. Let me test your OS internals & Networking depth: Walk me through what happens under the hood in kernel space when a process calls fork(), and how Copy-On-Write (COW) memory paging operates under high load."
+  },
+  "MAANG": {
+    preface: "Imitate Tier-1 Big Tech (Google, Meta, Amazon, Apple, Netflix) hiring bar. Hold candidate to extreme precision, critique shallow answers, require microsecond-level performance trade-offs, and evaluate Leadership Principles.",
+    starter: "Welcome to your Tier-1 MAANG Technical Screening. At Big Tech scale, every millisecond counts. Tell me about a time you optimized a critical service under a 10x traffic spike. What exact CPU/memory profiling did you perform, and what trade-offs did you make?"
+  },
+  "Behavioral": {
+    preface: "Evaluate strictly using the STAR methodology (Situation, Task, Action, Result). Critique responses for lack of quantifiable metrics, vague team ownership, or weak conflict resolution.",
+    starter: "Welcome to your Behavioral & Leadership Interview. I evaluate responses strictly using the STAR methodology (Situation, Task, Action, Result). Tell me about a time you strongly disagreed with a Principal Architect on project direction. How did you handle the conflict, and what was the quantifiable result?"
+  },
+  "Full-Stack": {
+    preface: "Focus on Modern Full-Stack & Web Architecture, React 19 / Server Components, Next.js streaming hydration, async Python APIs (FastAPI/Uvicorn), WebSockets, state management, and edge performance.",
+    starter: "Welcome to your Full-Stack & Web Architecture Interview. In modern Next.js App Router applications with React Server Components, explain how streaming SSR with Suspense interacts with client hydration, and how you avoid async waterfall requests."
+  }
+};
+
+const getDomainData = (topic: string) => {
+  const norm = (topic || "").toLowerCase();
+  if (norm.includes("dsa")) return DOMAIN_PREFACES["DSA"];
+  if (norm.includes("system")) return DOMAIN_PREFACES["System Design"];
+  if (norm.includes("fund")) return DOMAIN_PREFACES["Fundamentals"];
+  if (norm.includes("maang")) return DOMAIN_PREFACES["MAANG"];
+  if (norm.includes("behav")) return DOMAIN_PREFACES["Behavioral"];
+  if (norm.includes("full") || norm.includes("web")) return DOMAIN_PREFACES["Full-Stack"];
+  return DOMAIN_PREFACES["DSA"];
+};
 
 export default function MockInterview() {
   const router = useRouter();
@@ -16,8 +54,12 @@ export default function MockInterview() {
   const [userName, setUserName] = useState("shrinish suyash");
   const [selectedTopic, setSelectedTopic] = useState("DSA");
 
+  // Camera Access State
+  const [cameraPermissionStatus, setCameraPermissionStatus] = useState<"prompt" | "granted" | "denied">("prompt");
+  const [cameraErrorMessage, setCameraErrorMessage] = useState<string>("");
+
   const [aiTranscript, setAiTranscript] = useState(
-    "Hello! I'm your AI interviewer. Whenever you're ready, tell me a bit about yourself."
+    "Hello! I'm your AI interviewer. Whenever you're ready, select a domain track to begin."
   );
   const [userTranscript, setUserTranscript] = useState("");
 
@@ -32,6 +74,22 @@ export default function MockInterview() {
   const [isScanningResume, setIsScanningResume] = useState(false);
   const [resumeScanResult, setResumeScanResult] = useState<any>(null);
 
+  const requestCameraPermission = async () => {
+    if (typeof window === "undefined" || !navigator.mediaDevices) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      setCameraPermissionStatus("granted");
+      setCameraErrorMessage("");
+    } catch (err: any) {
+      console.warn("Camera permission denied or refused:", err);
+      setCameraPermissionStatus("denied");
+      setCameraErrorMessage("Camera permission was refused or blocked by the browser. Click to re-request camera access.");
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("zythron_user");
@@ -42,6 +100,9 @@ export default function MockInterview() {
           else if (parsed.email) setUserName(parsed.email.split("@")[0]);
         } catch (e) {}
       }
+
+      // Always request camera permission whenever the site loads
+      requestCameraPermission();
 
       const SpeechRecognition =
         (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -86,8 +147,17 @@ export default function MockInterview() {
   const startInterview = (topic: string = "DSA") => {
     setSelectedTopic(topic);
     setAppState("interview");
-    setAiTranscript(`Hello! I'm your ${topic} AI technical interviewer. Whenever you're ready, let's begin.`);
-    speakText(`Hello! I'm your ${topic} AI technical interviewer. Whenever you're ready, let's begin.`);
+    requestCameraPermission();
+
+    const domainData = getDomainData(topic);
+    const starterGreeting = domainData.starter;
+
+    setMessages([
+      { role: "user", content: `I am ready for the ${topic} technical interview.` },
+      { role: "assistant", content: starterGreeting }
+    ]);
+    setAiTranscript(starterGreeting);
+    speakText(starterGreeting);
   };
 
   const toggleListen = () => {
@@ -110,7 +180,7 @@ export default function MockInterview() {
     {
       role: "assistant",
       content:
-        "Hello! I'm Sara, your AI interviewer. Whenever you're ready, tell me a bit about yourself.",
+        "Hello! I'm Sara, your AI technical interviewer. Select a domain track to begin.",
     },
   ]);
 
@@ -127,14 +197,7 @@ export default function MockInterview() {
 
   useEffect(() => {
     if (appState === "interview") {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false })
-        .then((stream) => {
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        })
-        .catch((err) => console.error("Webcam access denied:", err));
+      requestCameraPermission();
     }
   }, [appState]);
 
@@ -148,18 +211,18 @@ export default function MockInterview() {
     const GROQ_API_KEY = process.env.NEXT_PUBLIC_GROQ_API_KEY || "YOUR_GROQ_API_KEY";
     const newUserMessage = { role: "user", content: message };
     const payloadHistory = [...messages, newUserMessage];
+    const domainData = getDomainData(selectedTopic);
 
-    const systemPrompt = `You are an elite AI technical interviewer built to conduct a ${selectedTopic} interview.
+    const systemPrompt = `You are an elite AI technical interviewer conducting a ${selectedTopic} interview.
 
-INTERVIEW STRUCTURE:
-1. Introduction: Acknowledge candidate's statement and probe their technical depth on ${selectedTopic}.
-2. Deep Technical Questions: Ask specific problem-solving, trade-off, and architectural edge case questions on ${selectedTopic}.
-3. Push Back: If they give shallow answers, ask them to clarify details or use the STAR method.
+PREFACE & TECHNICAL DOMAIN SPECIFICATION:
+${domainData.preface}
 
-STRICT RULES:
-- Ask exactly ONE question at a time.
-- Listen carefully to their previous answer and base your next question directly on it.
-- Keep responses concise and conversational.
+INTERVIEW STRUCTURE & RULES:
+1. Listen carefully to candidate's previous response and evaluate depth strictly against the ${selectedTopic} domain preface above.
+2. Ask ONE focused, domain-specific technical question at a time.
+3. Push back on missing edge cases, buzzwords, or superficial trade-offs.
+4. Keep responses concise, direct, and conversational.
 ${interviewerProfile.sensibility}`;
 
     try {
@@ -168,14 +231,16 @@ ${interviewerProfile.sensibility}`;
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           role: `${selectedTopic} Engineer`,
+          topic: selectedTopic,
+          domain: selectedTopic,
           answer: message,
-          question: `Live ${selectedTopic} technical screening`,
+          question: `Live ${selectedTopic} technical evaluation`,
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const replyText = data.feedback || "Thank you for that response. Let's continue.";
+        const replyText = data.feedback || data.next_question || "Thank you for that response. Let's proceed to the next technical challenge.";
         setMessages([...payloadHistory, { role: "assistant", content: replyText }]);
         setUserTranscript("");
         setAiTranscript(replyText);
@@ -210,7 +275,7 @@ ${interviewerProfile.sensibility}`;
         }
       } catch (e) {}
 
-      const fallbackReply = `Good explanation of ${selectedTopic}. In production, how would you address scalability boundaries and failure recovery under high load?`;
+      const fallbackReply = `Regarding ${selectedTopic}: How would you address real-world edge cases and failure recovery under high load?`;
       setMessages([...payloadHistory, { role: "assistant", content: fallbackReply }]);
       setUserTranscript("");
       setAiTranscript(fallbackReply);
@@ -455,6 +520,22 @@ ${interviewerProfile.sensibility}`;
           </button>
         </div>
       </nav>
+
+      {/* Camera Access Refused Alert Banner */}
+      {cameraPermissionStatus === "denied" && (
+        <div className="bg-amber-500/10 border-b border-amber-500/20 px-8 py-3 flex items-center justify-between animate-fade-up z-40">
+          <div className="flex items-center gap-3 text-amber-200 text-sm font-medium">
+            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>Camera access was refused or blocked. Click to re-request camera permission.</span>
+          </div>
+          <button
+            onClick={requestCameraPermission}
+            className="px-4 py-1.5 bg-amber-400 text-black font-semibold text-xs rounded-full hover:bg-amber-300 transition-all shadow-sm flex items-center gap-1.5"
+          >
+            <Camera className="w-3.5 h-3.5" /> Request Camera Access
+          </button>
+        </div>
+      )}
 
       {/* Setup State: Dynamic Content */}
       {appState === "setup" && (
@@ -803,6 +884,25 @@ ${interviewerProfile.sensibility}`;
                 muted
                 className="w-full h-full object-cover transform -scale-x-100"
               />
+
+              {/* Interactive Camera Access Overlay if camera is denied */}
+              {cameraPermissionStatus !== "granted" && (
+                <div className="absolute inset-0 bg-zinc-950/95 backdrop-blur-md rounded-3xl flex flex-col items-center justify-center p-6 text-center z-20 animate-fade-up">
+                  <div className="w-14 h-14 bg-red-500/10 text-red-400 rounded-full flex items-center justify-center mb-3 border border-red-500/20 shadow-inner">
+                    <CameraOff className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Camera Access Refused</h3>
+                  <p className="text-xs text-zinc-400 max-w-sm mb-5 leading-relaxed">
+                    Camera permission was denied or blocked by your browser. Click below to ask for camera permission again.
+                  </p>
+                  <button
+                    onClick={requestCameraPermission}
+                    className="px-6 py-3 bg-white text-black font-semibold text-xs rounded-full hover:bg-zinc-200 transition-all shadow-xl flex items-center gap-2 hover:scale-105 active:scale-95"
+                  >
+                    <Camera className="w-4 h-4" /> Grant / Request Camera Access
+                  </button>
+                </div>
+              )}
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="w-12 h-12 bg-zinc-900/80 backdrop-blur-md rounded-full flex items-center justify-center border border-white/10 cursor-pointer hover:bg-zinc-800 hover:scale-110 active:scale-95 transition-all">
                   <svg
