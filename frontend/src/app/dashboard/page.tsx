@@ -1083,7 +1083,21 @@ export default function HyperPersonalizedCareerGuidance() {
   return (
     <div className="h-full overflow-y-auto bg-[#0a0a0d] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
       
-      {/* ─── ATMOSPHERIC BACKGROUND ─── */}
+      {/* ─── ATMOSPHERIC ANIMATED BACKGROUND ─── */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes dashFloat1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(35px,-45px) scale(1.1)} }
+        @keyframes dashFloat2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,35px) scale(1.12)} }
+        .dash-grid-bg {
+          background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 60px 60px;
+        }
+        .dash-orb-1 { animation: dashFloat1 16s ease-in-out infinite; }
+        .dash-orb-2 { animation: dashFloat2 20s ease-in-out infinite; }
+      `}} />
+      <div className="fixed inset-0 dash-grid-bg pointer-events-none opacity-60" />
+      <div className="dash-orb-1 fixed top-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full bg-white/[0.03] blur-[140px] pointer-events-none" />
+      <div className="dash-orb-2 fixed bottom-[-10%] right-[-5%] w-[550px] h-[550px] rounded-full bg-zinc-400/[0.03] blur-[130px] pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_70%)] pointer-events-none" />
 
       {/* ─── TOP NAVBAR ─── */}
