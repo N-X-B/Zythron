@@ -132,29 +132,19 @@ export default function LandingPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h1 className="text-6xl sm:text-8xl md:text-[7rem] font-extrabold tracking-[-0.04em] leading-[0.85] mb-8">
-              <span style={{
-                background: "linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>
+            <h1 className="text-6xl sm:text-8xl md:text-[7rem] font-extrabold tracking-[-0.04em] leading-[0.88] mb-8 drop-shadow-sm">
+              <span className="text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.15)]">
                 Career growth,
               </span>
               <br />
-              <span style={{
-                background: "linear-gradient(180deg, #a1a1aa 0%, #52525b 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}>
+              <span className="text-zinc-300">
                 engineered.
               </span>
             </h1>
           </Reveal>
 
           <Reveal delay={0.2}>
-            <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
               An AI agent that matches you with real jobs, builds a personalized learning roadmap,
               then interviews you like a harsh hiring manager — so you&apos;re ready when it counts.
             </p>

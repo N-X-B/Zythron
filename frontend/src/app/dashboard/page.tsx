@@ -627,8 +627,51 @@ export default function CareerGuidanceDashboard() {
   const [selectedTrackId, setSelectedTrackId] = useState<string>("fullstack-systems");
   const [mounted, setMounted] = useState<boolean>(false);
 
+  const [userName, setUserName] = useState<string>("");
+
   useEffect(() => {
     setMounted(true);
+    try {
+      const storedUser = localStorage.getItem("zythron_user");
+      if (storedUser) {
+        const u = JSON.parse(storedUser);
+        if (u.name) setUserName(u.name);
+      }
+
+      const storedProfile = localStorage.getItem("zythron_profile");
+      if (storedProfile) {
+        const p = JSON.parse(storedProfile);
+        if (p.role) setPreferredRole(p.role);
+        if (p.experience) {
+          const exp = p.experience.toLowerCase();
+          if (exp.includes("junior") || exp.includes("beginner")) setExperienceLevel("Junior");
+          else if (exp.includes("senior") || exp.includes("lead")) setExperienceLevel("Senior");
+          else setExperienceLevel("Mid");
+        }
+        if (Array.isArray(p.skills) && p.skills.length > 0) {
+          setUserSkills(
+            p.skills.map((sk: string) => ({
+              name: sk,
+              level: "Intermediate",
+            }))
+          );
+        }
+        if (p.commitment) {
+          const hrs = parseInt(p.commitment.replace(/\D/g, ""), 10);
+          if (!isNaN(hrs) && hrs > 0) setWeeklyCommitmentHours(hrs);
+        }
+        if (p.timeline) {
+          if (p.timeline.includes("3")) setTargetTimelineMonths(3);
+          else if (p.timeline.includes("6")) setTargetTimelineMonths(6);
+          else if (p.timeline.includes("1 Year") || p.timeline.includes("12")) setTargetTimelineMonths(12);
+        }
+        if (p.role || p.experience) {
+          setLastGeneratedAt(`Customized for ${p.role || "User"} (${p.experience || "Personalized"})`);
+        }
+      }
+    } catch (err) {
+      console.error("Error loading user profile in dashboard:", err);
+    }
   }, []);
 
   // Interactive 3D Impossible Triangle Tilt State
