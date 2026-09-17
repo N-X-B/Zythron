@@ -255,211 +255,215 @@ export default function UserFriendlyRecordMeeting() {
         </div>
       </nav>
 
-      {/* ─── MAIN CONTENT CONTAINER ─── */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* ─── MAIN CONTENT CONTAINER: SYMMETRICAL CENTERED LAYOUT ─── */}
+      <main className="flex-1 flex flex-col justify-center items-center p-6 md:p-10 w-full max-w-6xl mx-auto">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
-        {/* ─── LEFT COLUMN: BOT DISPATCH & TELEMETRY (5 Cols) ─── */}
-        <div className="lg:col-span-5 space-y-6">
+          {/* ─── LEFT COLUMN: BOT DISPATCH & TELEMETRY (50% Width) ─── */}
+          <div className="flex flex-col justify-between space-y-6">
 
-          {/* Header Card */}
-          <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 p-6 rounded-2xl shadow-xl">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs uppercase tracking-widest text-zinc-300 font-semibold px-2.5 py-1 rounded-full bg-white/5 border border-white/10 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                {isBotConnected ? "Bot Active in Session" : "Bot Standby"}
-              </span>
-              <span className="text-xs text-zinc-500 font-mono">{meetingPlatform}</span>
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Meeting Recorder Bot</h1>
-            <p className="text-xs text-zinc-400">
-              Dispatch an autonomous AI bot to your Google Meet, Zoom, or Teams call to transcribe, analyze, and generate action items in real time.
-            </p>
-          </div>
-
-          {/* Dispatch Form Card */}
-          <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-2xl space-y-4">
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-              <Video className="h-4 w-4 text-white" />
-              Dispatch Settings
-            </h3>
-
-            <div>
-              <label className="text-xs text-zinc-400 block mb-1 font-medium">Meeting URL (Google Meet / Zoom)</label>
-              <input
-                type="text"
-                value={meetingUrl}
-                onChange={(e) => setMeetingUrl(e.target.value)}
-                placeholder="https://meet.google.com/xyz-abcd-efg"
-                className="w-full bg-zinc-950 border border-zinc-700 px-3.5 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs text-zinc-400 block mb-1 font-medium">Bot Display Name</label>
-              <input
-                type="text"
-                value={botName}
-                onChange={(e) => setBotName(e.target.value)}
-                placeholder="Zythron AI Notetaker"
-                className="w-full bg-zinc-950 border border-zinc-700 px-3.5 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
-              />
-            </div>
-
-            <button
-              onClick={handleSendNotetaker}
-              disabled={isDispatching || !meetingUrl.trim()}
-              className="w-full bg-white text-black font-semibold py-3.5 px-4 rounded-xl text-sm hover:bg-zinc-200 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-            >
-              {isDispatching ? (
-                <>
-                  <Sparkles className="h-4 w-4 animate-spin text-black" />
-                  Dispatching Agent...
-                </>
-              ) : (
-                <>
-                  <Bot className="h-4 w-4 text-black" />
-                  Send AI Notetaker Bot
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* Bot Telemetry Card */}
-          <div className="bg-zinc-900/40 border border-zinc-800 p-6 rounded-2xl space-y-3">
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-              <Activity className="h-4 w-4 text-white" />
-              Live Telemetry
-            </h3>
-
-            <div className="grid grid-cols-3 gap-3 text-xs font-mono">
-              <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-                <span className="text-[10px] text-zinc-500 uppercase block">Codec</span>
-                <span className="text-zinc-200 font-semibold">OPUS 48kHz</span>
+            {/* Header Card */}
+            <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800/80 p-6 rounded-3xl shadow-xl">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs uppercase tracking-widest text-zinc-300 font-semibold px-3 py-1 rounded-full bg-white/5 border border-white/10 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                  {isBotConnected ? "Bot Active in Session" : "Bot Standby"}
+                </span>
+                <span className="text-xs text-zinc-500 font-mono">{meetingPlatform}</span>
               </div>
-              <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-                <span className="text-[10px] text-zinc-500 uppercase block">Encryption</span>
-                <span className="text-white font-semibold">TLS 1.3 / SRTP</span>
-              </div>
-              <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
-                <span className="text-[10px] text-zinc-500 uppercase block">Packets Ingested</span>
-                <span className="text-white font-semibold">{packetCount.toLocaleString()}</span>
-              </div>
+              <h1 className="text-2xl font-bold text-white mb-2">Meeting Recorder Bot</h1>
+              <p className="text-xs text-zinc-400 leading-relaxed font-light">
+                Dispatch an autonomous AI bot to your Google Meet, Zoom, or Teams call to transcribe, analyze, and generate action items in real time.
+              </p>
             </div>
-          </div>
 
-        </div>
+            {/* Dispatch Form Card */}
+            <div className="bg-zinc-900/50 border border-zinc-800/80 p-6 rounded-3xl space-y-4 flex-1 flex flex-col justify-between">
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                <Video className="h-4 w-4 text-white" />
+                Dispatch Settings
+              </h3>
 
-        {/* ─── RIGHT COLUMN: LIVE TRANSCRIPT & SUMMARY (7 Cols) ─── */}
-        <div className="lg:col-span-7 space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs text-zinc-400 block mb-1.5 font-medium">Meeting URL (Google Meet / Zoom / Teams)</label>
+                  <input
+                    type="text"
+                    value={meetingUrl}
+                    onChange={(e) => setMeetingUrl(e.target.value)}
+                    placeholder="https://meet.google.com/xyz-abcd-efg"
+                    className="w-full bg-zinc-950 border border-zinc-700/80 px-4 py-3 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
+                  />
+                </div>
 
-          {/* Tab Switcher */}
-          <div className="bg-zinc-900/60 border border-zinc-800 p-6 rounded-2xl space-y-5">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-              <div className="flex gap-2 font-mono text-xs">
-                <button
-                  onClick={() => setActiveTab("transcript")}
-                  className={`px-4 py-2 rounded-xl font-semibold transition-all ${
-                    activeTab === "transcript" ? "bg-white text-black" : "text-zinc-400 hover:text-white"
-                  }`}
-                >
-                  💬 Live Transcript
-                </button>
-                <button
-                  onClick={() => setActiveTab("summary")}
-                  className={`px-4 py-2 rounded-xl font-semibold transition-all ${
-                    activeTab === "summary" ? "bg-white text-black" : "text-zinc-400 hover:text-white"
-                  }`}
-                >
-                  📝 Minutes & Actions
-                </button>
+                <div>
+                  <label className="text-xs text-zinc-400 block mb-1.5 font-medium font-sans">Bot Display Name</label>
+                  <input
+                    type="text"
+                    value={botName}
+                    onChange={(e) => setBotName(e.target.value)}
+                    placeholder="Zythron AI Notetaker"
+                    className="w-full bg-zinc-950 border border-zinc-700/80 px-4 py-3 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
+                  />
+                </div>
               </div>
 
               <button
-                onClick={() => setIsStreamingPaused((prev) => !prev)}
-                className="text-xs text-zinc-400 hover:text-white font-mono px-3 py-1.5 rounded-xl border border-zinc-800 hover:border-zinc-700 bg-zinc-950 flex items-center gap-1.5 transition-colors"
+                onClick={handleSendNotetaker}
+                disabled={isDispatching || !meetingUrl.trim()}
+                className="w-full bg-white text-black font-semibold py-3.5 px-4 rounded-full text-sm hover:bg-zinc-200 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 hover:scale-102 active:scale-98 mt-2"
               >
-                <span className={`w-2 h-2 rounded-full ${isStreamingPaused ? "bg-amber-400" : "bg-emerald-400 animate-ping"}`} />
-                <span>{isStreamingPaused ? "Resume Stream" : "Streaming Live"}</span>
+                {isDispatching ? (
+                  <>
+                    <Sparkles className="h-4 w-4 animate-spin text-black" />
+                    Dispatching Agent...
+                  </>
+                ) : (
+                  <>
+                    <Bot className="h-4 w-4 text-black" />
+                    Send AI Notetaker Bot
+                  </>
+                )}
               </button>
             </div>
 
-            {/* TAB 1: LIVE TRANSCRIPT STREAM */}
-            {activeTab === "transcript" && (
-              <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
-                {transcriptItems.map((item, i) => (
-                  <div
-                    key={i}
-                    className={`p-3.5 rounded-xl border text-xs leading-relaxed font-mono ${
-                      item.speaker === "AI Notetaker"
-                        ? "bg-cyan-950/30 border-cyan-800/50 text-cyan-200"
-                        : item.speaker === "Interviewer"
-                        ? "bg-zinc-950 border-zinc-800 text-zinc-200"
-                        : "bg-zinc-900/90 border-zinc-800 text-white"
+            {/* Bot Telemetry Card */}
+            <div className="bg-zinc-900/40 border border-zinc-800/80 p-6 rounded-3xl space-y-3">
+              <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                <Activity className="h-4 w-4 text-white" />
+                Live Telemetry
+              </h3>
+
+              <div className="grid grid-cols-3 gap-3 text-xs font-mono">
+                <div className="bg-zinc-950 p-3 rounded-2xl border border-zinc-800">
+                  <span className="text-[10px] text-zinc-500 uppercase block">Codec</span>
+                  <span className="text-zinc-200 font-semibold">OPUS 48kHz</span>
+                </div>
+                <div className="bg-zinc-950 p-3 rounded-2xl border border-zinc-800">
+                  <span className="text-[10px] text-zinc-500 uppercase block">Encryption</span>
+                  <span className="text-white font-semibold">TLS 1.3 / SRTP</span>
+                </div>
+                <div className="bg-zinc-950 p-3 rounded-2xl border border-zinc-800">
+                  <span className="text-[10px] text-zinc-500 uppercase block">Packets Ingested</span>
+                  <span className="text-white font-semibold">{packetCount.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* ─── RIGHT COLUMN: LIVE TRANSCRIPT & SUMMARY (50% Width) ─── */}
+          <div className="flex flex-col justify-between">
+
+            {/* Tab Switcher & Transcript Box */}
+            <div className="bg-zinc-900/60 border border-zinc-800/80 p-6 rounded-3xl h-full flex flex-col justify-between space-y-5">
+              <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+                <div className="flex gap-2 font-mono text-xs">
+                  <button
+                    onClick={() => setActiveTab("transcript")}
+                    className={`px-4 py-2 rounded-full font-semibold transition-all ${
+                      activeTab === "transcript" ? "bg-white text-black font-bold shadow-md" : "text-zinc-400 hover:text-white"
                     }`}
                   >
-                    <div className="flex items-center justify-between text-[10px] text-zinc-500 mb-1">
-                      <span className="font-bold text-zinc-300">{item.speaker}</span>
-                      <span>{item.time}</span>
-                    </div>
-                    <p>{item.text}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* TAB 2: MINUTES & ACTION ITEMS */}
-            {activeTab === "summary" && (
-              <div className="space-y-4 text-xs font-mono">
-                <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <FileText className="h-4 w-4 text-cyan-400" />
-                    Executive Summary
-                  </h4>
-                  <p className="text-zinc-300 leading-relaxed">
-                    The candidate demonstrated strong knowledge of distributed caching architecture, vector clocks, and CDC pipeline mechanics. Addressed CAP theorem tradeoffs with clarity.
-                  </p>
+                    💬 Live Transcript
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("summary")}
+                    className={`px-4 py-2 rounded-full font-semibold transition-all ${
+                      activeTab === "summary" ? "bg-white text-black font-bold shadow-md" : "text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    📝 Minutes & Actions
+                  </button>
                 </div>
 
-                <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-3">
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <ListTodo className="h-4 w-4 text-emerald-400" />
-                    Action Items ({actionItems.length})
-                  </h4>
+                <button
+                  onClick={() => setIsStreamingPaused((prev) => !prev)}
+                  className="text-xs text-zinc-400 hover:text-white font-mono px-3 py-1.5 rounded-full border border-zinc-800 hover:border-zinc-700 bg-zinc-950 flex items-center gap-1.5 transition-colors"
+                >
+                  <span className={`w-2 h-2 rounded-full ${isStreamingPaused ? "bg-amber-400" : "bg-emerald-400 animate-ping"}`} />
+                  <span>{isStreamingPaused ? "Resume Stream" : "Streaming Live"}</span>
+                </button>
+              </div>
 
-                  {/* Action Item Input Form */}
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newActionInput}
-                      onChange={(e) => setNewActionInput(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && handleAddActionItem()}
-                      placeholder="Add new action item..."
-                      className="flex-1 bg-zinc-900 border border-zinc-700 px-3 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
-                    />
-                    <button
-                      onClick={handleAddActionItem}
-                      className="bg-white text-black font-bold px-3.5 py-2 rounded-xl text-xs hover:bg-zinc-200 transition-colors"
+              {/* TAB 1: LIVE TRANSCRIPT STREAM */}
+              {activeTab === "transcript" && (
+                <div className="space-y-3 flex-1 min-h-[440px] max-h-[500px] overflow-y-auto pr-1">
+                  {transcriptItems.map((item, i) => (
+                    <div
+                      key={i}
+                      className={`p-4 rounded-2xl border text-xs leading-relaxed font-mono ${
+                        item.speaker === "AI Notetaker"
+                          ? "bg-cyan-950/30 border-cyan-800/50 text-cyan-200"
+                          : item.speaker === "Interviewer"
+                          ? "bg-zinc-950 border-zinc-800 text-zinc-200"
+                          : "bg-zinc-900/90 border-zinc-800 text-white"
+                      }`}
                     >
-                      Add
-                    </button>
+                      <div className="flex items-center justify-between text-[10px] text-zinc-500 mb-1.5">
+                        <span className="font-bold text-zinc-300 font-sans">{item.speaker}</span>
+                        <span>{item.time}</span>
+                      </div>
+                      <p>{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* TAB 2: MINUTES & ACTION ITEMS */}
+              {activeTab === "summary" && (
+                <div className="space-y-5 text-xs font-mono flex-1 min-h-[440px]">
+                  <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-2">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 font-sans">
+                      <FileText className="h-4 w-4 text-cyan-400" />
+                      Executive Summary
+                    </h4>
+                    <p className="text-zinc-300 leading-relaxed font-light">
+                      The candidate demonstrated strong knowledge of distributed caching architecture, vector clocks, and CDC pipeline mechanics. Addressed CAP theorem tradeoffs with clarity.
+                    </p>
                   </div>
 
-                  <ul className="space-y-2 text-zinc-300">
-                    {actionItems.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/80">
-                        <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 space-y-3 flex-1">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 font-sans">
+                      <ListTodo className="h-4 w-4 text-emerald-400" />
+                      Action Items ({actionItems.length})
+                    </h4>
+
+                    {/* Action Item Input Form */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newActionInput}
+                        onChange={(e) => setNewActionInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleAddActionItem()}
+                        placeholder="Add new action item..."
+                        className="flex-1 bg-zinc-900 border border-zinc-700/80 px-3.5 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
+                      />
+                      <button
+                        onClick={handleAddActionItem}
+                        className="bg-white text-black font-bold px-4 py-2.5 rounded-xl text-xs hover:bg-zinc-200 transition-colors"
+                      >
+                        Add
+                      </button>
+                    </div>
+
+                    <ul className="space-y-2.5 text-zinc-300">
+                      {actionItems.map((item, i) => (
+                        <li key={i} className="flex items-start gap-2.5 bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80">
+                          <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+
+            </div>
 
           </div>
 
         </div>
-
       </main>
     </div>
   );
