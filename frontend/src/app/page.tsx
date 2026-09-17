@@ -651,6 +651,19 @@ export default function CareerGuidanceDashboard() {
   const [userBackground, setUserBackground] = useState<string>("Degree Candidate / Recent Graduate");
   const [targetTimelineMonths, setTargetTimelineMonths] = useState<number>(6);
   const [learningPreference, setLearningPreference] = useState<string>("Project-Based (Hands-on)");
+  // Exact Backend Requirements: Experience Level, Preferred Role & Generator State
+  const [experienceLevel, setExperienceLevel] = useState<"Junior" | "Mid" | "Senior">("Mid");
+  const [preferredRole, setPreferredRole] = useState<string>("Full-Stack Systems Engineer");
+  const [isGeneratingRoadmap, setIsGeneratingRoadmap] = useState<boolean>(false);
+  const [lastGeneratedAt, setLastGeneratedAt] = useState<string>("Active Synthesis");
+
+  const handleGenerateRoadmap = () => {
+    setIsGeneratingRoadmap(true);
+    setTimeout(() => {
+      setIsGeneratingRoadmap(false);
+      setLastGeneratedAt("Synthesized for " + preferredRole + " (" + experienceLevel + ")");
+    }, 450);
+  };
 
   // Checkpoints
   const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>({
@@ -690,6 +703,10 @@ export default function CareerGuidanceDashboard() {
       setSelectedTrackId(currentDomain.tracks[0].id);
     }
   }, [currentDomain, selectedTrackId]);
+
+  useEffect(() => {
+    setPreferredRole(activeTrack.role);
+  }, [activeTrack.role]);
 
   // Calculations
   const calculation = useMemo(() => {
@@ -876,8 +893,30 @@ export default function CareerGuidanceDashboard() {
           <div className="hidden md:flex items-center gap-1.5 text-xs font-mono text-zinc-400">
             <span className="text-zinc-500">{currentDomain.code}</span>
             <span>:</span>
-            <span className="text-zinc-200 font-medium truncate max-w-[200px]">{currentDomain.name}</span>
+            <span className="text-zinc-200 font-medium truncate max-w-[150px]">{currentDomain.name}</span>
           </div>
+        </div>
+
+        {/* 3 CORE BACKEND FEATURES SWITCHER */}
+        <div className="hidden lg:flex items-center gap-1 font-mono text-xs select-none">
+          <Link
+            href="/"
+            className="rounded-md px-2.5 py-1 text-xs font-semibold bg-white text-zinc-950 transition-all shadow-sm"
+          >
+            (01) CAREER MATCH
+          </Link>
+          <Link
+            href="/mock-interview"
+            className="rounded-md px-2.5 py-1 text-xs font-medium border border-white/10 bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all"
+          >
+            (02) MOCK INTERVIEW
+          </Link>
+          <Link
+            href="/record-meeting"
+            className="rounded-md px-2.5 py-1 text-xs font-medium border border-white/10 bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all"
+          >
+            (03) RECORD MEETING
+          </Link>
         </div>
 
         {/* Right Status Actions & Terminal Launcher */}
@@ -1040,29 +1079,67 @@ export default function CareerGuidanceDashboard() {
             </div>
           </div>
 
-          {/* CARD 2: CANDIDATE SKILLS MATRIX */}
-          <div className="rounded-xl border border-white/[0.08] bg-zinc-900/40 backdrop-blur-md p-3 space-y-2.5 shrink-0">
+          {/* UI SECTION 1: CAREER MATCH SPECIFICATION FORM */}
+          <div className="rounded-xl border border-white/[0.1] bg-zinc-900/50 backdrop-blur-xl p-3 space-y-3 shrink-0">
             <div className="flex items-center justify-between pb-1.5 border-b border-white/[0.06]">
               <div className="flex items-center gap-1.5">
                 <Code2 className="h-3.5 w-3.5 text-cyan-400" />
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                  Candidate Competency Matrix
+                  Career Match Parameters
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-zinc-400">
-                {userSkills.length} Verified Skills
+              <span className="text-[10px] font-mono text-cyan-400 border border-cyan-500/30 bg-cyan-950/30 px-1.5 py-0.5 rounded">
+                {lastGeneratedAt}
               </span>
             </div>
 
-            {/* Quick Add Form */}
-            <form onSubmit={handleAddSkill} className="space-y-1.5">
-              <div className="flex gap-1.5">
+            {/* Input 1 & 2: Preferred Role & Experience Level */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div className="sm:col-span-2 space-y-1">
+                <label className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
+                  <span>Preferred Role</span>
+                  <span className="text-[9px] text-zinc-500">Target Trajectory</span>
+                </label>
+                <input
+                  suppressHydrationWarning
+                  type="text"
+                  value={preferredRole}
+                  onChange={(e) => setPreferredRole(e.target.value)}
+                  placeholder="e.g. Full-Stack Systems Engineer..."
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-mono text-zinc-400 uppercase">Experience Level</label>
+                <select
+                  suppressHydrationWarning
+                  value={experienceLevel}
+                  onChange={(e) => setExperienceLevel(e.target.value as any)}
+                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
+                >
+                  <option value="Junior">Junior</option>
+                  <option value="Mid">Mid</option>
+                  <option value="Senior">Senior</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Input 3: Current Skills Tag Selector */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
+                <span>Current Skills</span>
+                <span className="text-[9px] text-zinc-500">{userSkills.length} Verified</span>
+              </label>
+              
+              {/* Quick Add Input */}
+              <form onSubmit={handleAddSkill} className="flex gap-1.5">
                 <input
                   suppressHydrationWarning
                   type="text"
                   value={skillInput}
                   onChange={(e) => setSkillInput(e.target.value)}
-                  placeholder="Add skill (e.g. Docker, Rust)..."
+                  placeholder="Add skill (e.g. React, Python, Docker)..."
                   className="flex-1 min-w-0 rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
                 />
                 <select
@@ -1083,36 +1160,32 @@ export default function CareerGuidanceDashboard() {
                 >
                   <Plus className="h-3.5 w-3.5" />
                 </button>
-              </div>
-            </form>
+              </form>
 
-            {/* Skills Tag Cloud */}
-            <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto no-scrollbar">
-              {userSkills.map((skill) => (
-                <span
-                  key={skill.name}
-                  className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-zinc-950/80 px-2 py-0.5 text-[10px] font-mono text-zinc-200"
-                >
-                  <span className="font-semibold">{skill.name}</span>
-                  <span className="text-[9px] text-zinc-500">[{skill.level[0]}]</span>
-                  <button
-                    suppressHydrationWarning
-                    type="button"
-                    onClick={() => handleRemoveSkill(skill.name)}
-                    className="text-zinc-500 hover:text-red-400 transition-colors ml-0.5 cursor-pointer"
+              {/* Tag Selector Cloud */}
+              <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto no-scrollbar pt-0.5">
+                {userSkills.map((skill) => (
+                  <span
+                    key={skill.name}
+                    className="inline-flex items-center gap-1 rounded-md border border-white/10 bg-zinc-950/80 px-2 py-0.5 text-[10px] font-mono text-zinc-200"
                   >
-                    <X className="h-2.5 w-2.5" />
-                  </button>
-                </span>
-              ))}
-            </div>
-
-            {/* Suggested Prerequisites Row */}
-            <div className="pt-1.5 border-t border-white/[0.06] space-y-1">
-              <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
-                Track Prerequisites:
+                    <span className="font-semibold">{skill.name}</span>
+                    <span className="text-[9px] text-zinc-500">[{skill.level[0]}]</span>
+                    <button
+                      suppressHydrationWarning
+                      type="button"
+                      onClick={() => handleRemoveSkill(skill.name)}
+                      className="text-zinc-500 hover:text-red-400 transition-colors ml-0.5 cursor-pointer"
+                    >
+                      <X className="h-2.5 w-2.5" />
+                    </button>
+                  </span>
+                ))}
               </div>
-              <div className="flex flex-wrap gap-1">
+
+              {/* Suggested Track Prereqs */}
+              <div className="flex flex-wrap items-center gap-1 pt-1">
+                <span className="text-[9px] font-mono text-zinc-500">Quick Add:</span>
                 {activeTrack.suggestedPrereqs.map((item) => {
                   const exists = userSkills.some((us) => us.name.toLowerCase() === item.toLowerCase());
                   return (
@@ -1122,7 +1195,7 @@ export default function CareerGuidanceDashboard() {
                       key={item}
                       disabled={exists}
                       onClick={() => handleQuickAdd(item)}
-                      className={`rounded px-1.5 py-0.5 text-[10px] font-mono transition-colors ${
+                      className={`rounded px-1.5 py-0.2 text-[9px] font-mono transition-colors ${
                         exists
                           ? "bg-zinc-950 text-zinc-600 border border-zinc-800 cursor-default line-through"
                           : "bg-zinc-800 text-zinc-300 border border-zinc-700 hover:bg-zinc-700 hover:text-white cursor-pointer"
@@ -1135,53 +1208,33 @@ export default function CareerGuidanceDashboard() {
                 })}
               </div>
             </div>
-          </div>
 
-          {/* CARD 3: TRAJECTORY PARAMETERS & PACING */}
-          <div className="rounded-xl border border-white/[0.08] bg-zinc-900/40 backdrop-blur-md p-3 space-y-2.5 shrink-0">
-            <div className="flex items-center justify-between pb-1.5 border-b border-white/[0.06]">
-              <div className="flex items-center gap-1.5">
-                <Sliders className="h-3.5 w-3.5 text-cyan-400" />
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                  Trajectory & Pacing Settings
-                </h3>
+            {/* Weekly Commitment & Timeline Controls */}
+            <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/[0.06]">
+              <div className="space-y-1">
+                <label className="text-[10px] font-mono text-zinc-400 uppercase flex items-center justify-between">
+                  <span>Commitment</span>
+                  <span className="text-white font-bold">{weeklyCommitmentHours}h/wk</span>
+                </label>
+                <div className="grid grid-cols-5 gap-0.5">
+                  {[10, 15, 20, 30, 40].map((hrs) => (
+                    <button
+                      suppressHydrationWarning
+                      type="button"
+                      key={hrs}
+                      onClick={() => setWeeklyCommitmentHours(hrs)}
+                      className={`rounded px-1 py-0.5 font-mono text-[9px] transition-all cursor-pointer text-center ${
+                        weeklyCommitmentHours === hrs
+                          ? "bg-white text-zinc-950 font-bold"
+                          : "bg-zinc-950 text-zinc-400 hover:bg-zinc-800 border border-zinc-800"
+                      }`}
+                    >
+                      {hrs}h
+                    </button>
+                  ))}
+                </div>
               </div>
-              <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
-                calculation.isPaceRealistic
-                  ? "border-emerald-800/60 bg-emerald-950/40 text-emerald-400"
-                  : "border-amber-800/60 bg-amber-950/40 text-amber-300"
-              }`}>
-                {calculation.isPaceRealistic ? "PACING REALISTIC" : "INTENSIVE PACE"}
-              </span>
-            </div>
 
-            {/* Hours Buttons */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400">
-                <span>WEEKLY COMMITMENT</span>
-                <span className="text-white font-bold">{weeklyCommitmentHours} hrs/week</span>
-              </div>
-              <div className="grid grid-cols-5 gap-1 text-[10px]">
-                {[10, 15, 20, 30, 40].map((hrs) => (
-                  <button
-                    suppressHydrationWarning
-                    type="button"
-                    key={hrs}
-                    onClick={() => setWeeklyCommitmentHours(hrs)}
-                    className={`rounded px-1.5 py-1 font-mono transition-all cursor-pointer text-center ${
-                      weeklyCommitmentHours === hrs
-                        ? "bg-white text-zinc-950 font-bold"
-                        : "bg-zinc-950 text-zinc-400 hover:bg-zinc-800 border border-zinc-800"
-                    }`}
-                  >
-                    {hrs}h
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Target Timeline & Modality Controls */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="space-y-1">
                 <label className="text-[10px] font-mono text-zinc-400 uppercase">Target Horizon</label>
                 <select
@@ -1196,27 +1249,19 @@ export default function CareerGuidanceDashboard() {
                   <option value={12}>12 Months (Paced)</option>
                 </select>
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] font-mono text-zinc-400 uppercase">Primary Modality</label>
-                <select
-                  suppressHydrationWarning
-                  value={learningPreference}
-                  onChange={(e) => setLearningPreference(e.target.value)}
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
-                >
-                  <option value="Project-Based (Hands-on)">Project-Based</option>
-                  <option value="Official Documentation">Official Manuals</option>
-                  <option value="Academic Specifications">Research RFCs</option>
-                </select>
-              </div>
             </div>
 
-            {/* Projection Output */}
-            <div className="rounded-md border border-white/[0.06] bg-zinc-950/60 p-2 flex items-center justify-between text-[11px] font-mono">
-              <span className="text-zinc-400">Est. Completion:</span>
-              <span className="text-cyan-300 font-semibold">{calculation.monthsNeeded} Months ({calculation.weeksNeeded} Weeks)</span>
-            </div>
+            {/* REQUIRED BUTTON: "Generate AI Roadmap" */}
+            <button
+              suppressHydrationWarning
+              type="button"
+              onClick={handleGenerateRoadmap}
+              disabled={isGeneratingRoadmap}
+              className="w-full flex items-center justify-center gap-2 rounded-md bg-white text-zinc-950 font-bold px-4 py-2 text-xs hover:bg-zinc-200 active:scale-[0.99] transition-all shadow-md cursor-pointer disabled:opacity-50"
+            >
+              <Sparkles className="h-4 w-4 text-cyan-500" />
+              <span>{isGeneratingRoadmap ? "Synthesizing AI Roadmap..." : "Generate AI Roadmap"}</span>
+            </button>
           </div>
         </div>
 
