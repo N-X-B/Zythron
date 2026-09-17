@@ -826,6 +826,82 @@ export default function HyperPersonalizedCareerGuidance() {
   const [aiRoadmapOutput, setAiRoadmapOutput] = useState<string>("");
   const [topJobMatch, setTopJobMatch] = useState<any>(null);
 
+  // Markdown Formatter Helper for AI Synthesis Output
+  const renderBoldText = (str: string) => {
+    const parts = str.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return (
+          <strong key={i} className="text-white font-semibold">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      return part;
+    });
+  };
+
+  const renderFormattedRoadmap = (rawText: string) => {
+    if (!rawText) return null;
+    const lines = rawText.split("\n");
+
+    return (
+      <div className="space-y-2 text-xs font-sans leading-relaxed text-zinc-300">
+        {lines.map((line, idx) => {
+          const trimmed = line.trim();
+          if (!trimmed) return <div key={idx} className="h-1" />;
+
+          if (trimmed === "---" || trimmed === "***" || trimmed === "___") {
+            return <hr key={idx} className="border-white/10 my-3" />;
+          }
+
+          if (trimmed.startsWith("# ")) {
+            const content = trimmed.replace(/^#\s+/, "");
+            return (
+              <h3 key={idx} className="text-sm md:text-base font-extrabold text-white font-sans tracking-tight border-b border-white/10 pb-2 mt-3 mb-2">
+                {renderBoldText(content)}
+              </h3>
+            );
+          }
+
+          if (trimmed.startsWith("## ")) {
+            const content = trimmed.replace(/^##\s+/, "");
+            return (
+              <h4 key={idx} className="text-xs md:text-sm font-bold text-white font-mono mt-3 mb-1.5 tracking-tight flex items-center gap-2">
+                {renderBoldText(content)}
+              </h4>
+            );
+          }
+
+          if (trimmed.startsWith("### ")) {
+            const content = trimmed.replace(/^###\s+/, "");
+            return (
+              <h5 key={idx} className="text-xs font-semibold text-zinc-200 font-mono mt-2.5 mb-1">
+                {renderBoldText(content)}
+              </h5>
+            );
+          }
+
+          if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+            const content = trimmed.replace(/^[-*]\s+/, "");
+            return (
+              <div key={idx} className="flex items-start gap-2 text-xs text-zinc-300 my-1 pl-1">
+                <span className="text-zinc-500 font-bold shrink-0 mt-0.5">•</span>
+                <span>{renderBoldText(content)}</span>
+              </div>
+            );
+          }
+
+          return (
+            <p key={idx} className="text-xs text-zinc-300">
+              {renderBoldText(trimmed)}
+            </p>
+          );
+        })}
+      </div>
+    );
+  };
+
   // AI Chat Assistant State
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
@@ -1207,23 +1283,33 @@ export default function HyperPersonalizedCareerGuidance() {
 
               {/* Live AI RAG Vector-Synthesized Roadmap Result */}
               {aiRoadmapOutput && (
-                <div className="bg-zinc-900/60 border border-white/10 p-4 rounded-2xl space-y-3 font-mono text-xs shadow-xl animate-fade-in">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="h-3.5 w-3.5 text-white" />
-                      <span className="font-bold text-white uppercase tracking-wider text-[11px]">
-                        Live AI RAG Vector Synthesis
-                      </span>
+                <div className="bg-[#0f0f0f] border border-white/10 p-5 rounded-2xl space-y-4 font-sans text-xs shadow-2xl animate-fade-in">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                        <Sparkles className="h-4 w-4 text-white" />
+                      </div>
+                      <div>
+                        <span className="font-bold text-white uppercase tracking-wider text-xs font-mono block">
+                          Live AI RAG Vector Synthesis
+                        </span>
+                        {topJobMatch && (
+                          <span className="text-[11px] text-zinc-400 font-mono block truncate max-w-[280px]">
+                            Matched: <span className="text-zinc-200 font-semibold">{topJobMatch.title}</span>
+                          </span>
+                        )}
+                      </div>
                     </div>
+
                     {topJobMatch && (
-                      <span className="text-[9px] bg-white/10 text-zinc-300 border border-white/10 px-2 py-0.5 rounded-full">
-                        Matched: {topJobMatch.title} ({Math.round((topJobMatch.match_score || 0.85) * 100)}%)
+                      <span className="text-[10px] font-mono bg-white/10 text-white px-3 py-1 rounded-full border border-white/10 font-bold shrink-0 self-start sm:self-auto">
+                        {Math.round((topJobMatch.match_score || 0.85) * 100)}% Match
                       </span>
                     )}
                   </div>
 
-                  <div className="max-h-60 overflow-y-auto space-y-2 text-zinc-300 text-[11px] leading-relaxed whitespace-pre-wrap font-mono pr-1">
-                    {aiRoadmapOutput}
+                  <div className="max-h-80 overflow-y-auto space-y-2 pr-1.5 scrollbar-thin scrollbar-thumb-white/10">
+                    {renderFormattedRoadmap(aiRoadmapOutput)}
                   </div>
                 </div>
               )}
@@ -1416,17 +1502,31 @@ export default function HyperPersonalizedCareerGuidance() {
 
             {/* Generated AI RAG Roadmap Output (If Triggered) */}
             {aiRoadmapOutput && (
-              <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-xl space-y-3 shadow-xl">
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-white" />
-                    Gemini Vector RAG Roadmap Response
-                  </h3>
-                  <span className="text-[10px] font-mono text-zinc-300">Live AI Synthesis</span>
+              <div className="rounded-3xl border border-white/10 bg-[#0f0f0f] p-6 backdrop-blur-xl space-y-4 shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                      <Sparkles className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                        Gemini Vector RAG Roadmap Response
+                      </h3>
+                      {topJobMatch && (
+                        <span className="text-[11px] text-zinc-400 font-mono">
+                          Target Role: <span className="text-zinc-200 font-semibold">{topJobMatch.title}</span> ({topJobMatch.company})
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono bg-white/10 text-white px-3 py-1 rounded-full border border-white/10 font-semibold shrink-0 self-start sm:self-auto">
+                    Live AI Synthesis
+                  </span>
                 </div>
-                <pre className="whitespace-pre-wrap font-mono text-xs text-zinc-300 bg-black/50 p-4 rounded-2xl border border-white/10 leading-relaxed overflow-x-auto">
-                  {aiRoadmapOutput}
-                </pre>
+
+                <div className="bg-black/50 p-5 rounded-2xl border border-white/10 leading-relaxed overflow-x-auto max-h-[450px] overflow-y-auto font-sans">
+                  {renderFormattedRoadmap(aiRoadmapOutput)}
+                </div>
               </div>
             )}
 
