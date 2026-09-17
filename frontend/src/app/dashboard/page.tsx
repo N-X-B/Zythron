@@ -1131,8 +1131,9 @@ export default function CareerGuidanceDashboard() {
                   Career Match Parameters
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-cyan-400 border border-cyan-500/30 bg-cyan-950/30 px-1.5 py-0.5 rounded">
-                {lastGeneratedAt}
+              <span className="text-[10px] font-mono text-emerald-400 border border-emerald-500/30 bg-emerald-950/30 px-1.5 py-0.5 rounded flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                PRE-FILLED FROM ONBOARDING
               </span>
             </div>
 
