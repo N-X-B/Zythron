@@ -505,6 +505,7 @@ export default function HyperPersonalizedCareerGuidance() {
   // Checkpoints & Inspector Modal
   const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>({ fs1: true });
   const [activeModalMilestone, setActiveModalMilestone] = useState<RoadmapMilestone | null>(null);
+  const [activeModalPhase, setActiveModalPhase] = useState<RoadmapPhase | null>(null);
 
   // AI RAG State
   const [isGeneratingRoadmap, setIsGeneratingRoadmap] = useState(false);
@@ -928,15 +929,25 @@ export default function HyperPersonalizedCareerGuidance() {
               {activeRoadmapPhases.map((phase) => {
                 const PhaseIcon = phase.icon;
                 return (
-                  <div key={phase.id} className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-5 space-y-4 flex flex-col justify-between backdrop-blur-xl shadow-xl">
+                  <div
+                    key={phase.id}
+                    onClick={() => setActiveModalPhase(phase)}
+                    className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-5 space-y-4 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-cyan-500/40 transition-all cursor-pointer group relative"
+                  >
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-[9px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/10">
                           {phase.badge}
                         </span>
-                        <PhaseIcon className="h-4 w-4 text-zinc-400" />
+                        <div className="flex items-center gap-1.5 text-zinc-400 group-hover:text-cyan-300 transition-colors">
+                          <span className="text-[10px] font-mono">Overview</span>
+                          <PhaseIcon className="h-4 w-4" />
+                        </div>
                       </div>
-                      <h3 className="text-xs font-bold text-white leading-snug mb-1">{phase.title}</h3>
+                      <h3 className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors leading-snug mb-1 flex items-center justify-between">
+                        <span>{phase.title}</span>
+                        <ChevronRight className="h-3.5 w-3.5 text-zinc-500 group-hover:text-cyan-300 transition-colors shrink-0" />
+                      </h3>
                       <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">{phase.description}</p>
                     </div>
 
@@ -947,8 +958,11 @@ export default function HyperPersonalizedCareerGuidance() {
                         return (
                           <div
                             key={m.id}
-                            onClick={() => setActiveModalMilestone(m)}
-                            className="p-3 rounded-2xl border bg-black/40 border-white/10 hover:border-white/30 transition-all cursor-pointer group"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveModalMilestone(m);
+                            }}
+                            className="p-3 rounded-2xl border bg-black/40 border-white/10 hover:border-white/30 transition-all cursor-pointer group/m"
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex items-start gap-2">
@@ -964,13 +978,13 @@ export default function HyperPersonalizedCareerGuidance() {
                                   {isDone && <Check className="h-3 w-3 stroke-[3]" />}
                                 </button>
                                 <div>
-                                  <h4 className="text-xs font-semibold text-white group-hover:text-cyan-300 transition-colors leading-snug">
+                                  <h4 className="text-xs font-semibold text-white group-hover/m:text-cyan-300 transition-colors leading-snug">
                                     {m.title}
                                   </h4>
                                   <span className="text-[9px] font-mono text-zinc-500">{m.workloadHours}h study hours</span>
                                 </div>
                               </div>
-                              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white transition-colors shrink-0" />
+                              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover/m:text-white transition-colors shrink-0" />
                             </div>
                           </div>
                         );
@@ -1002,6 +1016,139 @@ export default function HyperPersonalizedCareerGuidance() {
         </div>
 
       </main>
+
+      {/* ─── PHASE OVERVIEW & PROJECT BLUEPRINT MODAL POPUP ─── */}
+      {activeModalPhase && (
+        <div
+          onClick={() => setActiveModalPhase(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-[#0a0a0d] border border-white/20 rounded-3xl p-6 md:p-8 space-y-6 text-zinc-100 shadow-2xl relative font-sans scrollbar-thin scrollbar-thumb-white/10"
+          >
+            {/* Header */}
+            <div className="flex items-start justify-between border-b border-white/10 pb-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-mono uppercase text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-full font-bold">
+                    {activeModalPhase.badge} • Comprehensive Phase Blueprint
+                  </span>
+                  <span className="text-xs font-mono text-zinc-400">
+                    {activeModalPhase.milestones.reduce((acc, m) => acc + m.workloadHours, 0)} Hours Total Workload
+                  </span>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight">{activeModalPhase.title}</h3>
+              </div>
+              <button onClick={() => setActiveModalPhase(null)} className="text-zinc-400 hover:text-white cursor-pointer">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Executive Strategy Overview */}
+            <div className="bg-white/[0.03] border border-white/10 p-5 rounded-2xl space-y-2">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                <Compass className="h-4 w-4 text-emerald-400" />
+                Phase Executive Strategy & Core Objectives
+              </h4>
+              <p className="text-xs text-zinc-300 leading-relaxed">
+                {activeModalPhase.description} This phase establishes production-grade mastery required for {preferredRole} roles targeting {targetCompanyTier}.
+              </p>
+            </div>
+
+            {/* Consolidated Reference Library */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-cyan-400" />
+                Phase Reference Library & Primary Documentation
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+                {activeModalPhase.milestones
+                  .flatMap((m) => m.resources)
+                  .map((res, idx) => (
+                    <a
+                      key={idx}
+                      href={res.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-black/50 border border-white/10 p-3.5 rounded-xl hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center justify-between group cursor-pointer"
+                    >
+                      <div>
+                        <span className="text-xs text-cyan-300 group-hover:underline font-semibold block">{res.name}</span>
+                        <span className="text-[10px] text-zinc-500 uppercase">{res.category} Guide & Docs</span>
+                      </div>
+                      <ExternalLink className="h-4 w-4 text-zinc-500 group-hover:text-cyan-300" />
+                    </a>
+                  ))}
+              </div>
+            </div>
+
+            {/* Phase Capstone Project Blueprint */}
+            <div className="bg-cyan-950/20 border border-cyan-500/30 p-5 rounded-2xl space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-cyan-300 uppercase tracking-wider font-mono flex items-center gap-2">
+                  <Laptop className="h-4 w-4 text-cyan-400" />
+                  Phase Capstone Project Specifications & Requirements
+                </h4>
+                <span className="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded border border-cyan-500/20">
+                  Hands-On Capstone
+                </span>
+              </div>
+              
+              <div className="space-y-3 text-xs text-zinc-200 leading-relaxed font-mono">
+                {activeModalPhase.milestones.map((m, idx) => (
+                  <div key={m.id} className="bg-black/50 p-4 rounded-xl border border-white/10 space-y-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] text-cyan-400 font-bold uppercase">
+                        Module {idx + 1}: {m.title}
+                      </span>
+                      <span className="text-[10px] text-zinc-500">{m.workloadHours} Study Hours</span>
+                    </div>
+                    <p className="text-xs text-zinc-300">{m.projectPrompt}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* All Syllabus Competencies */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                <FileText className="h-4 w-4 text-emerald-400" />
+                Syllabus Topics & Technical Competencies
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
+                {activeModalPhase.milestones.map((m) => (
+                  <div key={m.id} className="bg-black/40 p-4 rounded-2xl border border-white/10 space-y-2">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                      <span className="font-semibold text-white">{m.title}</span>
+                    </div>
+                    <ul className="space-y-1.5 text-zinc-300 text-[11px] list-disc pl-4">
+                      {m.syllabusPoints?.map((pt, i) => (
+                        <li key={i}>{pt}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Footer */}
+            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <span>Phase setup complete • Select individual milestone cards for direct topic checks</span>
+              </div>
+              <button
+                onClick={() => setActiveModalPhase(null)}
+                className="bg-white text-black font-semibold text-xs px-5 py-2.5 rounded-xl hover:bg-zinc-200 transition-colors cursor-pointer"
+              >
+                Close Blueprint
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* ─── MILESTONE INSPECTOR MODAL POPUP ─── */}
       {activeModalMilestone && (
