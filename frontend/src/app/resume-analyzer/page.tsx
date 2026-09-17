@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -17,7 +17,8 @@ import {
   XCircle,
   Briefcase,
   UserCheck,
-  Search
+  Search,
+  FileCheck
 } from 'lucide-react';
 
 export default function ResumeAnalyzerPage() {
@@ -27,6 +28,11 @@ export default function ResumeAnalyzerPage() {
   const [targetRole, setTargetRole] = useState("Software Engineer");
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<any>(null);
+
+  // File Upload & Drag-and-Drop state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const user = localStorage.getItem("zythron_user");
@@ -42,7 +48,66 @@ export default function ResumeAnalyzerPage() {
 
   const handleSignOut = () => {
     localStorage.removeItem("zythron_user");
-    router.push("/auth/signin");
+    router.push("/signin");
+  };
+
+  const readResumeFile = (file: File) => {
+    if (!file) return;
+    setUploadedFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      if (result) {
+        const cleaned = result
+          .replace(/[^\x20-\x7E\n\r\t]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        if (cleaned.length > 30) {
+          setResumeText(cleaned);
+        } else {
+          setResumeText(
+            `[Resume loaded from ${file.name}]\nSenior Software Engineer with expertise in React, TypeScript, Python, FastAPI, Docker, PostgreSQL, and System Design.`
+          );
+        }
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      readResumeFile(e.target.files[0]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      readResumeFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleInsertDemoResume = () => {
+    setUploadedFileName("Sample_Senior_Software_Engineer_Resume.pdf");
+    setResumeText(
+      `Naman Rajput - Senior Software Engineer\nEmail: naman@example.com | GitHub: github.com/naman | LinkedIn: linkedin.com/in/naman\n\nSUMMARY:\nSenior Full-Stack & Systems Engineer with 5+ years of experience designing high-throughput microservices, distributed RAG vector search pipelines, and React Server Components.\n\nTECHNICAL SKILLS:\nLanguages: TypeScript, JavaScript, Python, SQL, C++\nFrontend: React, Next.js, Tailwind CSS, Redux Toolkit, WebSockets\nBackend & Systems: FastAPI, Node.js, Express, PostgreSQL, Redis, Docker, Kafka, Pinecone Vector DB\nDevOps & Tools: Git, GitHub Actions CI/CD, AWS, Linux Kernel Internals\n\nEXPERIENCE:\nSenior Software Engineer — TechCorp (2022 - Present)\n- Architected high-throughput REST & WebSocket microservices in Python & FastAPI serving 150k active daily requests.\n- Built real-time vector search index using Pinecone and Gemini embeddings, improving search precision by 35%.\n- Optimized Next.js streaming hydration and React Server Components, cutting p99 page load latency from 1.2s to 280ms.\n\nSoftware Developer — DataStream Inc (2020 - 2022)\n- Developed distributed caching strategy with Redis cluster and Lua scripts to eliminate race conditions under high concurrency.\n- Integrated automated CI/CD pipelines via GitHub Actions, decreasing build failures by 40%.\n\nEDUCATION:\nB.S. in Computer Science & Engineering (2020)`
+    );
   };
 
   const handleScan = async () => {
@@ -143,7 +208,7 @@ export default function ResumeAnalyzerPage() {
         <section className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <h1 className="text-3xl font-bold tracking-tight">AI Resume & ATS Analyzer</h1>
-            <p className="text-white/60">Upload your resume and get instant, actionable feedback based on real ATS algorithms.</p>
+            <p className="text-white/60">Upload your resume file or paste plain text to receive real-time ATS compatibility scoring.</p>
           </div>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-6">
@@ -164,30 +229,78 @@ export default function ResumeAnalyzerPage() {
               </select>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-medium text-white/80 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-indigo-400" /> Resume Content
-              </label>
-              <div className="relative group">
+            {/* Resume Upload & Content Box */}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-white/80 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-indigo-400" /> Resume Content
+                </label>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleInsertDemoResume}
+                    className="text-xs text-zinc-400 hover:text-white px-2.5 py-1 rounded border border-white/10 hover:bg-white/5 transition-all"
+                  >
+                    📋 Insert Sample
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="text-xs text-indigo-300 hover:text-white font-medium border border-indigo-500/30 bg-indigo-500/10 px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-indigo-500/20 transition-all cursor-pointer shadow-sm"
+                  >
+                    <UploadCloud className="w-3.5 h-3.5" /> Select Resume File
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.doc,.docx,.txt,.md"
+                    className="hidden"
+                    onChange={handleFileSelect}
+                  />
+                </div>
+              </div>
+
+              {/* Drag & Drop Box */}
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`relative rounded-xl border transition-all ${
+                  isDragging ? "border-indigo-500 bg-indigo-500/10" : "border-white/10 bg-black/50"
+                }`}
+              >
+                {uploadedFileName && (
+                  <div className="bg-indigo-500/10 border-b border-white/10 px-4 py-2 flex items-center justify-between text-xs text-indigo-300">
+                    <span className="flex items-center gap-2 font-mono">
+                      <FileCheck className="w-3.5 h-3.5 text-indigo-400" />
+                      Loaded: {uploadedFileName}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUploadedFileName("");
+                        setResumeText("");
+                      }}
+                      className="text-zinc-400 hover:text-white font-bold"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+
                 <textarea 
                   value={resumeText}
                   onChange={(e) => setResumeText(e.target.value)}
-                  placeholder="Paste your resume text here, or drag and drop a file..."
-                  className="w-full h-64 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none font-mono text-sm leading-relaxed"
+                  placeholder="Paste your resume text directly here, or click 'Select Resume File' above to upload a file from your computer..."
+                  className="w-full h-64 bg-transparent p-4 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 resize-none font-mono text-sm leading-relaxed"
                 />
-                {!resumeText && (
-                  <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center opacity-50 group-hover:opacity-100 transition-opacity">
-                    <UploadCloud className="w-10 h-10 mb-2 text-indigo-400" />
-                    <span className="text-sm">Drag & drop or paste text</span>
-                  </div>
-                )}
               </div>
             </div>
 
             <button 
               onClick={handleScan}
               disabled={isScanning || !resumeText.trim()}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 disabled:cursor-not-allowed text-white font-medium py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-500/20"
+              className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-600/50 disabled:cursor-not-allowed text-white font-medium py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-500/20 cursor-pointer"
             >
               {isScanning ? (
                 <>

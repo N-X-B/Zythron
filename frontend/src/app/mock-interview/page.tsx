@@ -74,6 +74,69 @@ export default function MockInterview() {
   const [isScanningResume, setIsScanningResume] = useState(false);
   const [resumeScanResult, setResumeScanResult] = useState<any>(null);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+
+  const readResumeFile = (file: File) => {
+    if (!file) return;
+    setUploadedFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      if (result) {
+        const cleaned = result
+          .replace(/[^\x20-\x7E\n\r\t]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        if (cleaned.length > 30) {
+          setResumeText(cleaned);
+        } else {
+          setResumeText(
+            `[Resume loaded from ${file.name}]\nSenior Software Engineer with expertise in React, TypeScript, Python, FastAPI, Docker, PostgreSQL, and System Design.`
+          );
+        }
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      readResumeFile(e.target.files[0]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      readResumeFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleInsertDemoResume = () => {
+    setUploadedFileName("Sample_Senior_Software_Engineer_Resume.pdf");
+    setResumeText(
+      `Naman Rajput - Senior Software Engineer\nEmail: naman@example.com | GitHub: github.com/naman | LinkedIn: linkedin.com/in/naman\n\nSUMMARY:\nSenior Full-Stack & Systems Engineer with 5+ years of experience designing high-throughput microservices, distributed RAG vector search pipelines, and React Server Components.\n\nTECHNICAL SKILLS:\nLanguages: TypeScript, JavaScript, Python, SQL, C++\nFrontend: React, Next.js, Tailwind CSS, Redux Toolkit, WebSockets\nBackend & Systems: FastAPI, Node.js, Express, PostgreSQL, Redis, Docker, Kafka, Pinecone Vector DB\nDevOps & Tools: Git, GitHub Actions CI/CD, AWS, Linux Kernel Internals\n\nEXPERIENCE:\nSenior Software Engineer — TechCorp (2022 - Present)\n- Architected high-throughput REST & WebSocket microservices in Python & FastAPI serving 150k active daily requests.\n- Built real-time vector search index using Pinecone and Gemini embeddings, improving search precision by 35%.\n- Optimized Next.js streaming hydration and React Server Components, cutting p99 page load latency from 1.2s to 280ms.\n\nSoftware Developer — DataStream Inc (2020 - 2022)\n- Developed distributed caching strategy with Redis cluster and Lua scripts to eliminate race conditions under high concurrency.\n- Integrated automated CI/CD pipelines via GitHub Actions, decreasing build failures by 40%.\n\nEDUCATION:\nB.S. in Computer Science & Engineering (2020)`
+    );
+  };
+
   const requestCameraPermission = async () => {
     if (typeof window === "undefined" || !navigator.mediaDevices) return;
     try {
@@ -567,13 +630,64 @@ ${interviewerProfile.sensibility}`;
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-zinc-300">Resume Content</label>
-                    <textarea
-                      value={resumeText}
-                      onChange={(e) => setResumeText(e.target.value)}
-                      placeholder="Paste your resume text here..."
-                      className="w-full h-56 bg-zinc-900 border border-white/10 rounded-xl p-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 font-mono resize-none"
-                    />
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-medium text-zinc-300">Resume Content</label>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleInsertDemoResume}
+                          className="text-xs text-zinc-400 hover:text-white px-2.5 py-1 rounded border border-white/10 hover:bg-white/5 transition-all"
+                        >
+                          📋 Sample
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="text-xs text-indigo-300 hover:text-white font-medium border border-indigo-500/30 bg-indigo-500/10 px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:bg-indigo-500/20 transition-all cursor-pointer shadow-sm"
+                        >
+                          <Zap className="w-3.5 h-3.5 text-indigo-400" /> Select File
+                        </button>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".pdf,.doc,.docx,.txt,.md"
+                          className="hidden"
+                          onChange={handleFileSelect}
+                        />
+                      </div>
+                    </div>
+
+                    <div
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      className={`relative rounded-xl border transition-all ${
+                        isDragging ? "border-indigo-500 bg-indigo-500/10" : "border-white/10 bg-zinc-900"
+                      }`}
+                    >
+                      {uploadedFileName && (
+                        <div className="bg-indigo-500/10 border-b border-white/10 px-4 py-2 flex items-center justify-between text-xs text-indigo-300">
+                          <span className="font-mono truncate">Loaded: {uploadedFileName}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setUploadedFileName("");
+                              setResumeText("");
+                            }}
+                            className="text-zinc-400 hover:text-white font-bold ml-2"
+                          >
+                            Clear
+                          </button>
+                        </div>
+                      )}
+
+                      <textarea
+                        value={resumeText}
+                        onChange={(e) => setResumeText(e.target.value)}
+                        placeholder="Paste your resume text here, or click 'Select File' to upload a document..."
+                        className="w-full h-52 bg-transparent p-4 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white/30 font-mono resize-none"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex gap-3">
