@@ -397,7 +397,9 @@ export default function LeetCodeArenaPage() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3 px-4 py-1.5 border border-white/10 rounded-full text-sm font-medium hover:bg-white/10 transition-all cursor-pointer bg-zinc-900/50 hover:scale-105 active:scale-95">
             <span className="text-zinc-300">{userName}</span>
-            <div className="w-7 h-7 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full shadow-inner border border-white/10" />
+            <div className="w-7 h-7 bg-white/10 text-white rounded-full flex items-center justify-center border border-white/15 text-xs font-mono font-bold">
+              {userName.charAt(0).toUpperCase()}
+            </div>
           </div>
           <button onClick={handleSignOut} className="p-2 text-zinc-500 hover:text-zinc-200 transition-colors" title="Sign Out">
             <LogOut className="w-4 h-4" />
@@ -406,7 +408,7 @@ export default function LeetCodeArenaPage() {
       </nav>
 
       {/* ─── MAIN LEETCODE ARENA LAYOUT ─── */}
-      <main className="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-6 relative z-10 flex-1 flex flex-col">
+      <main className="max-w-[1600px] w-full mx-auto p-6 md:p-8 space-y-6 relative z-10 flex-1 flex flex-col">
 
         {/* Skill Verification Banner / Target Context */}
         {(targetSkill || verifiedSuccess) && (
@@ -441,13 +443,13 @@ export default function LeetCodeArenaPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-[10px] font-mono uppercase text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-bold">
+              <span className="text-[10px] font-mono uppercase text-white bg-white/10 border border-white/15 px-2.5 py-0.5 rounded-full font-bold">
                 LeetCode & System Design Playground
               </span>
               <span className="text-xs font-mono text-zinc-400">AI Static Analysis + Big-O Profiler</span>
             </div>
             <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
-              <Code2 className="h-6 w-6 text-cyan-400" />
+              <Code2 className="h-6 w-6 text-white" />
               Code Arena Workstation
             </h1>
           </div>
@@ -481,10 +483,10 @@ export default function LeetCodeArenaPage() {
                 <div className="flex items-center gap-2">
                   <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${
                     activeProblem.difficulty === "Easy"
-                      ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                      ? "text-zinc-300 bg-white/5 border-white/10"
                       : activeProblem.difficulty === "Medium"
-                      ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
-                      : "text-rose-400 bg-rose-500/10 border-rose-500/20"
+                      ? "text-zinc-200 bg-white/10 border-white/20"
+                      : "text-white bg-white/20 border-white/30 font-bold"
                   }`}>
                     {activeProblem.difficulty}
                   </span>
@@ -510,9 +512,9 @@ export default function LeetCodeArenaPage() {
                 <span className="text-[10px] text-zinc-500 uppercase font-bold block">Example Input / Output</span>
                 {activeProblem.testCases.map((tc, idx) => (
                   <div key={idx} className="bg-black/50 p-3 rounded-xl border border-white/10 space-y-1">
-                    <span className="text-[10px] text-cyan-400 font-bold">Case {idx + 1}:</span>
-                    <div className="text-[11px] text-zinc-300">Input: <code className="text-emerald-300">{tc.input}</code></div>
-                    <div className="text-[11px] text-zinc-400">Expected: <code className="text-zinc-200">{tc.expected}</code></div>
+                    <span className="text-[10px] text-zinc-400 font-bold">Case {idx + 1}:</span>
+                    <div className="text-[11px] text-zinc-300">Input: <code className="text-zinc-100">{tc.input}</code></div>
+                    <div className="text-[11px] text-zinc-400">Expected: <code className="text-zinc-300">{tc.expected}</code></div>
                   </div>
                 ))}
               </div>
@@ -520,8 +522,8 @@ export default function LeetCodeArenaPage() {
 
             {/* Solution Hint */}
             <div className="pt-4 border-t border-white/10 font-mono text-xs space-y-1 text-zinc-400">
-              <span className="text-[10px] text-amber-400 uppercase font-bold flex items-center gap-1">
-                <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+              <span className="text-[10px] text-zinc-300 uppercase font-bold flex items-center gap-1">
+                <Sparkles className="h-3.5 w-3.5 text-zinc-300" />
                 AI Optimization Hint:
               </span>
               <p className="text-[11px] text-zinc-300">{activeProblem.solutionHints[0]}</p>
@@ -535,7 +537,7 @@ export default function LeetCodeArenaPage() {
               {/* Editor Header */}
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-emerald-400" />
+                  <Terminal className="h-4 w-4 text-white" />
                   <span className="text-xs font-bold text-white uppercase">IDE Sandbox</span>
                 </div>
 
@@ -565,7 +567,7 @@ export default function LeetCodeArenaPage() {
                 value={codeContent}
                 onChange={(e) => setCodeContent(e.target.value)}
                 rows={14}
-                className="w-full bg-[#0a0a0d] border border-white/10 p-4 rounded-2xl text-xs font-mono text-emerald-300 leading-relaxed focus:outline-none focus:border-cyan-400/50 resize-none selection:bg-white selection:text-black"
+                className="w-full bg-[#0a0a0d] border border-white/10 p-4 rounded-2xl text-xs font-mono text-zinc-100 leading-relaxed focus:outline-none focus:border-white/30 resize-none selection:bg-white selection:text-black"
               />
             </div>
 
@@ -575,7 +577,7 @@ export default function LeetCodeArenaPage() {
                 <button
                   onClick={handleRunCode}
                   disabled={isExecuting || !codeContent.trim()}
-                  className="bg-emerald-400 text-black font-bold px-6 py-3 rounded-xl text-xs hover:bg-emerald-300 transition-all flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
+                  className="bg-white text-black font-extrabold px-6 py-3 rounded-xl text-xs hover:bg-zinc-200 transition-all flex items-center gap-2 shadow-lg cursor-pointer disabled:opacity-50"
                 >
                   {isExecuting ? (
                     <>
@@ -592,7 +594,7 @@ export default function LeetCodeArenaPage() {
 
                 {executionResult && (
                   <div className="flex items-center gap-3 text-xs">
-                    <span className="text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+                    <span className="text-zinc-100 font-bold bg-white/10 border border-white/20 px-3 py-1 rounded-full">
                       ✓ {executionResult.status} ({executionResult.score}/100)
                     </span>
                     <span className="text-zinc-400">Runtime: {executionResult.runtimeMs}ms</span>
@@ -604,13 +606,13 @@ export default function LeetCodeArenaPage() {
               {executionResult && (
                 <div className="bg-black/80 border border-white/10 p-4 rounded-2xl space-y-2 text-xs font-mono animate-in fade-in">
                   <div className="flex items-center justify-between text-[10px] text-zinc-400 border-b border-white/10 pb-2">
-                    <span className="text-cyan-300 font-bold uppercase">Complexity Analysis: {executionResult.complexity}</span>
+                    <span className="text-zinc-200 font-bold uppercase">Complexity Analysis: {executionResult.complexity}</span>
                     <span>Memory Usage: {executionResult.memoryMb} MB</span>
                   </div>
                   <pre className="whitespace-pre-wrap text-[11px] text-zinc-300 leading-relaxed">
                     {executionResult.output}
                   </pre>
-                  <p className="text-xs text-emerald-300 pt-2 border-t border-white/10">
+                  <p className="text-xs text-zinc-200 pt-2 border-t border-white/10">
                     💡 AI Feedback: {executionResult.aiFeedback}
                   </p>
                 </div>
