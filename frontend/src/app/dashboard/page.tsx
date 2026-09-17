@@ -182,6 +182,58 @@ const ROADMAP_PHASES: RoadmapPhase[] = [
       },
     ],
   },
+  {
+    id: 4,
+    title: "Phase 4: High Availability & Chaos Engineering",
+    description: "Distributed consensus (Raft/Paxos), multi-region replication, fault-injection chaos testing, and disaster recovery.",
+    badge: "Resilience",
+    icon: ShieldCheck,
+    milestones: [
+      {
+        id: "fs6",
+        title: "Raft Consensus & Distributed Fault Injection",
+        description: "Leader election leases, split-brain mitigation, chaos mesh latency injection, and automated failover.",
+        workloadHours: 40,
+        requiredSkills: ["Kubernetes", "System Design"],
+        syllabusPoints: [
+          "Raft leader lease mechanics and monotonic heartbeat timers",
+          "Multi-DC async database replication lag monitoring",
+          "Chaos Mesh network partition fault-injection drills",
+          "Automated RTO/RPO disaster recovery procedures"
+        ],
+        resources: [
+          { name: "Raft Consensus Protocol", url: "https://raft.github.io/", category: "Paper" },
+        ],
+        projectPrompt: "Implement a 3-node Raft consensus cluster simulation handling node network partitions gracefully.",
+      },
+    ],
+  },
+  {
+    id: 5,
+    title: "Phase 5: Staff Engineering & System Design Drills",
+    description: "Principal-level trade-off analysis, capacity planning for 10M QPS, and harsh architectural reviews.",
+    badge: "Leadership",
+    icon: Award,
+    milestones: [
+      {
+        id: "fs7",
+        title: "10M QPS System Architecture & Cost Optimization",
+        description: "Designing global CDN edge caches, database sharding strategies, and cloud infrastructure cost reduction.",
+        workloadHours: 45,
+        requiredSkills: ["System Design", "Cloud Architecture"],
+        syllabusPoints: [
+          "Consistent hashing ring partitioning & virtual node rebalancing",
+          "Global CDN edge compute workers & stale-while-revalidate caches",
+          "Cloud cost optimization & reserved instance capacity planning",
+          "Harsh architectural review presentation to VP of Engineering"
+        ],
+        resources: [
+          { name: "System Design Primer", url: "https://github.com/donnemartin/system-design-primer", category: "Guide" },
+        ],
+        projectPrompt: "Design an end-to-end multi-region e-commerce platform architecture handling 10M QPS with zero downtime.",
+      },
+    ],
+  },
 ];
 
 const ROLE_SKILL_MAP: Record<string, string[]> = {
@@ -622,6 +674,50 @@ export default function HyperPersonalizedCareerGuidance() {
   const [activeModalMilestone, setActiveModalMilestone] = useState<RoadmapMilestone | null>(null);
   const [activeModalPhase, setActiveModalPhase] = useState<RoadmapPhase | null>(null);
 
+  // Custom Dynamic Phases State
+  const [customPhases, setCustomPhases] = useState<RoadmapPhase[]>([]);
+  const [showAddPhaseModal, setShowAddPhaseModal] = useState<boolean>(false);
+  const [newPhaseTitle, setNewPhaseTitle] = useState<string>("");
+  const [newPhaseBadge, setNewPhaseBadge] = useState<string>("Specialization");
+  const [newPhaseDesc, setNewPhaseDesc] = useState<string>("");
+  const [newPhaseSkill, setNewPhaseSkill] = useState<string>("");
+
+  const handleAddCustomPhase = () => {
+    if (!newPhaseTitle.trim()) return;
+    const nextId = (activeRoadmapPhases.length || 3) + 1;
+    const phaseToAdd: RoadmapPhase = {
+      id: nextId,
+      title: `Phase ${nextId}: ${newPhaseTitle.trim()}`,
+      description: newPhaseDesc.trim() || "Advanced domain specialization and hands-on production engineering.",
+      badge: newPhaseBadge.trim() || "Advanced",
+      icon: Sparkles,
+      milestones: [
+        {
+          id: `custom_p${nextId}`,
+          title: `${newPhaseTitle.trim()} Verification Milestone`,
+          description: `Mastery and hands-on verification of ${newPhaseSkill.trim() || "advanced concepts"}.`,
+          workloadHours: 40,
+          requiredSkills: [newPhaseSkill.trim() || "System Design"],
+          syllabusPoints: [
+            `Core principles and low-level mechanics of ${newPhaseTitle.trim()}`,
+            "Hands-on integration with zero runtime type assertions",
+            "Performance benchmarking and load profiling under concurrency",
+            "Production security review and error recovery strategies"
+          ],
+          resources: [
+            { name: "Official Technical Docs", url: "https://docs.github.com", category: "Docs" }
+          ],
+          projectPrompt: `Build and deploy a production-grade module demonstrating ${newPhaseTitle.trim()} integration.`
+        }
+      ]
+    };
+    setCustomPhases((prev) => [...prev, phaseToAdd]);
+    setNewPhaseTitle("");
+    setNewPhaseDesc("");
+    setNewPhaseSkill("");
+    setShowAddPhaseModal(false);
+  };
+
   // Hardcore Proof-of-Skill Capstone Auto-Grader State
   const [capstoneCodeInput, setCapstoneCodeInput] = useState("");
   const [isAuditingCode, setIsAuditingCode] = useState(false);
@@ -784,7 +880,7 @@ export default function HyperPersonalizedCareerGuidance() {
 
   // Calculate Dynamic Role Requirements & Dynamic Phases
   const requiredRoleSkills = useMemo(() => getRequiredSkillsForRole(preferredRole), [preferredRole]);
-  const activeRoadmapPhases = useMemo(() => getDynamicPhases(preferredRole), [preferredRole]);
+  const activeRoadmapPhases = useMemo(() => [...getDynamicPhases(preferredRole), ...customPhases], [preferredRole, customPhases]);
 
   const userSkillNames = new Set(userSkills.map((s) => s.name.toLowerCase()));
 
@@ -1211,17 +1307,26 @@ export default function HyperPersonalizedCareerGuidance() {
             </div>
 
             {/* 3 Phase Cards Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-base font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
                   <Compass className="h-4 w-4 text-white" />
-                  3-Phase Custom Curriculum
+                  Adaptive Custom Curriculum
                 </h2>
                 <p className="text-xs text-zinc-400">Click any milestone card to inspect syllabus topics, capstones & docs</p>
               </div>
-              <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
-                {progressPercent}% Complete ({completedCount}/5)
-              </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowAddPhaseModal(true)}
+                  className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-semibold transition-all flex items-center gap-1.5 shadow-lg shadow-cyan-500/10 active:scale-95"
+                >
+                  <Plus className="h-3.5 w-3.5 text-cyan-400" />
+                  Add Specialized Phase
+                </button>
+                <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
+                  {progressPercent}% Complete ({completedCount}/5)
+                </span>
+              </div>
             </div>
 
             {/* 3 Phase Parallel Grid */}
@@ -1833,6 +1938,102 @@ export default function HyperPersonalizedCareerGuidance() {
             <div className="pt-2 border-t border-white/10 flex justify-between text-[10px] text-zinc-500 px-2">
               <span>Press ⌘K anytime to toggle command menu</span>
               <span>Zythron OS v1.0</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Specialized Phase Modal */}
+      {showAddPhaseModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-white/20 rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">Add Specialized Phase</h3>
+                  <p className="text-[11px] text-zinc-400">Dynamically extend your learning path with custom domains</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowAddPhaseModal(false)}
+                className="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
+                  Phase Title / Domain Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. LLM Fine-Tuning & Quantization Engineering"
+                  value={newPhaseTitle}
+                  onChange={(e) => setNewPhaseTitle(e.target.value)}
+                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
+                    Badge Label
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. AI / ML"
+                    value={newPhaseBadge}
+                    onChange={(e) => setNewPhaseBadge(e.target.value)}
+                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
+                    Target Skill
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. PyTorch / LoRA"
+                    value={newPhaseSkill}
+                    onChange={(e) => setNewPhaseSkill(e.target.value)}
+                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
+                  Phase Description & Objectives
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Deep dive into parameter-efficient fine-tuning (PEFT), GGML/GGUF quantization, and vLLM inference acceleration."
+                  value={newPhaseDesc}
+                  onChange={(e) => setNewPhaseDesc(e.target.value)}
+                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-500 transition-colors resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                onClick={() => setShowAddPhaseModal(false)}
+                className="w-1/2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono transition-colors border border-white/10"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddCustomPhase}
+                disabled={!newPhaseTitle.trim()}
+                className="w-1/2 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-xs font-mono transition-all shadow-lg shadow-cyan-500/20"
+              >
+                Add to Roadmap ⚡
+              </button>
             </div>
           </div>
         </div>
