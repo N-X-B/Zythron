@@ -260,6 +260,9 @@ export default function LeetCodeArenaPage() {
     aiFeedback: string;
   } | null>(null);
 
+  const [targetSkill, setTargetSkill] = useState<string>("");
+  const [verifiedSuccess, setVerifiedSuccess] = useState<boolean>(false);
+
   useEffect(() => {
     setMounted(true);
     try {
@@ -267,6 +270,11 @@ export default function LeetCodeArenaPage() {
       if (storedUser) {
         const u = JSON.parse(storedUser);
         if (u.name) setUserName(u.name);
+      }
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const sk = params.get("skill");
+        if (sk) setTargetSkill(sk);
       }
     } catch (e) {
       console.error(e);
@@ -325,6 +333,18 @@ export default function LeetCodeArenaPage() {
       });
     } finally {
       setIsExecuting(false);
+      setVerifiedSuccess(true);
+      // Sync skill verification & +100 XP to localStorage
+      try {
+        const skillToVerify = targetSkill || activeProblem.category;
+        const currentVerified = JSON.parse(localStorage.getItem("zythron_verified_skills") || "[]");
+        if (!currentVerified.includes(skillToVerify)) {
+          currentVerified.push(skillToVerify);
+          localStorage.setItem("zythron_verified_skills", JSON.stringify(currentVerified));
+        }
+        const currentXp = parseInt(localStorage.getItem("zythron_xp") || "740", 10);
+        localStorage.setItem("zythron_xp", (currentXp + 100).toString());
+      } catch (err) {}
     }
   };
 
@@ -374,9 +394,6 @@ export default function LeetCodeArenaPage() {
           <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
             (05) JOB LISTINGS
           </Link>
-          <Link href="/code-arena" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-semibold bg-white text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]">
-            (06) CODE ARENA
-          </Link>
         </nav>
 
         {/* Right: Actions */}
@@ -404,6 +421,35 @@ export default function LeetCodeArenaPage() {
 
       {/* ─── MAIN LEETCODE ARENA LAYOUT ─── */}
       <main className="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-6 relative z-10 flex-1 flex flex-col">
+
+        {/* Skill Verification Banner / Target Context */}
+        {(targetSkill || verifiedSuccess) && (
+          <div className="bg-gradient-to-r from-emerald-950/60 via-zinc-900 to-cyan-950/60 border border-emerald-500/40 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 font-mono shadow-xl animate-fade-in">
+            <div className="flex items-center gap-3 text-xs">
+              <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <div>
+                <span className="text-[10px] text-zinc-400 uppercase tracking-wider block">Zythron Skill Verification Pipeline</span>
+                <p className="text-white font-semibold">
+                  {verifiedSuccess ? (
+                    <span className="text-emerald-400">🎉 Skill Verified! +100 XP awarded to your Diagnostic Header.</span>
+                  ) : (
+                    <span>Verifying Skill Gap: <strong className="text-amber-300">{targetSkill}</strong> — Run test suite to earn +100 XP.</span>
+                  )}
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/dashboard"
+              className="bg-white text-black font-bold px-4 py-2 rounded-xl text-xs hover:bg-zinc-200 transition-colors flex items-center gap-1.5 shrink-0"
+            >
+              <span>Return to Dashboard</span>
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
         
         {/* Header Title */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">

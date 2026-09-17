@@ -591,6 +591,7 @@ export default function HyperPersonalizedCareerGuidance() {
     { sender: "ai", text: "Zythron AI Career Advisor online. Ask me any question about your skill gap analysis, target role requirements, or interview prep!" }
   ]);
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const [verifiedSkills, setVerifiedSkills] = useState<string[]>([]);
 
   // Load Onboarding Data
   useEffect(() => {
@@ -601,6 +602,13 @@ export default function HyperPersonalizedCareerGuidance() {
         const u = JSON.parse(storedUser);
         if (u.name) setUserName(u.name);
         if (u.email) setUserEmail(u.email);
+      }
+      const storedVerified = localStorage.getItem("zythron_verified_skills");
+      if (storedVerified) {
+        try {
+          const parsed = JSON.parse(storedVerified);
+          if (Array.isArray(parsed)) setVerifiedSkills(parsed);
+        } catch (err) {}
       }
       const storedProfile = localStorage.getItem("zythron_profile");
       if (storedProfile) {
@@ -794,9 +802,6 @@ export default function HyperPersonalizedCareerGuidance() {
           </Link>
           <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
             (05) JOB LISTINGS
-          </Link>
-          <Link href="/code-arena" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-            (06) CODE ARENA
           </Link>
         </nav>
 
@@ -998,13 +1003,39 @@ export default function HyperPersonalizedCareerGuidance() {
                 </div>
 
                 <div>
-                  <span className="text-[10px] text-amber-400 uppercase tracking-wider block mb-1 font-semibold">Target Gaps to Acquire ({missingSkills.length})</span>
-                  <div className="flex flex-wrap gap-1">
-                    {missingSkills.map((sk) => (
-                      <span key={sk} className="text-[10px] bg-amber-950/60 text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-800/50">
-                        + {sk}
-                      </span>
-                    ))}
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] text-amber-400 uppercase tracking-wider font-semibold">Target Gaps ({missingSkills.length})</span>
+                    <span className="text-[9px] text-zinc-500 font-mono">Verify skill in Code Arena</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {missingSkills.map((sk) => {
+                      const isVerified = verifiedSkills.includes(sk);
+                      return (
+                        <Link
+                          key={sk}
+                          href={`/code-arena?skill=${encodeURIComponent(sk)}`}
+                          className={`text-[10px] px-2.5 py-1 rounded-full border transition-all flex items-center gap-1 font-mono ${
+                            isVerified
+                              ? "bg-emerald-950/80 text-emerald-300 border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]"
+                              : "bg-amber-950/60 text-amber-300 border-amber-800/50 hover:bg-amber-900/80 hover:border-amber-400/60"
+                          }`}
+                        >
+                          {isVerified ? (
+                            <>
+                              <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                              <span>{sk} [VERIFIED]</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>+ {sk}</span>
+                              <span className="text-[9px] bg-amber-400/20 text-amber-200 px-1 py-0.5 rounded font-bold hover:bg-amber-400 hover:text-black transition-colors ml-0.5">
+                                Verify ⚡
+                              </span>
+                            </>
+                          )}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -1323,24 +1354,36 @@ export default function HyperPersonalizedCareerGuidance() {
                 className="w-full bg-black/80 border border-white/10 p-3 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-emerald-400/50"
               />
 
-              <div className="flex items-center justify-between gap-2">
-                <button
-                  onClick={handleAuditCapstoneCode}
-                  disabled={isAuditingCode || !capstoneCodeInput.trim()}
-                  className="bg-emerald-400 text-black font-semibold px-4 py-2 rounded-xl text-xs hover:bg-emerald-300 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                >
-                  {isAuditingCode ? (
-                    <>
-                      <Sparkles className="h-3.5 w-3.5 animate-spin text-black" />
-                      Auditing AST & Concurrency...
-                    </>
-                  ) : (
-                    <>
-                      <ShieldCheck className="h-3.5 w-3.5 text-black" />
-                      Execute AI Code Audit & Verify Capstone
-                    </>
-                  )}
-                </button>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleAuditCapstoneCode}
+                    disabled={isAuditingCode || !capstoneCodeInput.trim()}
+                    className="bg-emerald-400 text-black font-semibold px-4 py-2 rounded-xl text-xs hover:bg-emerald-300 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  >
+                    {isAuditingCode ? (
+                      <>
+                        <Sparkles className="h-3.5 w-3.5 animate-spin text-black" />
+                        Auditing AST & Concurrency...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="h-3.5 w-3.5 text-black" />
+                        Execute AI Code Audit & Verify Capstone
+                      </>
+                    )}
+                  </button>
+
+                  <Link
+                    href={`/code-arena?problem=lc1&milestone=${encodeURIComponent(activeModalMilestone.id)}`}
+                    onClick={() => setActiveModalMilestone(null)}
+                    className="bg-white/10 hover:bg-white/20 text-white font-mono px-3.5 py-2 rounded-xl text-xs border border-white/20 transition-all flex items-center gap-1.5"
+                  >
+                    <Code2 className="h-3.5 w-3.5 text-cyan-400" />
+                    <span>Practice in Code Arena ⚡</span>
+                  </Link>
+                </div>
+
                 {codeAuditResult && (
                   <span className="text-xs font-bold text-emerald-400">
                     Score: {codeAuditResult.score}/100 ({codeAuditResult.verdict})
@@ -1558,6 +1601,23 @@ export default function HyperPersonalizedCareerGuidance() {
                   </div>
                 </div>
                 <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-cyan-300" />
+              </Link>
+
+              <Link
+                href="/code-arena"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center gap-3 text-white">
+                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
+                    <Code2 className="h-4 w-4 text-emerald-400" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">Code Arena IDE Workstation</span>
+                    <span className="text-[10px] text-zinc-400">Multi-Language Code Runner & Big-O Profiler</span>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-emerald-300" />
               </Link>
             </div>
 

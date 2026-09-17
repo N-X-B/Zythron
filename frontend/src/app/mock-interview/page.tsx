@@ -16,7 +16,8 @@ import {
   LogOut,
   Award,
   ArrowRight,
-  Search
+  Search,
+  Code2
 } from "lucide-react";
 
 interface QuestionPreset {
@@ -192,9 +193,6 @@ export default function UserFriendlyMockInterview() {
           <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
             (05) JOB LISTINGS
           </Link>
-          <Link href="/code-arena" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-            (06) CODE ARENA
-          </Link>
         </nav>
 
         {/* Right: Actions */}
@@ -308,23 +306,33 @@ export default function UserFriendlyMockInterview() {
               className="w-full bg-zinc-950 border border-zinc-700 p-4 rounded-xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white leading-relaxed font-mono resize-none"
             />
 
-            <button
-              onClick={handleEvaluateAnswer}
-              disabled={isGrading || !candidateAnswer.trim()}
-              className="w-full bg-white text-black font-semibold py-3.5 px-4 rounded-xl text-sm hover:bg-zinc-200 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-            >
-              {isGrading ? (
-                <>
-                  <Sparkles className="h-4 w-4 animate-spin text-black" />
-                  Harsh AI is Evaluating Your Answer...
-                </>
-              ) : (
-                <>
-                  <Send className="h-4 w-4 text-black" />
-                  Submit for Harsh AI Evaluation
-                </>
-              )}
-            </button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                onClick={handleEvaluateAnswer}
+                disabled={isGrading || !candidateAnswer.trim()}
+                className="w-full bg-white text-black font-semibold py-3.5 px-4 rounded-xl text-xs hover:bg-zinc-200 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {isGrading ? (
+                  <>
+                    <Sparkles className="h-4 w-4 animate-spin text-black" />
+                    Harsh AI Evaluating...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 text-black" />
+                    Submit for Harsh Evaluation
+                  </>
+                )}
+              </button>
+
+              <Link
+                href={`/code-arena?role=${encodeURIComponent(jobRole)}`}
+                className="w-full bg-white/10 hover:bg-white/20 text-white font-mono font-semibold py-3.5 px-4 rounded-xl text-xs border border-white/20 transition-all flex items-center justify-center gap-2"
+              >
+                <Code2 className="h-4 w-4 text-cyan-400" />
+                <span>Solve in Code Arena ⚡</span>
+              </Link>
+            </div>
           </div>
 
         </div>
