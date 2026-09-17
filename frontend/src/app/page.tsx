@@ -1,186 +1,439 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export default function LandingPage() {
-  const [mounted, setMounted] = useState(false);
-
+/* ───────────────────────────── FADE-IN OBSERVER ───────────────────────────── */
+function useFadeIn() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    setMounted(true);
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); io.disconnect(); } },
+      { threshold: 0.15 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return { ref, visible };
+}
+
+function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const { ref, visible } = useFadeIn();
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(32px)",
+        transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+/* ───────────────────────────────── PAGE ───────────────────────────────────── */
+export default function LandingPage() {
+  const [scrollY, setScrollY] = useState(0);
+  useEffect(() => {
+    const h = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", h, { passive: true });
+    return () => window.removeEventListener("scroll", h);
   }, []);
 
-  if (!mounted) return <div className="min-h-screen bg-[#0a0a0a]"></div>;
-
   return (
-    <div className="relative min-h-screen w-full bg-[#0a0a0a] text-zinc-100 overflow-x-hidden overflow-y-auto selection:bg-zinc-800 selection:text-white">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* Subtle grid pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]" 
-          style={{ 
-            backgroundImage: `linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)`,
-            backgroundSize: '40px 40px' 
-          }}
-        />
-        
-        {/* Animated Orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-zinc-800/20 rounded-full blur-[100px] animate-blob" />
-        <div className="absolute top-1/3 right-1/4 w-[28rem] h-[28rem] bg-zinc-900/40 rounded-full blur-[120px] animate-blob animation-delay-2000" />
-        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-zinc-800/30 rounded-full blur-[90px] animate-blob animation-delay-4000" />
-      </div>
+    <div className="overflow-y-auto overflow-x-hidden h-full bg-zinc-950 text-white font-sans">
+      {/* ─── INLINE STYLES ─── */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(30px,-40px) scale(1.05)} }
+        @keyframes float2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-20px,30px) scale(1.08)} }
+        @keyframes pulse-ring { 0%{transform:scale(.95);opacity:.6} 50%{transform:scale(1.05);opacity:.3} 100%{transform:scale(.95);opacity:.6} }
+        @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        @keyframes grid-fade { 0%{opacity:0.03} 50%{opacity:0.06} 100%{opacity:0.03} }
+        .grid-bg {
+          background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+          background-size: 60px 60px;
+          animation: grid-fade 8s ease infinite;
+        }
+        .blob-1 { animation: float1 12s ease-in-out infinite; }
+        .blob-2 { animation: float2 15s ease-in-out infinite; }
+        .step-num {
+          font-size: 7rem;
+          font-weight: 800;
+          line-height: 1;
+          color: rgba(255,255,255,0.04);
+          position: absolute;
+          top: -10px;
+          left: -8px;
+          user-select: none;
+          pointer-events: none;
+        }
+        .feature-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.06);
+          transition: all 0.4s ease;
+        }
+        .feature-card:hover {
+          background: rgba(255,255,255,0.06);
+          border-color: rgba(255,255,255,0.12);
+          transform: translateY(-4px);
+        }
+        .showcase-card {
+          background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+          border: 1px solid rgba(255,255,255,0.07);
+        }
+        .cta-glow {
+          box-shadow: 0 0 60px rgba(255,255,255,0.06), 0 0 120px rgba(255,255,255,0.03);
+        }
+      `}} />
 
-      {/* Floating Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 backdrop-blur-md bg-[#0a0a0a]/70 border-b border-zinc-800/50">
-        <Link href="/" className="text-xl font-bold tracking-widest text-white hover:text-zinc-300 transition-colors">
+      {/* ─── FLOATING NAV ─── */}
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-4 transition-all duration-500"
+        style={{
+          background: scrollY > 40 ? "rgba(9,9,11,0.85)" : "transparent",
+          backdropFilter: scrollY > 40 ? "blur(20px)" : "none",
+          borderBottom: scrollY > 40 ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+        }}
+      >
+        <Link href="/" className="text-xl font-bold tracking-[0.2em] text-white">
           ZYTHRON
         </Link>
-        <div className="flex items-center gap-6">
-          <Link href="/signin" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">
-            Sign In
+        <div className="flex items-center gap-4">
+          <Link href="/signin" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            Sign in
           </Link>
-          <Link href="/signup" className="text-sm font-medium bg-white text-black px-4 py-2 rounded-full hover:bg-zinc-200 transition-colors">
+          <Link
+            href="/signup"
+            className="text-sm bg-white text-black px-5 py-2 rounded-full font-medium hover:bg-zinc-200 transition-colors"
+          >
             Get Started
           </Link>
         </div>
       </nav>
 
-      {/* Main Content Wrapper */}
-      <main className="relative z-10 flex flex-col items-center w-full pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto">
-        
-        {/* Hero Section */}
-        <section className="flex flex-col items-center text-center py-20 md:py-32 w-full animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 backdrop-blur-sm mb-8 animate-fade-in-up animation-delay-100">
-            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-pulse"></span>
-            <span className="text-xs font-medium text-zinc-300 tracking-wide uppercase">Introducing the future of career growth</span>
+      {/* ─── HERO ─── */}
+      <section className="relative min-h-screen flex items-center justify-center grid-bg">
+        {/* Floating gradient orbs */}
+        <div className="blob-1 absolute top-[15%] left-[10%] w-[400px] h-[400px] rounded-full bg-zinc-800/20 blur-[120px] pointer-events-none" />
+        <div className="blob-2 absolute bottom-[10%] right-[10%] w-[350px] h-[350px] rounded-full bg-zinc-700/15 blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+          <Reveal>
+            <p className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-6 font-medium">
+              AI-Powered Career Intelligence
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <h1 className="text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight leading-[0.9] mb-8">
+              Career growth,
+              <br />
+              <span className="text-zinc-500">engineered.</span>
+            </h1>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+              An AI agent that matches you with real jobs, builds a personalized learning roadmap,
+              then interviews you like a harsh hiring manager — so you&apos;re ready when it counts.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/signup"
+                className="bg-white text-black px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-zinc-200 transition-all duration-300 hover:scale-[1.02]"
+              >
+                Start free — no credit card
+              </Link>
+              <Link
+                href="#how-it-works"
+                className="text-sm text-zinc-400 hover:text-white transition-colors border border-zinc-800 px-8 py-3.5 rounded-full hover:border-zinc-600"
+              >
+                See how it works ↓
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <div className="w-[1px] h-12 bg-gradient-to-b from-zinc-600 to-transparent" style={{ animation: "pulse-ring 2s ease infinite" }} />
+        </div>
+      </section>
+
+      {/* ─── SOCIAL PROOF BAR ─── */}
+      <section className="border-y border-zinc-800/60 py-6 overflow-hidden">
+        <div className="flex items-center gap-12 whitespace-nowrap" style={{ animation: "marquee 30s linear infinite" }}>
+          {["Built with Gemini AI", "Pinecone Vector Database", "RAG Architecture", "Real-Time Feedback", "Semantic Job Matching", "FastAPI Backend", "Built with Gemini AI", "Pinecone Vector Database", "RAG Architecture", "Real-Time Feedback", "Semantic Job Matching", "FastAPI Backend"].map((t, i) => (
+            <span key={i} className="text-xs tracking-[0.2em] uppercase text-zinc-600 font-medium flex items-center gap-3">
+              <span className="w-1 h-1 rounded-full bg-zinc-600" />
+              {t}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── HOW IT WORKS — 3 NUMBERED STEPS ─── */}
+      <section id="how-it-works" className="py-32 px-6 md:px-12 max-w-6xl mx-auto">
+        <Reveal>
+          <p className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-4 font-medium">How it works</p>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-20">
+            Three steps to career clarity.
+          </h2>
+        </Reveal>
+
+        <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+          {[
+            {
+              num: "01",
+              title: "Tell us about you",
+              desc: "Enter your current skills, experience level, and the role you're targeting. Zythron learns your exact position in the career landscape.",
+              detail: "Skills → Experience → Goals"
+            },
+            {
+              num: "02",
+              title: "Get your roadmap",
+              desc: "Our RAG engine matches you to real jobs, identifies your skill gaps, and generates a week-by-week learning plan tailored to close them.",
+              detail: "AI Matching → Gap Analysis → Plan"
+            },
+            {
+              num: "03",
+              title: "Face the interviewer",
+              desc: "A harsh AI interviewer scores your answers out of 100. Lazy responses get destroyed. You walk into the real interview battle-tested.",
+              detail: "Questions → Scoring → Feedback"
+            },
+          ].map((step, i) => (
+            <Reveal key={i} delay={i * 0.15}>
+              <div className="relative pt-12">
+                <span className="step-num">{step.num}</span>
+                <div className="relative z-10">
+                  <h3 className="text-xl font-semibold mb-3 text-white">{step.title}</h3>
+                  <p className="text-zinc-400 leading-relaxed mb-4 text-[15px]">{step.desc}</p>
+                  <p className="text-xs tracking-widest uppercase text-zinc-600">{step.detail}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── PRODUCT SHOWCASE ─── */}
+      <section className="py-32 px-6 md:px-12 border-t border-zinc-800/60">
+        <div className="max-w-6xl mx-auto">
+          <Reveal>
+            <p className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-4 font-medium">Product showcase</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+              Everything you need to land the job.
+            </h2>
+            <p className="text-zinc-400 max-w-2xl mb-16 text-lg">
+              Zythron isn&apos;t a chatbot wrapper. It&apos;s a complete career intelligence system
+              combining vector search, generative AI, and brutal honesty.
+            </p>
+          </Reveal>
+
+          {/* Showcase cards — large alternating layout */}
+          <div className="space-y-8">
+            {/* Card 1 — Career Match Engine */}
+            <Reveal>
+              <div className="showcase-card rounded-2xl p-8 md:p-12 md:flex md:items-center md:gap-12">
+                <div className="md:w-1/2 mb-8 md:mb-0">
+                  <p className="text-xs tracking-[0.25em] uppercase text-zinc-500 mb-3">01 · Career Match</p>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">Semantic Job Matching</h3>
+                  <p className="text-zinc-400 leading-relaxed mb-6">
+                    Your skills are converted into vector embeddings using Google&apos;s embedding model. We query
+                    Pinecone to find jobs that contextually match — not just keyword match. A Python developer
+                    with React experience gets matched to Full-Stack roles, not just &quot;Python Developer.&quot;
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {["Gemini Embeddings", "Pinecone", "Cosine Similarity", "Real Jobs"].map(t => (
+                      <span key={t} className="text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full border border-zinc-800 text-zinc-500">{t}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="md:w-1/2 bg-zinc-900/60 rounded-xl p-6 font-mono text-sm text-zinc-400 border border-zinc-800/50">
+                  <p className="text-zinc-600 mb-2">// Response from /api/match-jobs</p>
+                  <p><span className="text-zinc-300">top_match:</span> &quot;Junior Frontend Developer&quot;</p>
+                  <p><span className="text-zinc-300">company:</span> &quot;TechCorp India&quot;</p>
+                  <p><span className="text-zinc-300">match_score:</span> 0.85</p>
+                  <p><span className="text-zinc-300">missing_skills:</span> [&quot;Next.js&quot;, &quot;Tailwind&quot;]</p>
+                  <p className="text-zinc-600 mt-2">// + 4-phase AI learning roadmap</p>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Card 2 — Adaptive Roadmap */}
+            <Reveal delay={0.1}>
+              <div className="showcase-card rounded-2xl p-8 md:p-12 md:flex md:items-center md:gap-12 md:flex-row-reverse">
+                <div className="md:w-1/2 mb-8 md:mb-0">
+                  <p className="text-xs tracking-[0.25em] uppercase text-zinc-500 mb-3">02 · AI Roadmaps</p>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">Adaptive Learning Paths</h3>
+                  <p className="text-zinc-400 leading-relaxed mb-6">
+                    Gemini analyzes the gap between your current skills and the job requirements, then generates
+                    a structured, phase-by-phase curriculum. Each phase has action items, key milestones,
+                    and a capstone project. It&apos;s not generic advice — it&apos;s engineered for your exact gap.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {["Gemini 1.5 Flash", "RAG Pipeline", "Week-by-Week", "Milestones"].map(t => (
+                      <span key={t} className="text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full border border-zinc-800 text-zinc-500">{t}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="md:w-1/2 bg-zinc-900/60 rounded-xl p-6 border border-zinc-800/50">
+                  <div className="space-y-3">
+                    {[
+                      { phase: "Phase 1", title: "Core Fundamentals", weeks: "Weeks 1-2" },
+                      { phase: "Phase 2", title: "Practical Implementation", weeks: "Weeks 3-4" },
+                      { phase: "Phase 3", title: "Capstone Project", weeks: "Weeks 5-6" },
+                      { phase: "Phase 4", title: "Interview Readiness", weeks: "Week 7" },
+                    ].map((p, i) => (
+                      <div key={i} className="flex items-center gap-4">
+                        <div className="w-8 h-8 rounded-full border border-zinc-700 flex items-center justify-center text-xs text-zinc-500 shrink-0">{i + 1}</div>
+                        <div className="flex-1">
+                          <p className="text-zinc-300 text-sm font-medium">{p.title}</p>
+                          <p className="text-zinc-600 text-xs">{p.weeks}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Card 3 — Harsh Mock Interview */}
+            <Reveal delay={0.2}>
+              <div className="showcase-card rounded-2xl p-8 md:p-12 md:flex md:items-center md:gap-12">
+                <div className="md:w-1/2 mb-8 md:mb-0">
+                  <p className="text-xs tracking-[0.25em] uppercase text-zinc-500 mb-3">03 · Mock Interview</p>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">The Harsh Interviewer</h3>
+                  <p className="text-zinc-400 leading-relaxed mb-6">
+                    Our system prompt engineers Gemini into a brutally honest technical interviewer.
+                    Give a lazy, buzzword-filled answer? You&apos;ll score a 30/100 and hear exactly why
+                    you&apos;d fail in a real interview. It&apos;s uncomfortable — and that&apos;s the point.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {["Strict Scoring", "0-100 Scale", "Actionable Feedback", "Role-Specific"].map(t => (
+                      <span key={t} className="text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full border border-zinc-800 text-zinc-500">{t}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="md:w-1/2 bg-zinc-900/60 rounded-xl p-6 font-mono text-sm border border-zinc-800/50">
+                  <p className="text-zinc-600 mb-2">// User: &quot;I use hooks for state.&quot;</p>
+                  <p className="mb-3"><span className="text-red-400/80">score:</span> <span className="text-red-400/80 text-2xl font-bold">35</span><span className="text-zinc-600">/100</span></p>
+                  <p className="text-zinc-400 text-xs leading-relaxed">
+                    &quot;Your response is far too brief and lacks technical substance.
+                    You referenced hooks but failed to discuss useState vs useReducer,
+                    context patterns, or performance implications...&quot;
+                  </p>
+                </div>
+              </div>
+            </Reveal>
           </div>
-          
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white mb-6 animate-fade-in-up animation-delay-200 leading-[1.1]">
-            ZYTHRON
-          </h1>
-          
-          <p className="max-w-2xl text-lg md:text-xl text-zinc-400 mb-10 animate-fade-in-up animation-delay-300">
-            AI-Powered Career Intelligence Platform. Navigate your professional journey with precision, driven by advanced artificial intelligence.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up animation-delay-400">
-            <Link href="/signup" className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-zinc-200 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]">
-              Start Your Journey
+        </div>
+      </section>
+
+      {/* ─── FEATURE GRID ─── */}
+      <section className="py-32 px-6 md:px-12 border-t border-zinc-800/60">
+        <div className="max-w-6xl mx-auto">
+          <Reveal>
+            <p className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-4 font-medium">Capabilities</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-16">
+              Built different.
+            </h2>
+          </Reveal>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              { title: "Vector Search", desc: "Pinecone-powered semantic search finds contextually relevant jobs, not just keyword matches." },
+              { title: "RAG Architecture", desc: "Retrieval-Augmented Generation grounds AI responses in real job data from our vector database." },
+              { title: "Gemini 1.5 Flash", desc: "Google's fastest model generates roadmaps and interview feedback in under 3 seconds." },
+              { title: "Harsh Scoring", desc: "Answers are scored 0-100 with no mercy. Buzzwords and fluff get penalized heavily." },
+              { title: "Skill Gap Analysis", desc: "Automatically identifies what you're missing and builds a path to close the gap." },
+              { title: "Real Job Data", desc: "Live job postings from Adzuna API, not synthetic data. Real companies, real requirements." },
+            ].map((f, i) => (
+              <Reveal key={i} delay={i * 0.08}>
+                <div className="feature-card rounded-xl p-6 h-full">
+                  <h3 className="text-white font-semibold mb-2 text-[15px]">{f.title}</h3>
+                  <p className="text-zinc-500 text-sm leading-relaxed">{f.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── ARCHITECTURE STRIP ─── */}
+      <section className="py-20 px-6 md:px-12 border-t border-zinc-800/60">
+        <div className="max-w-6xl mx-auto">
+          <Reveal>
+            <p className="text-xs tracking-[0.35em] uppercase text-zinc-500 mb-8 font-medium text-center">Architecture</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+              {[
+                "Adzuna API", "→", "Python Scraper", "→", "Gemini Embeddings", "→", "Pinecone DB", "→", "FastAPI", "→", "Next.js UI"
+              ].map((item, i) => (
+                item === "→" ? (
+                  <span key={i} className="text-zinc-700 text-lg hidden md:inline">→</span>
+                ) : (
+                  <span key={i} className="text-xs tracking-wider uppercase px-4 py-2 rounded-full border border-zinc-800 text-zinc-400 font-medium">
+                    {item}
+                  </span>
+                )
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ─── CTA ─── */}
+      <section className="py-32 px-6 md:px-12 border-t border-zinc-800/60">
+        <div className="max-w-3xl mx-auto text-center">
+          <Reveal>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+              Stop guessing.
+              <br />
+              <span className="text-zinc-500">Start engineering your career.</span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto">
+              Zythron is an AI-powered career intelligence platform. Real jobs, real roadmaps,
+              real feedback — one session at a time.
+            </p>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <Link
+              href="/signup"
+              className="inline-block bg-white text-black px-10 py-4 rounded-full text-sm font-semibold hover:bg-zinc-200 transition-all duration-300 hover:scale-[1.02] cta-glow"
+            >
+              Get started free
             </Link>
-            <Link href="/dashboard" className="w-full sm:w-auto px-8 py-4 bg-transparent text-white border border-zinc-700 rounded-full font-semibold text-lg hover:bg-zinc-800 transition-all duration-300">
-              View Dashboard
-            </Link>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ─── FOOTER ─── */}
+      <footer className="border-t border-zinc-800/60 py-12 px-6 md:px-12">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <p className="text-sm font-bold tracking-[0.2em] text-zinc-400">ZYTHRON</p>
+            <p className="text-xs text-zinc-600 mt-1">AI-Powered Career Intelligence Platform</p>
           </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="w-full py-24 animate-fade-in-up animation-delay-500">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">Intelligent capabilities</h2>
-            <p className="text-zinc-400 max-w-xl mx-auto">Elevate your career trajectory with our suite of AI-driven tools designed for the modern professional.</p>
+          <div className="flex items-center gap-6">
+            <Link href="/privacy" className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors">Privacy</Link>
+            <Link href="/terms" className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors">Terms</Link>
+            <Link href="/signin" className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors">Sign in</Link>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="group relative p-8 rounded-2xl bg-zinc-900/40 border border-zinc-800/60 hover:bg-zinc-900/80 hover:border-zinc-700 transition-all duration-500 overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-zinc-600">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-              </div>
-              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center mb-6 text-white">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-zinc-200 transition-colors">Career Matching</h3>
-              <p className="text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
-                Our advanced algorithms analyze your skills and aspirations to match you with ideal opportunities that align with your unique profile.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="group relative p-8 rounded-2xl bg-zinc-900/40 border border-zinc-800/60 hover:bg-zinc-900/80 hover:border-zinc-700 transition-all duration-500 overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-zinc-600">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-              </div>
-              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center mb-6 text-white">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-zinc-200 transition-colors">Mock Interviews</h3>
-              <p className="text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
-                Practice with our AI interviewers that simulate real-world scenarios, providing instant, actionable feedback to hone your delivery.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="group relative p-8 rounded-2xl bg-zinc-900/40 border border-zinc-800/60 hover:bg-zinc-900/80 hover:border-zinc-700 transition-all duration-500 overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-zinc-600">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-              </div>
-              <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center mb-6 text-white">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-              </div>
-              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-zinc-200 transition-colors">AI Roadmaps</h3>
-              <p className="text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">
-                Generate personalized, step-by-step career progression plans tailored to your specific goals and industry trends.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="w-full py-24 relative overflow-hidden rounded-3xl border border-zinc-800/50 bg-zinc-900/30 backdrop-blur-md animate-fade-in-up animation-delay-600 my-10 text-center flex flex-col items-center">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-900/50 pointer-events-none" />
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 relative z-10">Ready to transform your career?</h2>
-          <p className="text-zinc-400 max-w-xl mx-auto mb-10 relative z-10">Join thousands of professionals leveraging Zythron to accelerate their growth and achieve their ambitions.</p>
-          <Link href="/signup" className="relative z-10 px-8 py-4 bg-white text-black rounded-full font-bold text-lg hover:bg-zinc-200 hover:scale-105 transition-all duration-300 shadow-[0_0_30px_-5px_rgba(255,255,255,0.2)]">
-            Get Started Now
-          </Link>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-zinc-900 bg-[#0a0a0a] py-10 text-center">
-        <p className="text-zinc-600 text-sm">© {new Date().getFullYear()} Zythron. All rights reserved.</p>
+          <p className="text-xs text-zinc-700">© 2026 Zythron. Built at Hackathon.</p>
+        </div>
       </footer>
-
-      {/* Global CSS for Animations */}
-      <style jsx global>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 15s infinite alternate;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-fade-in-up {
-          opacity: 0;
-          animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .animation-delay-100 { animation-delay: 100ms; }
-        .animation-delay-200 { animation-delay: 200ms; }
-        .animation-delay-300 { animation-delay: 300ms; }
-        .animation-delay-400 { animation-delay: 400ms; }
-        .animation-delay-500 { animation-delay: 500ms; }
-        .animation-delay-600 { animation-delay: 600ms; }
-      `}</style>
     </div>
   );
 }
