@@ -414,45 +414,18 @@ ${interviewerProfile.sensibility}`;
           >
             Career Match
           </Link>
-          <button
-            onClick={() => {
-              setAppState("setup");
-              setCurrentTab("Resume");
-            }}
-            className={`px-5 py-2.5 rounded-full transition-all duration-300 ${
-              currentTab === "Resume" && appState === "setup"
-                ? "bg-zinc-800/60 text-zinc-200 border border-zinc-700/50 shadow-inner"
-                : "hover:text-zinc-200 hover:bg-white/5"
-            }`}
+          <Link
+            href="/resume-analyzer"
+            className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all"
           >
             Resume
-          </button>
-          <button
-            onClick={() => {
-              setAppState("setup");
-              setCurrentTab("Practice");
-            }}
-            className={`px-5 py-2.5 rounded-full transition-all duration-300 ${
-              currentTab === "Practice" && appState === "setup"
-                ? "bg-zinc-800/60 text-zinc-200 border border-zinc-700/50 shadow-inner font-semibold text-white"
-                : "hover:text-zinc-200 hover:bg-white/5"
-            }`}
+          </Link>
+          <Link
+            href="/mock-interview"
+            className="px-5 py-2.5 rounded-full bg-zinc-800/60 text-white font-semibold border border-zinc-700/50 shadow-inner"
           >
             Practice
-          </button>
-          <button
-            onClick={() => {
-              setAppState("setup");
-              setCurrentTab("Interviews");
-            }}
-            className={`px-5 py-2.5 rounded-full transition-all duration-300 ${
-              currentTab === "Interviews" && appState === "setup"
-                ? "bg-zinc-800/60 text-zinc-200 border border-zinc-700/50 shadow-inner"
-                : "hover:text-zinc-200 hover:bg-white/5"
-            }`}
-          >
-            Interviews
-          </button>
+          </Link>
           <Link
             href="/job-listings"
             className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all"
@@ -584,39 +557,19 @@ ${interviewerProfile.sensibility}`;
             </div>
           )}
 
-          {/* Practice Tab View (Full Cards Grid for Career Match, DSA, Resume, Fundamentals, MAANG, Job Feed, Record Meeting) */}
+          {/* Practice Tab View (Focused Mock Interview Tracks: DSA, System Design, Fundamentals, MAANG, Behavioral, Full-Stack) */}
           {currentTab === "Practice" && (
             <div className="flex-1 flex items-center justify-center p-8">
-              <div className="max-w-7xl w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                {/* Career Match Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-100">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-emerald-400 transition-colors">
-                    Career Match
-                  </h2>
-                  <div className="flex-1 flex items-center justify-center mt-4">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
-                      AI-orchestrated skill gap analysis, Quantum/tech domain match, and dynamic learning roadmap synthesis.
-                    </p>
-                  </div>
-                  <div className="flex justify-center mb-2">
-                    <Link
-                      href="/dashboard"
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center gap-2"
-                    >
-                      Start now <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-
                 {/* DSA Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-100">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-blue-400 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-100">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
                     DSA
                   </h2>
                   <div className="flex-1 flex items-center justify-center mt-4">
                     <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
-                      A focused data structures & algorithms interview designed to assess problem-solving skills.
+                      A focused data structures & algorithms interview designed to assess problem-solving skills and Big-O efficiency.
                     </p>
                   </div>
                   <div className="flex justify-center mb-2">
@@ -629,19 +582,19 @@ ${interviewerProfile.sensibility}`;
                   </div>
                 </div>
 
-                {/* Resume Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-200">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-purple-400 transition-colors">
-                    Resume
+                {/* System Design Card */}
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-200">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
+                    System Design
                   </h2>
                   <div className="flex-1 flex items-center justify-center mt-4">
                     <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
-                      Guided conversation and ATS keyword scanner focused on your past experience and projects.
+                      High-throughput microservices, vector search indexing, consensus protocols, and fault-tolerant architecture drills.
                     </p>
                   </div>
                   <div className="flex justify-center mb-2">
                     <button
-                      onClick={() => setCurrentTab("Resume")}
+                      onClick={() => startInterview("System Design")}
                       className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
                     >
                       Start now
@@ -650,13 +603,13 @@ ${interviewerProfile.sensibility}`;
                 </div>
 
                 {/* Fundamentals Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-300">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-emerald-400 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-300">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
                     Fundamentals
                   </h2>
                   <div className="flex-1 flex items-center justify-center mt-4">
                     <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
-                      Configure a focused round across networking, OS, databases, and OOP.
+                      Configure a focused technical round across networking, OS internals, database isolation, and OOP paradigms.
                     </p>
                   </div>
                   <div className="flex justify-center mb-2">
@@ -670,13 +623,13 @@ ${interviewerProfile.sensibility}`;
                 </div>
 
                 {/* MAANG Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-400">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-orange-400 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-400">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
                     MAANG
                   </h2>
                   <div className="flex-1 flex items-center justify-center mt-4">
                     <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
-                      Algorithmic and system design screening inspired by big tech interviews.
+                      Algorithmic and system design screening questions inspired by Tier-1 Big Tech interview bars.
                     </p>
                   </div>
                   <div className="flex justify-center mb-2">
@@ -689,43 +642,43 @@ ${interviewerProfile.sensibility}`;
                   </div>
                 </div>
 
-                {/* Job Listings Feed Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-amber-400 transition-colors">
-                    Job Feed
+                {/* Behavioral Card */}
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
+                    Behavioral
                   </h2>
                   <div className="flex-1 flex items-center justify-center mt-4">
                     <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
-                      Verified engineering job postings with Pinecone vector RAG matching and salary benchmarks.
+                      STAR method questions covering leadership principles, project ownership, and technical conflict resolution.
                     </p>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <Link
-                      href="/job-listings"
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center gap-2"
+                    <button
+                      onClick={() => startInterview("Behavioral")}
+                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
                     >
-                      Explore Jobs <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                      Start now
+                    </button>
                   </div>
                 </div>
 
-                {/* Record Meeting Notetaker Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[420px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-cyan-400 transition-colors">
-                    Notetaker
+                {/* Full-Stack Card */}
+                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
+                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
+                    Full-Stack & Web
                   </h2>
                   <div className="flex-1 flex items-center justify-center mt-4">
                     <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
-                      Autonomous notetaker bot to join live technical calls and transcribe meeting notes.
+                      React Server Components, Next.js streaming, async Python APIs, state management, and edge performance.
                     </p>
                   </div>
                   <div className="flex justify-center mb-2">
-                    <Link
-                      href="/record-meeting"
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center gap-2"
+                    <button
+                      onClick={() => startInterview("Full-Stack")}
+                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
                     >
-                      Launch Bot <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                      Start now
+                    </button>
                   </div>
                 </div>
 
