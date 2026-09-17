@@ -651,6 +651,15 @@ export default function HyperPersonalizedCareerGuidance() {
     }
   }, [preferredRole, experienceLevel, targetCompanyTier, userSkills, weeklyCommitmentHours, targetTimelineMonths, mounted]);
 
+  // Formatted Role Title for crisp presentation
+  const formattedRoleTitle = useMemo(() => {
+    if (!preferredRole.trim()) return "Full-Stack Systems Engineer";
+    return preferredRole
+      .split(" ")
+      .map((word) => (word.length > 0 ? word[0].toUpperCase() + word.slice(1) : ""))
+      .join(" ");
+  }, [preferredRole]);
+
   // Calculate Dynamic Role Requirements & Dynamic Phases
   const requiredRoleSkills = useMemo(() => getRequiredSkillsForRole(preferredRole), [preferredRole]);
   const activeRoadmapPhases = useMemo(() => getDynamicPhases(preferredRole), [preferredRole]);
@@ -752,8 +761,10 @@ export default function HyperPersonalizedCareerGuidance() {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_70%)] pointer-events-none" />
 
       {/* ─── TOP NAVBAR ─── */}
-      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/80 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-8">
+      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/90 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between relative">
+        
+        {/* Left: Brand Logo */}
+        <div className="flex items-center gap-3">
           <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2.5 font-mono group">
             <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors">
               <Zap className="h-4 w-4 text-white group-hover:text-cyan-300 transition-colors" />
@@ -765,44 +776,45 @@ export default function HyperPersonalizedCareerGuidance() {
               <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
             </span>
           </Link>
-
-          {/* Standardized Pill Navigation */}
-          <nav className="hidden md:flex items-center gap-1.5 font-mono text-xs">
-            <Link href="/dashboard" className="rounded-full px-3.5 py-1.5 text-xs font-semibold bg-white text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-              (01) CAREER MATCH
-            </Link>
-            <Link href="/mock-interview" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-              (02) MOCK INTERVIEW
-            </Link>
-            <Link href="/record-meeting" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-              (03) RECORD MEETING
-            </Link>
-            <Link href="/resume-analyzer" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-              (04) RESUME SCANNER
-            </Link>
-            <Link href="/job-listings" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
-              (05) JOB LISTINGS
-            </Link>
-          </nav>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* Center: Perfectly Centered Symmetrical Navigation */}
+        <nav className="hidden xl:flex items-center gap-1.5 font-mono text-xs absolute left-1/2 -translate-x-1/2">
+          <Link href="/dashboard" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-semibold bg-white text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]">
+            (01) CAREER MATCH
+          </Link>
+          <Link href="/mock-interview" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (02) MOCK INTERVIEW
+          </Link>
+          <Link href="/record-meeting" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (03) RECORD MEETING
+          </Link>
+          <Link href="/resume-analyzer" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (04) RESUME SCANNER
+          </Link>
+          <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (05) JOB LISTINGS
+          </Link>
+        </nav>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2.5">
           {/* Cmd+K Quick Launch Button */}
           <button
             onClick={() => setCommandPaletteOpen(true)}
-            className="hidden lg:flex items-center gap-2 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
+            className="hidden sm:flex items-center gap-2 h-9 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
           >
             <Search className="h-3.5 w-3.5 text-zinc-400" />
             <span>Search</span>
             <kbd className="text-[9px] bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded border border-white/20">⌘K</kbd>
           </button>
 
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono">
+          <div className="hidden sm:flex items-center gap-2 h-9 px-3.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono">
             <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
             <span className="text-zinc-300 font-medium">{userName}</span>
           </div>
 
-          <button onClick={handleSignOut} className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-full transition-colors cursor-pointer">
+          <button onClick={handleSignOut} className="h-9 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full transition-colors cursor-pointer font-mono">
             <LogOut className="h-3.5 w-3.5" />
             Sign out
           </button>
@@ -813,39 +825,39 @@ export default function HyperPersonalizedCareerGuidance() {
       <main className="max-w-7xl w-full mx-auto p-6 md:p-8 space-y-8 relative z-10">
 
         {/* ─── 1. HYPER-PERSONALIZED DIAGNOSTIC HEADER BANNER ─── */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-6 md:p-8 backdrop-blur-2xl shadow-2xl">
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-emerald-950/20 via-white/[0.03] to-cyan-950/20 p-6 md:p-8 backdrop-blur-2xl shadow-2xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-              <div className="flex flex-wrap items-center gap-2 mb-2">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Synced Profile: {userName}
                 </span>
-                <span className="text-[10px] uppercase font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1 rounded-full flex items-center gap-1">
+                <span className="text-[10px] uppercase font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1 rounded-full flex items-center gap-1 font-semibold">
                   <Award className="h-3 w-3 text-cyan-300" />
                   Level 3 Trajectory Rank (450 XP)
                 </span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-                Career Trajectory: <span className="text-zinc-200">{preferredRole}</span>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-snug">
+                Career Trajectory: <span className="text-cyan-300">{formattedRoleTitle}</span>
               </h1>
-              <p className="text-xs text-zinc-400 mt-1 font-mono">
-                Targeting {targetCompanyTier} • {experienceLevel} Tier • {weeklyCommitmentHours}h/week Commitment Horizon
+              <p className="text-xs text-zinc-400 font-mono leading-relaxed">
+                Targeting <span className="text-zinc-200">{targetCompanyTier}</span> • <span className="text-zinc-200">{experienceLevel} Tier</span> • <span className="text-zinc-200">{weeklyCommitmentHours}h/week</span> Commitment Horizon
               </p>
             </div>
 
             {/* Diagnostic Metrics */}
-            <div className="grid grid-cols-3 gap-3 font-mono text-center">
-              <div className="bg-black/40 border border-white/10 p-3 rounded-2xl">
-                <span className="text-[9px] text-zinc-500 uppercase block">Skill Match</span>
+            <div className="grid grid-cols-3 gap-3 font-mono text-center shrink-0">
+              <div className="w-28 sm:w-32 h-20 bg-black/60 border border-white/10 p-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
+                <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Skill Match</span>
                 <span className="text-xl font-bold text-emerald-400">{skillMatchPercent}%</span>
               </div>
-              <div className="bg-black/40 border border-white/10 p-3 rounded-2xl">
-                <span className="text-[9px] text-zinc-500 uppercase block">Milestones</span>
+              <div className="w-28 sm:w-32 h-20 bg-black/60 border border-white/10 p-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
+                <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Milestones</span>
                 <span className="text-xl font-bold text-white">{completedCount}/5</span>
               </div>
-              <div className="bg-black/40 border border-white/10 p-3 rounded-2xl">
-                <span className="text-[9px] text-zinc-500 uppercase block">Salary Uplift</span>
+              <div className="w-28 sm:w-32 h-20 bg-black/60 border border-white/10 p-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
+                <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Salary Uplift</span>
                 <span className="text-base font-bold text-cyan-300">+${estimatedSalaryUplift / 1000}k</span>
               </div>
             </div>
