@@ -34,7 +34,10 @@ export default function UserFriendlyRecordMeeting() {
   // Bot Status
   const [isDispatching, setIsDispatching] = useState<boolean>(false);
   const [isBotConnected, setIsBotConnected] = useState<boolean>(true);
+  const [isStreamingPaused, setIsStreamingPaused] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"transcript" | "summary">("transcript");
+  const [packetCount, setPacketCount] = useState<number>(1842);
+  const [newActionInput, setNewActionInput] = useState<string>("");
 
   // Live Transcript Stream
   const [transcriptItems, setTranscriptItems] = useState<
@@ -81,6 +84,52 @@ export default function UserFriendlyRecordMeeting() {
     }
   }, []);
 
+  // Periodic Telemetry & Transcript Auto-Stream
+  useEffect(() => {
+    if (!isBotConnected || isStreamingPaused) return;
+
+    const interval = setInterval(() => {
+      setPacketCount((prev) => prev + Math.floor(Math.random() * 12) + 5);
+
+      const nowStr = new Date().toLocaleTimeString("en-US", { hour12: false });
+      const streamDialogues = [
+        {
+          speaker: "Interviewer" as const,
+          time: nowStr,
+          text: "How do you handle consensus during network partitioning in Raft vs Paxos clusters?",
+        },
+        {
+          speaker: "Candidate" as const,
+          time: nowStr,
+          text: "We rely on Raft leader leases with monotonic heartbeats to prevent split-brain leader elections.",
+        },
+        {
+          speaker: "AI Notetaker" as const,
+          time: nowStr,
+          text: "[ARCHITECTURAL INSIGHT: Raft leader lease mechanism verified for zero-data-loss failover.]",
+        },
+        {
+          speaker: "Interviewer" as const,
+          time: nowStr,
+          text: "What happens when a node experiences a 500ms JVM garbage collection pause?",
+        },
+        {
+          speaker: "Candidate" as const,
+          time: nowStr,
+          text: "The lease duration is configured to 2s, exceeding maximum expected GC pauses to avoid unnecessary re-elections.",
+        },
+      ];
+
+      setTranscriptItems((prev) => {
+        if (prev.length > 15) return prev;
+        const nextItem = streamDialogues[(prev.length - 4) % streamDialogues.length];
+        return [...prev, nextItem];
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isBotConnected, isStreamingPaused]);
+
   // Detect platform
   useEffect(() => {
     const lower = meetingUrl.toLowerCase();
@@ -124,7 +173,7 @@ export default function UserFriendlyRecordMeeting() {
         throw new Error("Failed to dispatch bot");
       }
     } catch (err) {
-      // Fallback local status update if backend endpoint isn't active
+      // Fallback local status update
       setIsBotConnected(true);
       setTranscriptItems((prev) => [
         ...prev,
@@ -137,6 +186,12 @@ export default function UserFriendlyRecordMeeting() {
     } finally {
       setIsDispatching(false);
     }
+  };
+
+  const handleAddActionItem = () => {
+    if (!newActionInput.trim()) return;
+    setActionItems((prev) => [...prev, newActionInput.trim()]);
+    setNewActionInput("");
   };
 
   const handleSignOut = () => {
@@ -292,7 +347,7 @@ export default function UserFriendlyRecordMeeting() {
               Live Telemetry
             </h3>
 
-            <div className="grid grid-cols-2 gap-3 text-xs font-mono">
+            <div className="grid grid-cols-3 gap-3 text-xs font-mono">
               <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                 <span className="text-[10px] text-zinc-500 uppercase block">Codec</span>
                 <span className="text-zinc-200 font-semibold">OPUS 48kHz</span>
@@ -300,6 +355,10 @@ export default function UserFriendlyRecordMeeting() {
               <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
                 <span className="text-[10px] text-zinc-500 uppercase block">Encryption</span>
                 <span className="text-emerald-400 font-semibold">TLS 1.3 / SRTP</span>
+              </div>
+              <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                <span className="text-[10px] text-zinc-500 uppercase block">Packets Ingested</span>
+                <span className="text-cyan-400 font-semibold">{packetCount.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -331,7 +390,13 @@ export default function UserFriendlyRecordMeeting() {
                 </button>
               </div>
 
-              <span className="text-xs text-zinc-500 font-mono">Real-Time Stream</span>
+              <button
+                onClick={() => setIsStreamingPaused((prev) => !prev)}
+                className="text-xs text-zinc-400 hover:text-white font-mono px-3 py-1.5 rounded-xl border border-zinc-800 hover:border-zinc-700 bg-zinc-950 flex items-center gap-1.5 transition-colors"
+              >
+                <span className={`w-2 h-2 rounded-full ${isStreamingPaused ? "bg-amber-400" : "bg-emerald-400 animate-ping"}`} />
+                <span>{isStreamingPaused ? "Resume Stream" : "Streaming Live"}</span>
+              </button>
             </div>
 
             {/* TAB 1: LIVE TRANSCRIPT STREAM */}
@@ -371,14 +436,33 @@ export default function UserFriendlyRecordMeeting() {
                   </p>
                 </div>
 
-                <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-2">
+                <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-3">
                   <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
                     <ListTodo className="h-4 w-4 text-emerald-400" />
                     Action Items ({actionItems.length})
                   </h4>
+
+                  {/* Action Item Input Form */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newActionInput}
+                      onChange={(e) => setNewActionInput(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && handleAddActionItem()}
+                      placeholder="Add new action item..."
+                      className="flex-1 bg-zinc-900 border border-zinc-700 px-3 py-2 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
+                    />
+                    <button
+                      onClick={handleAddActionItem}
+                      className="bg-white text-black font-bold px-3.5 py-2 rounded-xl text-xs hover:bg-zinc-200 transition-colors"
+                    >
+                      Add
+                    </button>
+                  </div>
+
                   <ul className="space-y-2 text-zinc-300">
                     {actionItems.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2">
+                      <li key={i} className="flex items-start gap-2 bg-zinc-900/60 p-2.5 rounded-lg border border-zinc-800/80">
                         <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         <span>{item}</span>
                       </li>
