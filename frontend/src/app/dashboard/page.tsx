@@ -1072,43 +1072,43 @@ export default function HyperPersonalizedCareerGuidance() {
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="max-w-[1536px] w-full mx-auto p-6 md:p-8 space-y-8 relative z-10">
+      <main className="w-full max-w-[1720px] mx-auto p-6 md:p-10 space-y-10 relative z-10">
 
         {/* ─── 1. HYPER-PERSONALIZED DIAGNOSTIC HEADER BANNER ─── */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-emerald-950/20 via-white/[0.03] to-cyan-950/20 p-6 md:p-8 backdrop-blur-2xl shadow-2xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-emerald-950/20 via-white/[0.03] to-cyan-950/20 p-8 md:p-10 backdrop-blur-2xl shadow-2xl">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-xs uppercase font-mono tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   Synced Profile: {userName}
                 </span>
-                <span className="text-[10px] uppercase font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1 rounded-full flex items-center gap-1 font-semibold">
-                  <Award className="h-3 w-3 text-cyan-300" />
+                <span className="text-xs uppercase font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 font-bold">
+                  <Award className="h-4 w-4 text-cyan-300" />
                   Level 3 Trajectory Rank (450 XP)
                 </span>
               </div>
-              <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight leading-snug">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
                 Career Trajectory: <span className="text-cyan-300">{formattedRoleTitle}</span>
               </h1>
-              <p className="text-xs text-zinc-400 font-mono leading-relaxed">
-                Targeting <span className="text-zinc-200">{targetCompanyTier}</span> • <span className="text-zinc-200">{experienceLevel} Tier</span> • <span className="text-zinc-200">{weeklyCommitmentHours}h/week</span> Commitment Horizon
+              <p className="text-sm text-zinc-300 font-sans leading-relaxed">
+                Targeting <span className="text-white font-semibold">{targetCompanyTier}</span> • <span className="text-white font-semibold">{experienceLevel} Tier</span> • <span className="text-white font-semibold">{weeklyCommitmentHours}h/week</span> Commitment Horizon
               </p>
             </div>
 
             {/* Diagnostic Metrics */}
-            <div className="grid grid-cols-3 gap-3 font-mono text-center shrink-0">
-              <div className="min-w-[110px] bg-black/60 border border-white/10 px-4 py-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
-                <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Skill Match</span>
-                <span className="text-xl font-bold text-emerald-400">{skillMatchPercent}%</span>
+            <div className="grid grid-cols-3 gap-4 font-mono text-center shrink-0">
+              <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
+                <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Skill Match</span>
+                <span className="text-2xl md:text-3xl font-extrabold text-emerald-400">{skillMatchPercent}%</span>
               </div>
-              <div className="min-w-[110px] bg-black/60 border border-white/10 px-4 py-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
-                <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Milestones</span>
-                <span className="text-xl font-bold text-white">{completedCount}/{totalMilestones}</span>
+              <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
+                <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Milestones</span>
+                <span className="text-2xl md:text-3xl font-extrabold text-white">{completedCount}/{totalMilestones}</span>
               </div>
-              <div className="min-w-[110px] bg-black/60 border border-white/10 px-4 py-3 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/20 transition-all">
-                <span className="text-[9px] text-zinc-500 uppercase tracking-wider block mb-0.5">Salary Uplift</span>
-                <span className="text-base font-bold text-cyan-300">+${estimatedSalaryUplift / 1000}k</span>
+              <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
+                <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Salary Uplift</span>
+                <span className="text-xl md:text-2xl font-extrabold text-cyan-300">+${estimatedSalaryUplift / 1000}k</span>
               </div>
             </div>
           </div>
@@ -1121,33 +1121,33 @@ export default function HyperPersonalizedCareerGuidance() {
           <div className="lg:col-span-4 space-y-6">
 
             {/* Parameter Adjustment Panel */}
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-xl space-y-5 shadow-xl">
-              <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-7 backdrop-blur-xl space-y-6 shadow-xl">
+              <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.08]">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                   <Sliders className="h-4 w-4 text-white" />
                   Career Controls
                 </h3>
-                <span className="text-[10px] font-mono text-zinc-500">Live Tweak</span>
+                <span className="text-xs font-mono text-zinc-400">Live Tweak</span>
               </div>
 
               {/* Target Role Input */}
               <div>
-                <label className="text-xs text-zinc-400 block mb-1.5 font-medium">Target Role</label>
+                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Target Role</label>
                 <input
                   type="text"
                   value={preferredRole}
                   onChange={(e) => setPreferredRole(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 px-3.5 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-white/40 font-mono"
+                  className="w-full bg-black/50 border border-white/15 px-4 py-3 rounded-xl text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
                 />
               </div>
 
               {/* Experience Level Selector */}
               <div>
-                <label className="text-xs text-zinc-400 block mb-1.5 font-medium">Experience Level</label>
+                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Experience Level</label>
                 <select
                   value={experienceLevel}
                   onChange={(e) => setExperienceLevel(e.target.value as any)}
-                  className="w-full bg-black/50 border border-white/10 px-3.5 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-white/40 font-mono"
+                  className="w-full bg-black/50 border border-white/15 px-4 py-3 rounded-xl text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
                 >
                   <option value="Junior">Junior Tier (0-2 YOE)</option>
                   <option value="Mid">Mid-Level Tier (2-5 YOE)</option>
@@ -1157,13 +1157,13 @@ export default function HyperPersonalizedCareerGuidance() {
 
               {/* Target Company Tier Selector */}
               <div>
-                <label className="text-xs text-zinc-400 block mb-1.5 font-medium">Target Employer Tier</label>
-                <div className="grid grid-cols-3 gap-1.5 font-mono text-[10px]">
+                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Target Employer Tier</label>
+                <div className="grid grid-cols-3 gap-2 text-xs">
                   {(["Tier 1 Big Tech", "AI Unicorn", "High-Growth"] as const).map((tier) => (
                     <button
                       key={tier}
                       onClick={() => setTargetCompanyTier(tier)}
-                      className={`p-2 rounded-xl border text-center transition-all ${
+                      className={`py-2.5 px-2 rounded-xl border text-center font-medium transition-all ${
                         targetCompanyTier === tier
                           ? "bg-white text-black font-bold border-white shadow-md"
                           : "bg-black/40 border-white/10 text-zinc-400 hover:text-white"
@@ -1177,27 +1177,27 @@ export default function HyperPersonalizedCareerGuidance() {
 
               {/* Interactive Skill Chips Editor */}
               <div>
-                <label className="text-xs text-zinc-400 block mb-1.5 font-medium">Your Current Skills ({userSkills.length})</label>
-                <div className="flex gap-2 mb-2">
+                <label className="text-xs text-zinc-300 block mb-1.5 font-semibold">Your Current Skills ({userSkills.length})</label>
+                <div className="flex gap-2 mb-2.5">
                   <input
                     type="text"
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
                     placeholder="Add skill (e.g. Docker)..."
-                    className="flex-1 bg-black/50 border border-white/10 px-3 py-2 rounded-xl text-xs text-white focus:outline-none font-mono"
+                    className="flex-1 bg-black/50 border border-white/15 px-4 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-cyan-400"
                   />
-                  <button onClick={handleAddSkill} className="bg-white text-black px-3.5 py-2 rounded-xl text-xs font-semibold hover:bg-zinc-200 transition-colors">
+                  <button onClick={handleAddSkill} className="bg-white text-black px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-zinc-200 transition-colors">
                     <Plus className="h-4 w-4" />
                   </button>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto">
+                <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto">
                   {userSkills.map((s) => (
-                    <span key={s.name} className="inline-flex items-center gap-1.5 text-xs bg-white/[0.04] text-zinc-200 px-3 py-1 rounded-full border border-white/10 font-mono">
+                    <span key={s.name} className="inline-flex items-center gap-2 text-xs bg-white/[0.06] text-zinc-200 px-3.5 py-1.5 rounded-full border border-white/15 font-medium">
                       {s.name}
-                      <button onClick={() => handleRemoveSkill(s.name)} className="text-zinc-500 hover:text-white">
-                        <X className="h-3 w-3" />
+                      <button onClick={() => handleRemoveSkill(s.name)} className="text-zinc-400 hover:text-white">
+                        <X className="h-3.5 w-3.5" />
                       </button>
                     </span>
                   ))}
@@ -1208,7 +1208,7 @@ export default function HyperPersonalizedCareerGuidance() {
               <button
                 onClick={handleSynthesizeAIRoadmap}
                 disabled={isGeneratingRoadmap}
-                className="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-xs hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
+                className="w-full bg-white text-black font-extrabold py-4 rounded-2xl text-sm hover:bg-zinc-200 transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-xl disabled:opacity-50"
               >
                 {isGeneratingRoadmap ? (
                   <>
@@ -1312,84 +1312,84 @@ export default function HyperPersonalizedCareerGuidance() {
           <div className="lg:col-span-8 space-y-6">
 
             {/* 🚀 PROMINENT CODE ARENA WORKSTATION CARD */}
-            <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-cyan-950/40 p-6 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono relative overflow-hidden group">
-              <div className="space-y-1 z-10">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+            <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-cyan-950/40 p-7 md:p-8 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 font-mono relative overflow-hidden group">
+              <div className="space-y-2 z-10">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs uppercase font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
                     Interactive IDE Workstation
                   </span>
-                  <span className="text-[10px] text-zinc-400">Python & TypeScript Sandbox</span>
+                  <span className="text-xs text-zinc-300 font-sans">Python & TypeScript Sandbox</span>
                 </div>
-                <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
-                  <Code2 className="h-5 w-5 text-cyan-400" />
+                <h3 className="text-xl md:text-2xl font-black text-white flex items-center gap-2.5 tracking-tight">
+                  <Code2 className="h-6 w-6 text-cyan-400" />
                   LeetCode & System Design Code Arena
                 </h3>
-                <p className="text-xs text-zinc-300 font-sans max-w-lg leading-relaxed">
+                <p className="text-sm text-zinc-300 font-sans max-w-xl leading-relaxed">
                   Practice live data structure algorithms, token bucket rate limiters, and vector similarity metrics with AI test runners and Big-O complexity profiling.
                 </p>
               </div>
 
               <Link
                 href="/code-arena"
-                className="z-10 bg-white text-black font-extrabold px-5 py-3 rounded-2xl text-xs hover:bg-zinc-200 transition-all flex items-center gap-2 shrink-0 shadow-lg group-hover:scale-105"
+                className="z-10 bg-white text-black font-extrabold px-6 py-3.5 rounded-2xl text-sm hover:bg-zinc-200 transition-all flex items-center gap-2 shrink-0 shadow-xl group-hover:scale-105"
               >
                 <span>Launch Code Arena</span>
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-5 w-5" />
               </Link>
             </div>
 
             {/* 3 Phase Cards Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-base font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                  <Compass className="h-4 w-4 text-white" />
+                <h2 className="text-lg font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                  <Compass className="h-5 w-5 text-white" />
                   Adaptive Custom Curriculum
                 </h2>
-                <p className="text-xs text-zinc-400">Click any milestone card to inspect syllabus topics, capstones & docs</p>
+                <p className="text-xs text-zinc-300">Click any milestone card to inspect syllabus topics, capstones & docs</p>
               </div>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowAddPhaseModal(true)}
-                  className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-semibold transition-all flex items-center gap-1.5 shadow-lg shadow-cyan-500/10 active:scale-95"
+                  className="px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-lg shadow-cyan-500/10 active:scale-95 cursor-pointer"
                 >
-                  <Plus className="h-3.5 w-3.5 text-cyan-400" />
+                  <Plus className="h-4 w-4 text-cyan-400" />
                   Add Specialized Phase
                 </button>
-                <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
-                  {progressPercent}% Complete ({completedCount}/5)
+                <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full">
+                  {progressPercent}% Complete ({completedCount}/{totalMilestones})
                 </span>
               </div>
             </div>
 
             {/* 3 Phase Parallel Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {activeRoadmapPhases.map((phase) => {
                 const PhaseIcon = phase.icon;
                 return (
                   <div
                     key={phase.id}
                     onClick={() => setActiveModalPhase(phase)}
-                    className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-5 space-y-4 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-cyan-500/40 transition-all cursor-pointer group relative"
+                    className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent p-6 space-y-5 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-cyan-500/40 transition-all cursor-pointer group relative min-h-[340px]"
                   >
                     <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[9px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/10">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-mono uppercase tracking-widest px-3 py-1 rounded-full bg-white/10 text-zinc-200 border border-white/10 font-bold">
                           {phase.badge}
                         </span>
                         <div className="flex items-center gap-1.5 text-zinc-400 group-hover:text-cyan-300 transition-colors">
-                          <span className="text-[10px] font-mono">Overview</span>
-                          <PhaseIcon className="h-4 w-4" />
+                          <span className="text-xs font-medium">Overview</span>
+                          <PhaseIcon className="h-4.5 w-4.5" />
                         </div>
                       </div>
-                      <h3 className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors leading-snug mb-1 flex items-center justify-between">
+                      <h3 className="text-sm md:text-base font-extrabold text-white group-hover:text-cyan-300 transition-colors leading-snug mb-1.5 flex items-center justify-between">
                         <span>{phase.title}</span>
-                        <ChevronRight className="h-3.5 w-3.5 text-zinc-500 group-hover:text-cyan-300 transition-colors shrink-0" />
+                        <ChevronRight className="h-4 w-4 text-zinc-400 group-hover:text-cyan-300 transition-colors shrink-0 ml-1" />
                       </h3>
-                      <p className="text-[11px] text-zinc-400 leading-relaxed line-clamp-2">{phase.description}</p>
+                      <p className="text-xs md:text-sm text-zinc-300 leading-relaxed line-clamp-3">{phase.description}</p>
                     </div>
 
                     {/* Milestones inside Phase */}
-                    <div className="space-y-2 pt-3 border-t border-white/[0.08]">
+                    <div className="space-y-2.5 pt-4 border-t border-white/[0.08]">
                       {phase.milestones.map((m) => {
                         const isDone = completedMilestones[m.id];
                         return (
@@ -1399,29 +1399,29 @@ export default function HyperPersonalizedCareerGuidance() {
                               e.stopPropagation();
                               setActiveModalMilestone(m);
                             }}
-                            className="p-3 rounded-2xl border bg-black/40 border-white/10 hover:border-white/30 transition-all cursor-pointer group/m"
+                            className="p-3.5 rounded-2xl border bg-black/40 border-white/10 hover:border-white/30 transition-all cursor-pointer group/m"
                           >
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="flex items-start gap-2">
+                            <div className="flex items-start justify-between gap-2.5">
+                              <div className="flex items-start gap-2.5">
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toggleMilestone(m.id);
                                   }}
-                                  className={`mt-0.5 h-4 w-4 rounded-md flex items-center justify-center transition-colors ${
+                                  className={`mt-0.5 h-4.5 w-4.5 rounded-md flex items-center justify-center transition-colors ${
                                     isDone ? "bg-emerald-400 text-black" : "border border-zinc-600 hover:border-zinc-300"
                                   }`}
                                 >
-                                  {isDone && <Check className="h-3 w-3 stroke-[3]" />}
+                                  {isDone && <Check className="h-3.5 w-3.5 stroke-[3]" />}
                                 </button>
                                 <div>
-                                  <h4 className="text-xs font-semibold text-white group-hover/m:text-cyan-300 transition-colors leading-snug">
+                                  <h4 className="text-xs md:text-sm font-bold text-white group-hover/m:text-cyan-300 transition-colors leading-snug">
                                     {m.title}
                                   </h4>
-                                  <span className="text-[9px] font-mono text-zinc-500">{m.workloadHours}h study hours</span>
+                                  <span className="text-xs font-mono text-zinc-400">{m.workloadHours}h study hours</span>
                                 </div>
                               </div>
-                              <ChevronRight className="h-4 w-4 text-zinc-500 group-hover/m:text-white transition-colors shrink-0" />
+                              <ChevronRight className="h-4 w-4 text-zinc-400 group-hover/m:text-white transition-colors shrink-0 mt-0.5" />
                             </div>
                           </div>
                         );
