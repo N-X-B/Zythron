@@ -282,37 +282,22 @@ export default function SleekExecutiveDashboard() {
             ZYTHRON
           </Link>
 
-          {/* Navigation Feature Tabs */}
-          <nav className="flex items-center gap-1 font-mono text-xs overflow-x-auto no-scrollbar">
-            <Link
-              href="/dashboard"
-              className="rounded-full px-3.5 py-1 font-semibold bg-white text-black transition-all"
-            >
+          {/* Standardized Navigation Feature Tabs - All text-xs font-medium */}
+          <nav className="hidden md:flex items-center gap-1.5 font-mono text-xs overflow-x-auto no-scrollbar">
+            <Link href="/dashboard" className="rounded-full px-3.5 py-1.5 text-xs font-semibold bg-white text-black transition-all">
               (01) CAREER MATCH
             </Link>
-            <Link
-              href="/mock-interview"
-              className="rounded-full px-3.5 py-1 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
+            <Link href="/mock-interview" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
               (02) MOCK INTERVIEW
             </Link>
-            <Link
-              href="/record-meeting"
-              className="rounded-full px-3.5 py-1 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
+            <Link href="/record-meeting" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
               (03) RECORD MEETING
             </Link>
-            <Link
-              href="/resume-analyzer"
-              className="rounded-full px-3.5 py-1 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
+            <Link href="/resume-analyzer" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
               (04) RESUME SCANNER
             </Link>
-            <Link
-              href="/salary-benchmark"
-              className="rounded-full px-3.5 py-1 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
-              (05) SALARY BENCHMARK
+            <Link href="/job-listings" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
+              (05) JOB LISTINGS
             </Link>
           </nav>
         </div>
@@ -462,6 +447,37 @@ export default function SleekExecutiveDashboard() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* EXPANDED CAREER TANGENT: Target Company Tier Selector */}
+            <div>
+              <label className="text-xs text-zinc-400 block mb-1 font-medium">Target Employer Tier</label>
+              <div className="grid grid-cols-3 gap-1 text-[10px] font-mono">
+                {["Tier 1 Big Tech", "AI Unicorn", "High-Growth"].map((tier, i) => (
+                  <button
+                    key={tier}
+                    type="button"
+                    className={`p-1.5 rounded border text-center transition-all ${
+                      i === 0
+                        ? "bg-emerald-950/60 border-emerald-800 text-emerald-300 font-bold"
+                        : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    {tier}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* EXPANDED CAREER TANGENT: Estimated Salary Growth Widget */}
+            <div className="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-1">
+              <div className="flex items-center justify-between text-[10px] font-mono">
+                <span className="text-zinc-400 uppercase">Estimated Salary Uplift</span>
+                <span className="text-emerald-400 font-bold">+$32,000 / yr</span>
+              </div>
+              <p className="text-[10px] text-zinc-500 leading-snug">
+                Completing Phase 1-3 unlocks higher market compensation in Pinecone RAG job feeds.
+              </p>
             </div>
 
             {/* Action Button */}
