@@ -625,6 +625,11 @@ export default function CareerGuidanceDashboard() {
   // Domain and Track Selection
   const [selectedDomainId, setSelectedDomainId] = useState<string>("tech-ai");
   const [selectedTrackId, setSelectedTrackId] = useState<string>("fullstack-systems");
+  const [mounted, setMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Interactive 3D Impossible Triangle Tilt State
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -826,6 +831,27 @@ export default function CareerGuidanceDashboard() {
     setTilt({ x: 0, y: 0 });
   };
 
+  if (!mounted) {
+    return (
+      <div suppressHydrationWarning className="min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-white selection:text-black relative overflow-x-hidden flex items-center justify-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(0,56,255,0.18),transparent_55%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+        <div className="relative z-10 flex flex-col items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-md bg-white/[0.08] border border-white/20 flex items-center justify-center shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+              <Layers className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-bold tracking-wider text-base text-white font-mono">ZYTHRON</span>
+          </div>
+          <div className="flex items-center gap-2 font-mono text-[11px] text-zinc-400">
+            <span className="inline-block h-1.5 w-1.5 rounded-sm bg-cyan-400 animate-ping" />
+            <span>INITIALIZING EXECUTIVE WORKSTATION...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div suppressHydrationWarning className="min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-white selection:text-black relative overflow-x-hidden">
       {/* ATMOSPHERIC AMBIENT GLOW & ARCHITECTURAL GRID */}
@@ -866,7 +892,7 @@ export default function CareerGuidanceDashboard() {
             </div>
 
             {/* Glassy Terminal Action Button */}
-            <button
+            <button suppressHydrationWarning
               type="button"
               onClick={() => setChatDrawerOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/[0.06] hover:bg-white/[0.12] hover:border-white/25 px-3 py-1.5 text-xs font-medium text-white transition-all active:scale-95 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] cursor-pointer"
@@ -890,7 +916,7 @@ export default function CareerGuidanceDashboard() {
               const isSelected = domain.id === selectedDomainId;
               const DomainIcon = domain.icon;
               return (
-                <button
+                <button suppressHydrationWarning
                   type="button"
                   key={domain.id}
                   onClick={() => setSelectedDomainId(domain.id)}
@@ -925,7 +951,7 @@ export default function CareerGuidanceDashboard() {
             {currentDomain.tracks.map((track) => {
               const isCurrent = track.id === selectedTrackId;
               return (
-                <button
+                <button suppressHydrationWarning
                   type="button"
                   key={track.id}
                   onClick={() => setSelectedTrackId(track.id)}
@@ -941,7 +967,7 @@ export default function CareerGuidanceDashboard() {
             })}
           </div>
 
-          <button
+          <button suppressHydrationWarning
             onClick={() => setChatDrawerOpen(true)}
             className="hidden sm:inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 bg-cyan-950/20 px-2.5 py-1 text-xs font-semibold text-cyan-300 hover:bg-cyan-900/30 transition-all cursor-pointer shrink-0"
           >
@@ -1146,7 +1172,7 @@ export default function CareerGuidanceDashboard() {
                 </label>
                 <div className="flex flex-wrap gap-1">
                   {[5, 10, 15, 20, 30, 40].map((hrs) => (
-                    <button
+                    <button suppressHydrationWarning
                       key={hrs}
                       type="button"
                       onClick={() => setWeeklyCommitmentHours(hrs)}
@@ -1186,7 +1212,7 @@ export default function CareerGuidanceDashboard() {
                   <Calendar className="h-3.5 w-3.5 text-zinc-400" />
                   Target Completion Window
                 </label>
-                <select
+                <select suppressHydrationWarning
                   value={targetTimelineMonths}
                   onChange={(e) => setTargetTimelineMonths(Number(e.target.value))}
                   className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
@@ -1204,7 +1230,7 @@ export default function CareerGuidanceDashboard() {
                   <BookOpen className="h-3.5 w-3.5 text-zinc-400" />
                   Primary Learning Modality
                 </label>
-                <select
+                <select suppressHydrationWarning
                   value={learningPreference}
                   onChange={(e) => setLearningPreference(e.target.value)}
                   className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
@@ -1265,7 +1291,7 @@ export default function CareerGuidanceDashboard() {
                       placeholder="e.g. PyTorch, DCF Valuation, Unity"
                       suppressHydrationWarning className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
                     />
-                    <button
+                    <button suppressHydrationWarning
                       type="submit"
                       className="flex items-center justify-center rounded-md bg-white text-zinc-950 px-3 py-1.5 text-xs font-bold hover:bg-zinc-200 transition-colors cursor-pointer"
                     >
@@ -1278,7 +1304,7 @@ export default function CareerGuidanceDashboard() {
                   <label className="text-zinc-400">Proficiency:</label>
                   <div className="flex rounded-md border border-zinc-800 bg-zinc-950 p-0.5">
                     {(["Beginner", "Intermediate", "Advanced"] as const).map((lvl) => (
-                      <button
+                      <button suppressHydrationWarning
                         key={lvl}
                         type="button"
                         onClick={() => setSkillLevel(lvl)}
@@ -1308,7 +1334,7 @@ export default function CareerGuidanceDashboard() {
                     >
                       <span>{s.name}</span>
                       <span className="text-[10px] font-mono text-zinc-400">[{s.level[0]}]</span>
-                      <button
+                      <button suppressHydrationWarning
                         type="button"
                         onClick={() => handleRemoveSkill(s.name)}
                         className="text-zinc-400 hover:text-red-400 transition-colors ml-0.5 cursor-pointer"
@@ -1335,7 +1361,7 @@ export default function CareerGuidanceDashboard() {
                   {activeTrack.suggestedPrereqs.map((item) => {
                     const exists = userSkills.some((us) => us.name.toLowerCase() === item.toLowerCase());
                     return (
-                      <button
+                      <button suppressHydrationWarning
                         type="button"
                         key={item}
                         disabled={exists}
@@ -1399,7 +1425,7 @@ export default function CareerGuidanceDashboard() {
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {calculation.missing.map((s) => (
-                      <button
+                      <button suppressHydrationWarning
                         type="button"
                         key={s}
                         onClick={() => handleQuickAdd(s)}
@@ -1512,7 +1538,7 @@ export default function CareerGuidanceDashboard() {
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex items-start gap-3">
-                                <button
+                                <button suppressHydrationWarning
                                   type="button"
                                   onClick={(e) => toggleMilestone(m.id, e)}
                                   title={isDone ? "Mark Incomplete" : "Mark Complete"}
@@ -1636,7 +1662,7 @@ export default function CareerGuidanceDashboard() {
                   {activeModalMilestone.title}
                 </h3>
               </div>
-              <button
+              <button suppressHydrationWarning
                 type="button"
                 onClick={() => setActiveModalMilestone(null)}
                 className="rounded-md p-1.5 text-zinc-400 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
@@ -1717,7 +1743,7 @@ export default function CareerGuidanceDashboard() {
 
             {/* Modal Actions */}
             <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-              <button
+              <button suppressHydrationWarning
                 type="button"
                 onClick={() => {
                   toggleMilestone(activeModalMilestone.id);
@@ -1735,7 +1761,7 @@ export default function CareerGuidanceDashboard() {
                 </span>
               </button>
 
-              <button
+              <button suppressHydrationWarning
                 type="button"
                 onClick={() => setActiveModalMilestone(null)}
                 className="rounded-md border border-zinc-700 bg-zinc-800 px-3.5 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-700 transition-colors cursor-pointer"
@@ -1770,7 +1796,7 @@ export default function CareerGuidanceDashboard() {
                   <span className="h-2 w-2 rounded bg-emerald-400" />
                   <span>{AI_CHAT_ENDPOINT}</span>
                 </div>
-                <button
+                <button suppressHydrationWarning
                   type="button"
                   onClick={() => setChatDrawerOpen(false)}
                   className="rounded-md p-1 text-zinc-400 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
@@ -1819,7 +1845,7 @@ export default function CareerGuidanceDashboard() {
                 "Recommend next capstone project to build.",
                 "Explain the primary competencies of Phase 1.",
               ].map((query) => (
-                <button
+                <button suppressHydrationWarning
                   key={query}
                   type="button"
                   disabled={isChatLoading}
@@ -1833,7 +1859,7 @@ export default function CareerGuidanceDashboard() {
 
             {/* Input */}
             <div className="flex gap-2">
-              <input
+              <input suppressHydrationWarning
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
@@ -1847,7 +1873,7 @@ export default function CareerGuidanceDashboard() {
                 placeholder="Query AI backend regarding track prerequisites or capstone specs..."
                 className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
               />
-              <button
+              <button suppressHydrationWarning
                 type="button"
                 onClick={() => handleSendQuery()}
                 disabled={isChatLoading || !chatInput.trim()}
