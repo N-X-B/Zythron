@@ -1352,6 +1352,51 @@ export default function HyperPersonalizedCareerGuidance() {
               </div>
             )}
 
+            {/* Granular Micro-Nuances & Production Anti-Patterns */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
+              <div className="bg-amber-950/20 border border-amber-500/30 p-3.5 rounded-2xl space-y-2">
+                <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Zap className="h-3.5 w-3.5 text-amber-400" />
+                  Granular Technical Nuances & Edge Cases
+                </span>
+                <ul className="space-y-1 text-zinc-300 text-[11px] leading-relaxed">
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-amber-400 font-bold">•</span>
+                    <span>Exact memory allocation bounds, stack vs heap lifetime, & GC pause profiling</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-amber-400 font-bold">•</span>
+                    <span>Discriminated union state machines with zero runtime `any` assertions</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-amber-400 font-bold">•</span>
+                    <span>EXPLAIN ANALYZE query plans, B-Tree vs GIN indexing, & WAL log flushes</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-red-950/20 border border-red-500/30 p-3.5 rounded-2xl space-y-2">
+                <span className="text-[10px] font-bold text-red-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-red-400" />
+                  Production Anti-Patterns to Avoid
+                </span>
+                <ul className="space-y-1 text-zinc-300 text-[11px] leading-relaxed">
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-red-400 font-bold">•</span>
+                    <span>N+1 ORM query cascades from unindexed foreign key relationships</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-red-400 font-bold">•</span>
+                    <span>Unbounded Context Provider re-render loops without memoization</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-red-400 font-bold">•</span>
+                    <span>Split-brain stale cache overwrites during concurrent mutation races</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
             {/* Capstone Challenge */}
             <div className="bg-cyan-950/30 border border-cyan-500/20 p-4 rounded-2xl space-y-1">
               <h4 className="text-xs font-bold text-cyan-300 uppercase flex items-center gap-2 font-mono">

@@ -669,42 +669,44 @@ def generate_fallback_roadmap(top_job: JobRecommendation, user_skills: List[str]
         if not missing:
             specialization_note = " (Note: You already match all required skills; this roadmap focuses on advanced senior-level mastery and production optimization.)"
 
-        return f"""# Step-by-Step Skill Acquisition Roadmap: {top_job.title} at {top_job.company}
+        return f"""# Nuanced Technical Acquisition Roadmap: {top_job.title} at {top_job.company}
 {specialization_note}
 
-## Target Skills Gap:
-- **Current Skills:** {current_str}
-- **Missing Skills to Acquire:** {missing_str}
+## 🎯 Target Skill Gaps & Granular Micro-Competencies:
+- **Current Verified Skills:** {current_str}
+- **Target Micro-Competencies to Master:** {missing_str}
 
 ---
 
-### Phase 1: Core Fundamentals & Theory (Weeks 1-2)
-- **Focus Area:** Comprehensive study of {first_missing} fundamentals.
-- **Action Items:**
-  1. Complete official documentation, tutorials, and fundamental concepts.
-  2. Implement mini-modules and practice exercises focusing on syntax, lifecycle, and patterns.
-- **Key Milestone:** Pass self-assessment quizzes and build 2 isolated demo components.
+### Phase 1: Low-Level Core Mechanics & Type Systems (Weeks 1-2)
+- **⚡ Granular Micro-Topics (Exhaustive Technical Checklist):**
+  - Discriminating union state machines & strict tsconfig flags (`noImplicitAny`, `exactOptionalPropertyTypes`)
+  - AST parsing, recursive generics, conditional types, and mapped tuple transformations
+  - Memory allocation boundaries, stack vs heap lifetime mechanics, and GC pause profiling
+- **🛑 Production Anti-Patterns to Avoid:**
+  - Masking type errors with explicit `any` casting or swallowing async promise rejections
+  - Unbounded re-render cascades in React context providers without memoization boundaries
+- **🛠 Architectural Verification Benchmark:**
+  - Execute `npx tsc --noEmit` with zero type assertions and run unit test coverage (>90%).
 
-### Phase 2: Practical Implementation & Ecosystem Tooling (Weeks 3-4)
-- **Focus Area:** Hands-on integration of {second_missing} into a complete project workflow.
-- **Action Items:**
-  1. Study state management, asynchronous data fetching, and performance optimization.
-  2. Integrate testing suites (unit and integration tests) to ensure reliability.
-- **Key Milestone:** Develop a feature-complete micro-application demonstrating clean code and best practices.
+### Phase 2: Asynchronous Microservices & Distributed Data (Weeks 3-4)
+- **⚡ Granular Micro-Topics (Exhaustive Technical Checklist):**
+  - Python asyncio event loops, non-blocking I/O multiplexing, and FastAPI dependency injection chains
+  - PostgreSQL B-Tree vs GIN indexing strategies, EXPLAIN ANALYZE query plan profiling, and PgBouncer pool sizing
+  - Redis Token Bucket rate limiting, WAL log persistence, and ACID transaction isolation levels
+- **🛑 Production Anti-Patterns to Avoid:**
+  - N+1 query cascades from unindexed ORM foreign keys or blocking sync calls on main event loops
+  - Split-brain cache stale overwrites under high-concurrency mutation races
+- **🛠 Architectural Verification Benchmark:**
+  - Run `k6` load test hitting 1,000 requests/sec with p99 latency under 50ms and zero connection leaks.
 
-### Phase 3: Production-Grade Capstone Project (Weeks 5-6)
-- **Focus Area:** End-to-end integration addressing all requirements for {top_job.title}.
-- **Action Items:**
-  1. Build a portfolio project combining your existing skills with: {missing_str}.
-  2. Implement robust error handling, database caching, and cloud deployment (e.g. Vercel/Render/AWS).
-- **Key Milestone:** Deploy the project live with public GitHub repo, CI/CD pipeline, and README architecture diagram.
-
-### Phase 4: Mock Interviews & Technical Readiness (Week 7)
-- **Focus Area:** Interview preparation tailored for {top_job.company}.
-- **Action Items:**
-  1. Practice deep-dive architectural trade-offs and live coding problems.
-  2. Conduct harsh mock technical interviews to refine communication and technical depth.
-- **Ready to Apply:** Submit application for {top_job.title} with tailored resume highlighting your new skills!
+### Phase 3: Containerization, Zero-Trust Security & Cloud Ops (Weeks 5-6)
+- **⚡ Production Readiness Checklist:**
+  - Multi-stage Dockerfile optimization reducing container image size below 100MB
+  - Non-root runtime user security contexts (`USER node/appuser`), read-only root filesystems, and secret scrubbing
+  - Kubernetes liveness/readiness probes, graceful SIGTERM shutdown hooks, and TLS 1.3 encryption
+- **🚀 Final Proof-of-Skill Capstone:**
+  - Deploy production microservice with automated GitHub Actions CI/CD pipeline, README architecture diagram, and Pinecone vector search integration.
 """
 
 def generate_fallback_interview_feedback(role: str, answer: str) -> Dict[str, Any]:
@@ -1140,16 +1142,47 @@ def match_jobs(profile: UserProfile):
         user_skills_str = ", ".join(user_skills_clean) if user_skills_clean else "None specified"
         language_requested = user_language
 
-        prompt = f"""You are an expert AI Career and Technical Learning Advisor.
-A candidate is targeting the job role '{top_match.title}' at '{top_match.company}'.
-Candidate's current skills: {user_skills_str}.
-Required skills for the role: {', '.join(top_match.required_skills)}.
-Missing skills to acquire: {missing_skills_str}.
-Preferred language: {language_requested}.
+        prompt = f"""You are a Principal Technical Architect & AI Career Advisor.
+Candidate Target Role: '{top_match.title}' at '{top_match.company}'.
+Candidate Current Skills: {user_skills_str}.
+Required Role Skills: {', '.join(top_match.required_skills)}.
+Missing Skill Gaps: {missing_skills_str}.
+Preferred Language: {language_requested}.
 
-Generate a clear, adaptive, step-by-step learning roadmap explaining exactly how the candidate can acquire these missing skills to qualify for this top job match.
-Structure the roadmap with concrete phases, weekly milestones, recommended project ideas, and actionable resources.
-If the preferred language is not English, generate the entire response in '{language_requested}'.
+Generate a hyper-detailed, technical, and concise roadmap catching low-level nuances, framework mechanics, and production edge cases.
+Format the output clearly using Markdown:
+
+# Nuanced Technical Acquisition Roadmap: {top_match.title} ({top_match.company})
+
+## 🎯 Target Skill Gaps & Deep Nuances:
+- **Current Skills:** {user_skills_str}
+- **Required Micro-Competencies:** {missing_skills_str}
+
+---
+
+### Phase 1: Core Mechanics & Low-Level Nuances
+- **⚡ Granular Technical Micro-Topics (Exhaustive Checklist):**
+  - List specific low-level concepts, memory models, runtime behaviors, type-system edge cases, and algorithm complexities.
+- **🛑 Production Anti-Patterns to Avoid:**
+  - List non-obvious anti-patterns (e.g. N+1 query cascades, context re-render loops, unindexed foreign keys, unbounded queues).
+- **🛠 Architectural Verification Check:**
+  - Specific test commands, profiling tools (EXPLAIN ANALYZE, k6, memory profilers), and validation benchmarks.
+
+### Phase 2: System Integration & Distributed Trade-Offs
+- **⚡ Granular Technical Micro-Topics:**
+  - Asynchronous event loops, concurrency locks, CDC pipelines, caching eviction policies, rate-limiting semantics.
+- **🛑 Production Anti-Patterns to Avoid:**
+  - Split-brain failovers, stale cache overwrites, unhandled promises, blocking main thread loops.
+- **🛠 Verification Check:**
+  - Automated unit/integration test suites, load testing thresholds, and resilience drills.
+
+### Phase 3: Production Capstone & Security Hardening
+- **⚡ Production Readiness Checklist:**
+  - Zero-trust OAuth2/JWT security, container non-root contexts, multi-stage Docker optimization (<100MB), health probes.
+- **🚀 Final Verification Benchmark:**
+  - GitHub CI/CD pipeline, README architecture diagram, and AST code audit standards.
+
+If the preferred language is not English, generate the entire markdown response in '{language_requested}'.
 """
 
         if is_online():
