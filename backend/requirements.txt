@@ -1,5 +1,6 @@
 fastapi
 uvicorn
-pinecone-client
+pinecone
 twilio
 python-dotenv
+google-generativeai
