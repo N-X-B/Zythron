@@ -303,7 +303,8 @@ export default function LeetCodeArenaPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           job_role: "Software Engineer",
-          candidate_answer: `LEETCODE PROBLEM SOLVED: ${activeProblem.title} (${selectedLanguage})\n\nCODE:\n${codeContent}`,
+          interview_question: `${activeProblem.title}: ${activeProblem.description}`,
+          candidate_answer: codeContent,
         }),
       });
 
