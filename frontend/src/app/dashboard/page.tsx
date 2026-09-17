@@ -250,6 +250,7 @@ const ROLE_SKILL_MAP: Record<string, string[]> = {
   "full-stack": ["TypeScript", "React", "Next.js", "Python", "FastAPI", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Kafka"],
   "fullstack": ["TypeScript", "React", "Next.js", "Python", "FastAPI", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Kafka"],
   "security": ["Python", "Linux", "Networking", "SIEM", "Penetration Testing", "Cryptography", "OAuth2", "Docker", "AWS", "Bash"],
+  "quantum": ["Qiskit", "Cirq", "Quantum Circuit Design", "Q#", "Linear Algebra", "Python", "Quantum Error Correction", "VQE Algorithm", "Docker", "PyTorch"],
   "product": ["Product Strategy", "User Research", "Agile/Scrum", "SQL", "A/B Testing", "Figma", "Data Analytics", "Roadmapping", "System Architecture", "KPI Tracking"],
 };
 
@@ -265,6 +266,89 @@ function getRequiredSkillsForRole(roleText: string): string[] {
 
 function getDynamicPhases(roleText: string): RoadmapPhase[] {
   const r = roleText.toLowerCase();
+
+  if (r.includes("quantum") || r.includes("qiskit") || r.includes("qubit")) {
+    return [
+      {
+        id: 1,
+        title: "Phase 1: Quantum Circuit Mechanics & Qubit States",
+        description: "Superposition, Bloch Sphere representations, Hadamard gates, CNOT entanglement, and state vectors.",
+        badge: "Quantum Core",
+        icon: Cpu,
+        milestones: [
+          {
+            id: "q1",
+            title: "Qiskit Quantum Circuit Simulation & Entanglement",
+            description: "Constructing quantum state vectors, Bell states, single & multi-qubit gate operations.",
+            workloadHours: 45,
+            requiredSkills: ["Qiskit", "Python"],
+            syllabusPoints: [
+              "Bloch sphere rotations and unitary matrix transformations",
+              "Hadamard and Pauli-X/Y/Z single-qubit gate mechanics",
+              "Controlled-NOT (CNOT) 2-qubit entanglement & Bell state verification",
+              "Statevector execution & quantum measurement sampling"
+            ],
+            resources: [
+              { name: "Qiskit Textbook", url: "https://qiskit.org/textbook", category: "Book" }
+            ],
+            projectPrompt: "Implement a 3-qubit quantum teleportation protocol simulation using Qiskit."
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "Phase 2: Quantum Algorithms & Variational Solvers",
+        description: "Shor's factoring, Grover's search, Quantum Fourier Transform (QFT), and VQE for molecular energy.",
+        badge: "Algorithms",
+        icon: Zap,
+        milestones: [
+          {
+            id: "q2",
+            title: "VQE & Quantum Approximate Optimization (QAOA)",
+            description: "Hybrid quantum-classical optimization loops, Ansatz design, and noisy intermediate-scale quantum (NISQ) execution.",
+            workloadHours: 50,
+            requiredSkills: ["Cirq", "Linear Algebra"],
+            syllabusPoints: [
+              "Quantum Fourier Transform (QFT) and phase estimation mechanics",
+              "Variational Quantum Eigensolver (VQE) expectation value measurement",
+              "Parameterized quantum circuits & classical optimizer gradient updates",
+              "Combinatorial optimization via QAOA on graph max-cut problems"
+            ],
+            resources: [
+              { name: "IBM Quantum Learning", url: "https://learning.quantum.ibm.com/", category: "Course" }
+            ],
+            projectPrompt: "Build a VQE algorithm solver predicting hydrogen molecule ground-state energy."
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "Phase 3: Quantum Error Correction & QPU Execution",
+        description: "Surface codes, decoherence mitigation, zero-noise extrapolation, and real IBM Quantum hardware submission.",
+        badge: "Hardware Ops",
+        icon: ShieldCheck,
+        milestones: [
+          {
+            id: "q3",
+            title: "Fault-Tolerant Error Mitigation & Cloud QPU",
+            description: "Error mitigation techniques, pulse-level control, and remote execution on superconducting QPUs.",
+            workloadHours: 40,
+            requiredSkills: ["Quantum Error Correction", "Python"],
+            syllabusPoints: [
+              "T1 relaxation and T2 dephasing time profile analysis",
+              "Zero-noise extrapolation (ZNE) and probabilistic error cancellation",
+              "Surface code syndrome extraction and stabilizer measurements",
+              "Submitting quantum jobs to IBM Eagle 127-qubit QPUs"
+            ],
+            resources: [
+              { name: "Qiskit Runtime Docs", url: "https://docs.quantum.ibm.com/", category: "Docs" }
+            ],
+            projectPrompt: "Deploy a noise-mitigated quantum circuit job on real IBM Quantum hardware via Qiskit Runtime."
+          }
+        ]
+      }
+    ];
+  }
 
   if (r.includes("ai") || r.includes("ml") || r.includes("machine learning") || r.includes("intelligence")) {
     return [
