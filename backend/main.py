@@ -404,6 +404,11 @@ class MockInterviewResponse(BaseModel):
     feedback: str
     model_config = {"extra": "allow"}
 
+
+class JoinMeetingRequest(BaseModel):
+    meeting_url: str
+    bot_name: str = "Career Agent Bot"
+
 class ChatRequest(BaseModel):
     user_id: str
     message: str
@@ -827,6 +832,33 @@ def generate_fallback_interview_feedback(role: str, answer: str) -> Dict[str, An
         }
 
 # --- ENDPOINTS ---
+
+@app.post("/api/join-meeting")
+def join_meeting(request: JoinMeetingRequest):
+    import requests
+    import os
+    api_key = os.getenv("MEETING_BAAS_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="MEETING_BAAS_API_KEY not configured in backend.")
+    
+    url = "https://api.meetingbaas.com/v2/bots"
+    headers = {
+        "x-meeting-baas-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "meeting_url": request.meeting_url,
+        "bot_name": request.bot_name,
+        "transcription_enabled": True
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"MeetingBaaS Error: {str(e)}")
+
 @app.get("/")
 def health_check():
     return {"status": "ok", "message": "Career Agent Core Engine is running."}
