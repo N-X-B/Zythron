@@ -827,7 +827,7 @@ export default function CareerGuidanceDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-white selection:text-black relative overflow-x-hidden">
+    <div suppressHydrationWarning className="min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-white selection:text-black relative overflow-x-hidden">
       {/* ATMOSPHERIC AMBIENT GLOW & ARCHITECTURAL GRID */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(0,56,255,0.18),transparent_55%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
@@ -867,6 +867,7 @@ export default function CareerGuidanceDashboard() {
 
             {/* Glassy Terminal Action Button */}
             <button
+              type="button"
               onClick={() => setChatDrawerOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/[0.06] hover:bg-white/[0.12] hover:border-white/25 px-3 py-1.5 text-xs font-medium text-white transition-all active:scale-95 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] cursor-pointer"
             >
@@ -890,6 +891,7 @@ export default function CareerGuidanceDashboard() {
               const DomainIcon = domain.icon;
               return (
                 <button
+                  type="button"
                   key={domain.id}
                   onClick={() => setSelectedDomainId(domain.id)}
                   className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-all shrink-0 cursor-pointer text-xs ${
@@ -924,6 +926,7 @@ export default function CareerGuidanceDashboard() {
               const isCurrent = track.id === selectedTrackId;
               return (
                 <button
+                  type="button"
                   key={track.id}
                   onClick={() => setSelectedTrackId(track.id)}
                   className={`rounded-md px-2.5 py-0.5 text-xs font-medium transition-all cursor-pointer shrink-0 ${
@@ -1168,7 +1171,7 @@ export default function CareerGuidanceDashboard() {
                 <select
                   value={userBackground}
                   onChange={(e) => setUserBackground(e.target.value)}
-                  className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
+                  suppressHydrationWarning className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-2.5 py-1.5 text-xs text-zinc-200 focus:border-cyan-500 focus:outline-none transition-colors cursor-pointer"
                 >
                   <option value="Degree Candidate / Recent Graduate">University Degree / Graduate</option>
                   <option value="Self-Taught Practitioner">Self-Taught Practitioner</option>
@@ -1260,7 +1263,7 @@ export default function CareerGuidanceDashboard() {
                       value={skillInput}
                       onChange={(e) => setSkillInput(e.target.value)}
                       placeholder="e.g. PyTorch, DCF Valuation, Unity"
-                      className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
+                      suppressHydrationWarning className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-zinc-100 placeholder-zinc-500 focus:border-cyan-500 focus:outline-none transition-colors"
                     />
                     <button
                       type="submit"
@@ -1333,8 +1336,8 @@ export default function CareerGuidanceDashboard() {
                     const exists = userSkills.some((us) => us.name.toLowerCase() === item.toLowerCase());
                     return (
                       <button
-                        key={item}
                         type="button"
+                        key={item}
                         disabled={exists}
                         onClick={() => handleQuickAdd(item)}
                         className={`rounded-md px-2 py-0.5 text-xs transition-colors ${
@@ -1397,8 +1400,8 @@ export default function CareerGuidanceDashboard() {
                   <div className="flex flex-wrap gap-1.5">
                     {calculation.missing.map((s) => (
                       <button
-                        key={s}
                         type="button"
+                        key={s}
                         onClick={() => handleQuickAdd(s)}
                         className="rounded-md border border-amber-800/60 bg-amber-950/40 px-2 py-0.5 text-xs font-mono text-amber-300 hover:bg-amber-900/60 transition-colors cursor-pointer"
                         title="Click to add to your skills"
@@ -1634,6 +1637,7 @@ export default function CareerGuidanceDashboard() {
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={() => setActiveModalMilestone(null)}
                 className="rounded-md p-1.5 text-zinc-400 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
               >
@@ -1767,6 +1771,7 @@ export default function CareerGuidanceDashboard() {
                   <span>{AI_CHAT_ENDPOINT}</span>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setChatDrawerOpen(false)}
                   className="rounded-md p-1 text-zinc-400 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
                 >
