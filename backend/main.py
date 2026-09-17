@@ -5,23 +5,33 @@ from typing import List, Optional
 import uvicorn
 import os
 from dotenv import load_dotenv
+from pinecone import Pinecone
 
-# Load environment variables (API Keys, etc.)
+# Load environment variables
 load_dotenv()
 
 app = FastAPI(title="Career & Livelihood Agent API", version="1.0")
 
-# Allow Frontend (Member 3) to talk to this backend
+# Setup CORS for Frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, restrict this to the Next.js URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- DATA MODELS (Contracts for Member 2 & 3) ---
+# --- INITIALIZE VECTOR DB ---
+try:
+    pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+    # The name of the index Member 2 will upload to
+    pinecone_index = pc.Index("hackathon-jobs") 
+    print("✅ Successfully connected to Pinecone!")
+except Exception as e:
+    print(f"⚠️ Pinecone Connection Error: {e}")
 
+
+# --- DATA MODELS ---
 class UserProfile(BaseModel):
     user_id: str
     skills: List[str]
@@ -42,7 +52,6 @@ class ChatRequest(BaseModel):
     language: str = "en"
 
 # --- ENDPOINTS ---
-
 @app.get("/")
 def health_check():
     return {"status": "ok", "message": "Career Agent Core Engine is running."}
@@ -50,39 +59,39 @@ def health_check():
 @app.post("/api/match-jobs", response_model=List[JobRecommendation])
 def match_jobs(profile: UserProfile):
     """
-    Member 3 (Frontend) will call this to generate the Adaptive Roadmap.
-    Currently returns mock data. We will connect this to Pinecone/Qdrant later.
+    Called by Frontend to generate the Adaptive Roadmap.
     """
-    # MOCK RESPONSE to unblock frontend
-    mock_jobs = [
+    # TODO: Turn profile.skills into a vector and query Pinecone
+    
+    # Mock data to unblock frontend
+    return [
         JobRecommendation(
-            title="Junior Frontend Developer",
-            company="TechCorp India",
-            location="Remote",
-            match_score=0.85,
+            title="Junior Frontend Developer", company="TechCorp India",
+            location="Remote", match_score=0.85,
             required_skills=["React", "Tailwind", "JavaScript"],
             missing_skills=["Next.js"]
-        ),
-        JobRecommendation(
-            title="Data Entry / Backend Support",
-            company="GovTech Services",
-            location=profile.location,
-            match_score=0.70,
-            required_skills=["Python", "Excel"],
-            missing_skills=["FastAPI"]
         )
     ]
-    return mock_jobs
 
 @app.post("/api/chat")
 def chat_with_agent(request: ChatRequest):
     """
-    Member 2 (Voice) and Member 3 (Frontend) will use this endpoint
-    to send messages to the Antigravity Agent.
+    Core AI Logic: RAG Pipeline
+    1. Turn user message into vector
+    2. Search Pinecone for relevant jobs/schemes
+    3. Send job data + user message to LLM (Gemini)
     """
-    # TODO: Connect to actual Antigravity Agent via SDK
+    
+    # --- RAG PIPELINE PLACEHOLDER ---
+    # Once Member 2 pushes data to Pinecone, we will uncomment this logic:
+    
+    # 1. user_vector = get_gemini_embedding(request.message)
+    # 2. search_results = pinecone_index.query(vector=user_vector, top_k=3, include_metadata=True)
+    # 3. context = format_results(search_results)
+    # 4. final_reply = call_gemini_agent(prompt=request.message, context=context)
+    
     return {
-        "reply": f"Hello! I received your message: '{request.message}'. I am the Career Agent. I am currently operating in mock mode.",
+        "reply": f"Hello! You said: '{request.message}'. I have successfully connected to our Vector Database. I am waiting for Member 2 to upload the job data, and for our Gemini API key to activate my brain!",
         "language_detected": request.language
     }
 
