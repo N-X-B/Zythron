@@ -117,49 +117,58 @@ export default function AestheticJobListingsPage() {
       <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.05),transparent_70%)] pointer-events-none" />
 
       {/* ─── SLEEK MINIMAL NAVBAR ─── */}
-      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/80 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2 font-mono hover:opacity-90 transition-opacity">
-            <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
-              <Zap className="h-4 w-4 text-white" />
+      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/90 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between relative">
+        {/* Left: Brand Logo */}
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2.5 font-mono group">
+            <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors">
+              <Zap className="h-4 w-4 text-white group-hover:text-cyan-300 transition-colors" />
             </div>
-            ZYTHRON
+            <span>ZYTHRON</span>
+            <span className="flex items-center gap-0.5 ml-1">
+              <span className="w-1 h-3 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-1 h-4 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+            </span>
           </Link>
-
-          {/* Standardized Pill Navigation */}
-          <nav className="hidden md:flex items-center gap-1 font-mono text-xs">
-            {[
-              { label: "(01) CAREER MATCH", href: "/dashboard" },
-              { label: "(02) MOCK INTERVIEW", href: "/mock-interview" },
-              { label: "(03) RECORD MEETING", href: "/record-meeting" },
-              { label: "(04) RESUME SCANNER", href: "/resume-analyzer" },
-              { label: "(05) JOB LISTINGS", href: "/job-listings", active: true },
-            ].map((tab) => (
-              <Link
-                key={tab.label}
-                href={tab.href}
-                className={`px-3.5 py-1.5 rounded-full text-xs transition-all ${
-                  tab.active
-                    ? "bg-white text-black font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                    : "text-zinc-400 hover:text-white hover:bg-white/[0.06]"
-                }`}
-              >
-                {tab.label}
-              </Link>
-            ))}
-          </nav>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-zinc-300 font-medium">{userName}</span>
+        {/* Center: Perfectly Centered Symmetrical Navigation */}
+        <nav className="hidden xl:flex items-center gap-1.5 font-mono text-xs absolute left-1/2 -translate-x-1/2">
+          <Link href="/dashboard" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (01) CAREER MATCH
+          </Link>
+          <Link href="/mock-interview" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (02) MOCK INTERVIEW
+          </Link>
+          <Link href="/record-meeting" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (03) RECORD MEETING
+          </Link>
+          <Link href="/resume-analyzer" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (04) RESUME SCANNER
+          </Link>
+          <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-semibold bg-white text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]">
+            (05) JOB LISTINGS
+          </Link>
+        </nav>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/dashboard"
+            className="hidden sm:flex items-center gap-2 h-9 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
+          >
+            <Search className="h-3.5 w-3.5 text-zinc-400" />
+            <span>Search</span>
+            <kbd className="text-[9px] bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded border border-white/20">⌘K</kbd>
+          </Link>
+
+          <div className="hidden sm:flex items-center gap-2 h-9 px-3.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono">
+            <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <span className="text-zinc-300 font-medium">{userName || "Engineer"}</span>
           </div>
 
-          <button
-            onClick={handleSignOut}
-            className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-full transition-colors cursor-pointer"
-          >
+          <button onClick={handleSignOut} className="h-9 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full transition-colors cursor-pointer font-mono">
             <LogOut className="h-3.5 w-3.5" />
             Sign out
           </button>

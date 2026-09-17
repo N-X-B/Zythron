@@ -15,7 +15,8 @@ import {
   UserCheck,
   LogOut,
   Award,
-  ArrowRight
+  ArrowRight,
+  Search
 } from "lucide-react";
 
 interface QuestionPreset {
@@ -156,60 +157,60 @@ export default function UserFriendlyMockInterview() {
   const activeQuestionText = customQuestion.trim() || selectedQuestion.question;
 
   return (
-    <div className="h-full overflow-y-auto bg-[#0e0e12] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
+    <div className="h-full overflow-y-auto bg-[#0a0a0d] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
       {/* ─── TOP NAVBAR ─── */}
-      <header className="h-16 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="text-lg font-bold tracking-[0.2em] text-white flex items-center gap-2">
-            <Zap className="h-5 w-5 text-white" />
-            ZYTHRON
+      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/90 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between relative">
+        {/* Left: Brand Logo */}
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2.5 font-mono group">
+            <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors">
+              <Zap className="h-4 w-4 text-white group-hover:text-cyan-300 transition-colors" />
+            </div>
+            <span>ZYTHRON</span>
+            <span className="flex items-center gap-0.5 ml-1">
+              <span className="w-1 h-3 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-1 h-4 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+            </span>
           </Link>
-
-          {/* Feature Tabs */}
-          <nav className="hidden md:flex items-center gap-1 font-mono text-xs overflow-x-auto no-scrollbar">
-            <Link
-              href="/dashboard"
-              className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
-              🎯 CAREER MATCH
-            </Link>
-            <Link
-              href="/mock-interview"
-              className="rounded-full px-4 py-1.5 font-semibold bg-white text-black transition-all"
-            >
-              🎤 MOCK INTERVIEW
-            </Link>
-            <Link
-              href="/record-meeting"
-              className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
-              📹 RECORD MEETING
-            </Link>
-            <Link
-              href="/resume-analyzer"
-              className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
-              📄 RESUME SCANNER
-            </Link>
-            <Link
-              href="/salary-benchmark"
-              className="rounded-full px-4 py-1.5 font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all"
-            >
-              📊 SALARY BENCHMARK
-            </Link>
-          </nav>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs">
+        {/* Center: Perfectly Centered Symmetrical Navigation */}
+        <nav className="hidden xl:flex items-center gap-1.5 font-mono text-xs absolute left-1/2 -translate-x-1/2">
+          <Link href="/dashboard" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (01) CAREER MATCH
+          </Link>
+          <Link href="/mock-interview" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-semibold bg-white text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]">
+            (02) MOCK INTERVIEW
+          </Link>
+          <Link href="/record-meeting" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (03) RECORD MEETING
+          </Link>
+          <Link href="/resume-analyzer" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (04) RESUME SCANNER
+          </Link>
+          <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (05) JOB LISTINGS
+          </Link>
+        </nav>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/dashboard"
+            className="hidden sm:flex items-center gap-2 h-9 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
+          >
+            <Search className="h-3.5 w-3.5 text-zinc-400" />
+            <span>Search</span>
+            <kbd className="text-[9px] bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded border border-white/20">⌘K</kbd>
+          </Link>
+
+          <div className="hidden sm:flex items-center gap-2 h-9 px-3.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono">
             <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
             <span className="text-zinc-300 font-medium">{userName}</span>
           </div>
 
-          <button
-            onClick={handleSignOut}
-            className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full transition-colors"
-          >
+          <button onClick={handleSignOut} className="h-9 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full transition-colors cursor-pointer font-mono">
             <LogOut className="h-3.5 w-3.5" />
             Sign out
           </button>

@@ -15,7 +15,9 @@ import {
   Zap,
   TrendingUp,
   XCircle,
-  Briefcase
+  Briefcase,
+  UserCheck,
+  Search
 } from 'lucide-react';
 
 export default function ResumeAnalyzerPage() {
@@ -68,44 +70,62 @@ export default function ResumeAnalyzerPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto bg-[#0e0e12] text-white font-sans selection:bg-indigo-500/30 flex flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between px-8 py-6 border-b border-white/10 sticky top-0 bg-[#0e0e12]/80 backdrop-blur-md z-50">
-        <div className="flex items-center gap-12">
-          <Link href="/" className="text-2xl font-black tracking-tighter text-white uppercase hover:text-indigo-400 transition-colors">
-            Zythron
-          </Link>
-          <nav className="hidden lg:flex items-center gap-6">
-            <Link href="/dashboard" className="text-xs font-medium text-white/50 hover:text-white transition-colors flex items-center gap-2">
-              <span className="text-indigo-500">(01)</span> CAREER MATCH
-            </Link>
-            <Link href="/mock-interview" className="text-xs font-medium text-white/50 hover:text-white transition-colors flex items-center gap-2">
-              <span className="text-indigo-500">(02)</span> MOCK INTERVIEW
-            </Link>
-            <Link href="/record-meeting" className="text-xs font-medium text-white/50 hover:text-white transition-colors flex items-center gap-2">
-              <span className="text-indigo-500">(03)</span> RECORD MEETING
-            </Link>
-            <Link href="/resume-analyzer" className="text-xs font-bold text-white transition-colors flex items-center gap-2 border-b border-white pb-1">
-              <span className="text-indigo-500">(04)</span> RESUME SCANNER
-            </Link>
-            <Link href="/salary-benchmark" className="text-xs font-medium text-white/50 hover:text-white transition-colors flex items-center gap-2">
-              <span className="text-indigo-500">(05)</span> SALARY BENCHMARK
-            </Link>
-          </nav>
-        </div>
-        <div className="flex items-center gap-4">
-          {userName && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
-              <User className="w-4 h-4 text-indigo-400" />
-              <span className="text-sm font-medium">{userName}</span>
+    <div className="h-full overflow-y-auto bg-[#0a0a0d] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
+      {/* ─── TOP NAVBAR ─── */}
+      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/90 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between relative">
+        {/* Left: Brand Logo */}
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2.5 font-mono group">
+            <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors">
+              <Zap className="h-4 w-4 text-white group-hover:text-cyan-300 transition-colors" />
             </div>
-          )}
-          <button 
-            onClick={handleSignOut}
-            className="p-2 text-white/50 hover:text-red-400 hover:bg-white/5 rounded-full transition-all"
-            title="Sign out"
+            <span>ZYTHRON</span>
+            <span className="flex items-center gap-0.5 ml-1">
+              <span className="w-1 h-3 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-1 h-4 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+            </span>
+          </Link>
+        </div>
+
+        {/* Center: Perfectly Centered Symmetrical Navigation */}
+        <nav className="hidden xl:flex items-center gap-1.5 font-mono text-xs absolute left-1/2 -translate-x-1/2">
+          <Link href="/dashboard" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (01) CAREER MATCH
+          </Link>
+          <Link href="/mock-interview" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (02) MOCK INTERVIEW
+          </Link>
+          <Link href="/record-meeting" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (03) RECORD MEETING
+          </Link>
+          <Link href="/resume-analyzer" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-semibold bg-white text-black transition-all shadow-[0_0_20px_rgba(255,255,255,0.25)]">
+            (04) RESUME SCANNER
+          </Link>
+          <Link href="/job-listings" className="rounded-full h-9 px-4 inline-flex items-center justify-center text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/[0.06] transition-all">
+            (05) JOB LISTINGS
+          </Link>
+        </nav>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/dashboard"
+            className="hidden sm:flex items-center gap-2 h-9 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
           >
-            <LogOut className="w-5 h-5" />
+            <Search className="h-3.5 w-3.5 text-zinc-400" />
+            <span>Search</span>
+            <kbd className="text-[9px] bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded border border-white/20">⌘K</kbd>
+          </Link>
+
+          <div className="hidden sm:flex items-center gap-2 h-9 px-3.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono">
+            <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <span className="text-zinc-300 font-medium">{userName || "Engineer"}</span>
+          </div>
+
+          <button onClick={handleSignOut} className="h-9 text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 rounded-full transition-colors cursor-pointer font-mono">
+            <LogOut className="h-3.5 w-3.5" />
+            Sign out
           </button>
         </div>
       </header>
