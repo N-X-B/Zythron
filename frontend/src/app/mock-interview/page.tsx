@@ -572,7 +572,9 @@ ${interviewerProfile.sensibility}`;
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-3 px-4 py-1.5 border border-white/10 rounded-full text-sm font-medium hover:bg-white/10 transition-all cursor-pointer bg-zinc-900/50 hover:scale-105 active:scale-95">
             <span className="text-zinc-300">{userName}</span>
-            <div className="w-7 h-7 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full shadow-inner border border-white/10" />
+            <div className="w-7 h-7 bg-white/10 text-white rounded-full flex items-center justify-center border border-white/15 text-xs font-mono font-bold">
+              {userName.charAt(0).toUpperCase()}
+            </div>
           </div>
           <button
             onClick={handleSignOut}
@@ -754,125 +756,155 @@ ${interviewerProfile.sensibility}`;
 
           {/* Practice Tab View (Focused Mock Interview Tracks: DSA, System Design, Fundamentals, MAANG, Behavioral, Full-Stack) */}
           {currentTab === "Practice" && (
-            <div className="flex-1 flex items-center justify-center p-8">
+            <div className="flex-1 flex items-center justify-center p-6 md:p-10 my-auto">
               <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 {/* DSA Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-100">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
-                    DSA
-                  </h2>
-                  <div className="flex-1 flex items-center justify-center mt-4">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[320px] bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/30 hover:bg-white/[0.06] transition-all duration-300 shadow-xl group animate-fade-up">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full font-bold">Domain 01</span>
+                      <span className="text-[10px] font-mono text-zinc-400">Live AI Interview</span>
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                      DSA
+                    </h2>
+                    <p className="text-xs md:text-sm text-zinc-300 leading-relaxed font-normal">
                       A focused data structures & algorithms interview designed to assess problem-solving skills and Big-O efficiency.
                     </p>
                   </div>
-                  <div className="flex justify-center mb-2">
+                  <div className="pt-6 mt-4 border-t border-white/10">
                     <button
                       onClick={() => startInterview("DSA")}
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
+                      className="w-full py-3 bg-white text-black font-extrabold text-xs md:text-sm rounded-full hover:bg-zinc-200 hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Start now
+                      <span>Start Interview</span>
+                      <ArrowRight className="w-4 h-4 text-black" />
                     </button>
                   </div>
                 </div>
 
                 {/* System Design Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-200">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
-                    System Design
-                  </h2>
-                  <div className="flex-1 flex items-center justify-center mt-4">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[320px] bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/30 hover:bg-white/[0.06] transition-all duration-300 shadow-xl group animate-fade-up delay-100">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full font-bold">Domain 02</span>
+                      <span className="text-[10px] font-mono text-zinc-400">Live AI Interview</span>
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                      System Design
+                    </h2>
+                    <p className="text-xs md:text-sm text-zinc-300 leading-relaxed font-normal">
                       High-throughput microservices, vector search indexing, consensus protocols, and fault-tolerant architecture drills.
                     </p>
                   </div>
-                  <div className="flex justify-center mb-2">
+                  <div className="pt-6 mt-4 border-t border-white/10">
                     <button
                       onClick={() => startInterview("System Design")}
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
+                      className="w-full py-3 bg-white text-black font-extrabold text-xs md:text-sm rounded-full hover:bg-zinc-200 hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Start now
+                      <span>Start Interview</span>
+                      <ArrowRight className="w-4 h-4 text-black" />
                     </button>
                   </div>
                 </div>
 
                 {/* Fundamentals Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-300">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
-                    Fundamentals
-                  </h2>
-                  <div className="flex-1 flex items-center justify-center mt-4">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[320px] bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/30 hover:bg-white/[0.06] transition-all duration-300 shadow-xl group animate-fade-up delay-200">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full font-bold">Domain 03</span>
+                      <span className="text-[10px] font-mono text-zinc-400">Live AI Interview</span>
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                      Fundamentals
+                    </h2>
+                    <p className="text-xs md:text-sm text-zinc-300 leading-relaxed font-normal">
                       Configure a focused technical round across networking, OS internals, database isolation, and OOP paradigms.
                     </p>
                   </div>
-                  <div className="flex justify-center mb-2">
+                  <div className="pt-6 mt-4 border-t border-white/10">
                     <button
                       onClick={() => startInterview("Fundamentals")}
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
+                      className="w-full py-3 bg-white text-black font-extrabold text-xs md:text-sm rounded-full hover:bg-zinc-200 hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Start now
+                      <span>Start Interview</span>
+                      <ArrowRight className="w-4 h-4 text-black" />
                     </button>
                   </div>
                 </div>
 
                 {/* MAANG Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-400">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
-                    MAANG
-                  </h2>
-                  <div className="flex-1 flex items-center justify-center mt-4">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[320px] bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/30 hover:bg-white/[0.06] transition-all duration-300 shadow-xl group animate-fade-up delay-300">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full font-bold">Domain 04</span>
+                      <span className="text-[10px] font-mono text-zinc-400">Live AI Interview</span>
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                      MAANG
+                    </h2>
+                    <p className="text-xs md:text-sm text-zinc-300 leading-relaxed font-normal">
                       Algorithmic and system design screening questions inspired by Tier-1 Big Tech interview bars.
                     </p>
                   </div>
-                  <div className="flex justify-center mb-2">
+                  <div className="pt-6 mt-4 border-t border-white/10">
                     <button
                       onClick={() => startInterview("MAANG")}
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
+                      className="w-full py-3 bg-white text-black font-extrabold text-xs md:text-sm rounded-full hover:bg-zinc-200 hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Start now
+                      <span>Start Interview</span>
+                      <ArrowRight className="w-4 h-4 text-black" />
                     </button>
                   </div>
                 </div>
 
                 {/* Behavioral Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
-                    Behavioral
-                  </h2>
-                  <div className="flex-1 flex items-center justify-center mt-4">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[320px] bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/30 hover:bg-white/[0.06] transition-all duration-300 shadow-xl group animate-fade-up delay-400">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full font-bold">Domain 05</span>
+                      <span className="text-[10px] font-mono text-zinc-400">Live AI Interview</span>
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                      Behavioral
+                    </h2>
+                    <p className="text-xs md:text-sm text-zinc-300 leading-relaxed font-normal">
                       STAR method questions covering leadership principles, project ownership, and technical conflict resolution.
                     </p>
                   </div>
-                  <div className="flex justify-center mb-2">
+                  <div className="pt-6 mt-4 border-t border-white/10">
                     <button
                       onClick={() => startInterview("Behavioral")}
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
+                      className="w-full py-3 bg-white text-black font-extrabold text-xs md:text-sm rounded-full hover:bg-zinc-200 hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Start now
+                      <span>Start Interview</span>
+                      <ArrowRight className="w-4 h-4 text-black" />
                     </button>
                   </div>
                 </div>
 
                 {/* Full-Stack Card */}
-                <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 flex flex-col h-[380px] hover:bg-[#141414] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,255,255,0.03)] transition-all duration-500 group animate-fade-up delay-500">
-                  <h2 className="text-3xl font-bold text-white text-center mt-4 group-hover:text-white transition-colors">
-                    Full-Stack & Web
-                  </h2>
-                  <div className="flex-1 flex items-center justify-center mt-4">
-                    <p className="text-zinc-400 text-center text-sm leading-relaxed px-2 group-hover:text-zinc-300 transition-colors">
+                <div className="bg-[#0f0f0f] border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between min-h-[320px] bg-gradient-to-b from-white/[0.04] to-transparent hover:border-white/30 hover:bg-white/[0.06] transition-all duration-300 shadow-xl group animate-fade-up delay-500">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2.5 py-0.5 bg-white/5 border border-white/10 rounded-full font-bold">Domain 06</span>
+                      <span className="text-[10px] font-mono text-zinc-400">Live AI Interview</span>
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                      Full-Stack & Web
+                    </h2>
+                    <p className="text-xs md:text-sm text-zinc-300 leading-relaxed font-normal">
                       React Server Components, Next.js streaming, async Python APIs, state management, and edge performance.
                     </p>
                   </div>
-                  <div className="flex justify-center mb-2">
+                  <div className="pt-6 mt-4 border-t border-white/10">
                     <button
                       onClick={() => startInterview("Full-Stack")}
-                      className="px-6 py-2.5 rounded-full border border-white/10 text-zinc-300 text-sm font-medium hover:bg-white hover:text-black hover:scale-105 active:scale-95 transition-all duration-300"
+                      className="w-full py-3 bg-white text-black font-extrabold text-xs md:text-sm rounded-full hover:bg-zinc-200 hover:scale-[1.02] active:scale-95 transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      Start now
+                      <span>Start Interview</span>
+                      <ArrowRight className="w-4 h-4 text-black" />
                     </button>
                   </div>
                 </div>
