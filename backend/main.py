@@ -467,6 +467,7 @@ class ResumeAnalyzeRequest(BaseModel):
 class ResumeAnalyzeResponse(BaseModel):
     score: int
     ats_score: int
+    parameter_breakdown: Optional[Dict[str, int]] = Field(default_factory=dict)
     skills: List[str]
     extracted_skills: List[str]
     missingKeywords: List[str]
@@ -981,33 +982,68 @@ def generate_fallback_resume_analysis(role: str, text: str) -> Dict[str, Any]:
         missing = ["Distributed Caching", "Zero-Trust Security"]
 
     red_flags = []
-    if not re.search(r"\b\d+%\b|\b\d+x\b|\$\d+|\b\d+\s*(ms|sec|users|req)\b", txt_lower):
-        red_flags.append("Missing quantifiable metrics (percentages, speedups, revenue, scale) in experience bullet points.")
-    if len(text.split("\n")) < 8:
-        red_flags.append("Resume content appears brief; expand detailed accomplishment descriptions.")
+
+    # 1. Keyword Score (Max 25)
+    keyword_score = min(25, max(8, len(extracted) * 4))
+    
+    # 2. Impact & Metrics Score (Max 25)
+    metrics_matches = re.findall(r"\b(\d+%\b|\d+x\b|\$\d+|\b\d+\s*(ms|sec|users|req|qps|k|m|b)\b)", txt_lower)
+    if len(metrics_matches) == 0:
+        impact_score = 5
+        red_flags.append("Audit Failure (-20 pts): Zero quantifiable metrics found in experience bullet points.")
+    elif len(metrics_matches) == 1:
+        impact_score = 14
+        red_flags.append("Audit Notice (-11 pts): Only 1 quantifiable metric detected. Expand metrics across all roles.")
+    elif len(metrics_matches) == 2:
+        impact_score = 19
+    else:
+        impact_score = 25
+
+    # 3. Structure & Hygiene Score (Max 20)
+    structure_score = 20
     if not any(k in txt_lower for k in ["github", "linkedin", "http", "@"]):
-        red_flags.append("Missing portfolio or professional profile links (GitHub, LinkedIn, contact info).")
+        structure_score -= 6
+        red_flags.append("Formatting Deficit (-6 pts): Missing professional profile links (GitHub, LinkedIn, contact info).")
+    if len(text.split("\n")) < 8:
+        structure_score -= 8
+        red_flags.append("Hygiene Deficit (-8 pts): Resume text is extremely brief (<8 lines); lacks ATS depth.")
+    structure_score = max(5, structure_score)
+
+    # 4. Seniority & Scope Score (Max 15)
+    strong_verbs = ["architected", "optimized", "engineered", "scaled", "deployed", "designed", "implemented", "spearheaded"]
+    matched_verbs = [v for v in strong_verbs if re.search(r"\b" + re.escape(v) + r"\b", txt_lower)]
+    seniority_score = min(15, max(4, 5 + len(matched_verbs) * 2))
+
+    # 5. Action Bullet Precision & Buzzword Penalty (Max 15)
+    fluff_words = ["passionate", "hardworking", "team player", "synergy", "enthusiastic"]
+    matched_fluff = [f for f in fluff_words if re.search(r"\b" + re.escape(f) + r"\b", txt_lower)]
+    bullet_precision_score = max(2, 15 - (len(matched_fluff) * 5))
+    if matched_fluff:
+        red_flags.append(f"Precision Penalty (-{len(matched_fluff)*5} pts): Contains subjective buzzword fluff ('{', '.join(matched_fluff)}').")
+
     if not red_flags:
-        red_flags.append("Minor formatting inconsistency in technical skill categories.")
+        red_flags.append("Minor formatting note: Ensure consistent bullet point indentation for ATS scanners.")
 
     recommendations = [
-        f"Incorporate missing keywords ({', '.join(missing[:3])}) naturally into work experience bullet points.",
-        "Quantify your achievements using metrics (e.g., 'Reduced API latency by 35%' or 'Managed 10k+ daily active users').",
-        f"Add a targeted summary section emphasizing experience tailored specifically for {role} positions."
+        f"Incorporate missing keywords ({', '.join(missing[:3])}) into work experience bullet points.",
+        "Quantify your technical achievements with numerical metrics (e.g., 'Reduced p99 API latency by 35%' or 'Managed 150k+ QPS').",
+        "Replace subjective soft-skill statements with concrete architectural action verbs (e.g. 'Architected', 'Spearheaded')."
     ]
 
-    base_score = 78
-    if len(extracted) >= 5:
-        base_score += 8
-    if len(red_flags) == 1:
-        base_score += 4
-    elif len(red_flags) >= 3:
-        base_score -= 12
-    score = max(50, min(95, base_score))
+    total_score = max(10, min(100, keyword_score + impact_score + structure_score + seniority_score + bullet_precision_score))
+
+    parameter_breakdown = {
+        "keyword_score": keyword_score,
+        "impact_score": impact_score,
+        "structure_score": structure_score,
+        "seniority_score": seniority_score,
+        "bullet_precision_score": bullet_precision_score
+    }
 
     return {
-        "score": score,
-        "ats_score": score,
+        "score": total_score,
+        "ats_score": total_score,
+        "parameter_breakdown": parameter_breakdown,
         "skills": extracted,
         "extracted_skills": extracted,
         "missingKeywords": missing,
@@ -1641,15 +1677,16 @@ User's Message: {request.message}
 @app.post("/api/resume-analyze", response_model=ResumeAnalyzeResponse)
 def analyze_resume(request: ResumeAnalyzeRequest):
     """
-    ATS Resume Scanner Endpoint
-    Uses Gemini (gemini-1.5-flash) to evaluate resume text against target role.
-    Returns ATS score, extracted skills, missing keywords, red flags, and actionable recommendations.
+    Strict ATS Resume Scanner Endpoint
+    Evaluates candidate resume text against target role across 5 explicit scoring dimensions.
+    Returns multi-parameter ATS audit score, breakdown, extracted skills, missing keywords, red flags with deductions, and recommendations.
     """
     try:
         role = request.get_role()
         text = request.get_text()
 
         score = None
+        parameter_breakdown = {}
         extracted_skills = []
         missing_keywords = []
         red_flags = []
@@ -1659,25 +1696,34 @@ def analyze_resume(request: ResumeAnalyzeRequest):
             try:
                 model = get_llm_model()
                 if model:
-                    prompt = f"""You are an expert ATS (Applicant Tracking System) & Resume Screener.
-Evaluate the following resume text for a candidate targeting the role: '{role}'.
+                    prompt = f"""You are a Strict, Factual ATS (Applicant Tracking System) Screener & Technical Resume Auditor.
+Evaluate the candidate's resume text for a target role of: '{role}'.
 
 Resume Text:
 {text[:6000]}
 
-Analyze the resume thoroughly and provide:
-1. Overall ATS Compatibility Score (integer 0-100).
-2. List of Extracted Technical Skills present in the text.
-3. List of Critical Missing Keywords/Skills required for a top-tier '{role}'.
-4. ATS Red Flags or Formatting/Structural Issues.
-5. Actionable Recommendations for improvement.
+Perform a factual, multi-parameter audit across 5 explicit scoring dimensions (do NOT inflate scores; be strict, factual, and fair):
+1. keyword_score (0 to 25): Extracted skills vs. critical required skills for {role}.
+2. impact_score (0 to 25): Presence of concrete numeric metrics (%, $, QPS, ms, scale). Heavy penalty if metrics are missing.
+3. structure_score (0 to 20): ATS parsing hygiene, section headers, GitHub/LinkedIn links, bullet formatting.
+4. seniority_score (0 to 15): Action verbs, architectural scope, and technical depth.
+5. bullet_precision_score (0 to 15): Technical density vs subjective buzzwords ("passionate", "team player").
 
-Respond ONLY with valid JSON having the following exact keys:
+Calculate total ats_score = sum of the 5 parameter sub-scores (0-100).
+
+Respond ONLY with valid JSON having this exact format:
 {{
   "ats_score": <integer 0-100>,
+  "parameter_breakdown": {{
+    "keyword_score": <integer 0-25>,
+    "impact_score": <integer 0-25>,
+    "structure_score": <integer 0-20>,
+    "seniority_score": <integer 0-15>,
+    "bullet_precision_score": <integer 0-15>
+  }},
   "extracted_skills": [<string>, ...],
   "missing_keywords": [<string>, ...],
-  "red_flags": [<string>, ...],
+  "red_flags": [<string with point deduction rationale>, ...],
   "recommendations": [<string>, ...]
 }}
 """
@@ -1688,6 +1734,15 @@ Respond ONLY with valid JSON having the following exact keys:
                             s = parse_score(parsed.get("ats_score") or parsed.get("score"))
                             if s is not None:
                                 score = s
+                            if isinstance(parsed.get("parameter_breakdown"), dict):
+                                pb = parsed["parameter_breakdown"]
+                                parameter_breakdown = {
+                                    "keyword_score": parse_score(pb.get("keyword_score")) or 18,
+                                    "impact_score": parse_score(pb.get("impact_score")) or 15,
+                                    "structure_score": parse_score(pb.get("structure_score")) or 16,
+                                    "seniority_score": parse_score(pb.get("seniority_score")) or 12,
+                                    "bullet_precision_score": parse_score(pb.get("bullet_precision_score")) or 12
+                                }
                             extracted_skills = parsed.get("extracted_skills") or parsed.get("skills") or []
                             missing_keywords = parsed.get("missing_keywords") or parsed.get("missingKeywords") or []
                             red_flags = parsed.get("red_flags") or parsed.get("redFlags") or []
@@ -1700,6 +1755,8 @@ Respond ONLY with valid JSON having the following exact keys:
             fallback = generate_fallback_resume_analysis(role, text)
             if score is None:
                 score = fallback["score"]
+            if not parameter_breakdown:
+                parameter_breakdown = fallback["parameter_breakdown"]
             if not extracted_skills:
                 extracted_skills = fallback["extracted_skills"]
             if not missing_keywords:
@@ -1711,9 +1768,19 @@ Respond ONLY with valid JSON having the following exact keys:
 
         score = max(0, min(100, int(score)))
 
+        if not parameter_breakdown:
+            parameter_breakdown = {
+                "keyword_score": min(25, int(score * 0.25)),
+                "impact_score": min(25, int(score * 0.25)),
+                "structure_score": min(20, int(score * 0.20)),
+                "seniority_score": min(15, int(score * 0.15)),
+                "bullet_precision_score": min(15, int(score * 0.15))
+            }
+
         return ResumeAnalyzeResponse(
             score=score,
             ats_score=score,
+            parameter_breakdown=parameter_breakdown,
             skills=extracted_skills,
             extracted_skills=extracted_skills,
             missingKeywords=missing_keywords,
@@ -1728,6 +1795,7 @@ Respond ONLY with valid JSON having the following exact keys:
         return ResumeAnalyzeResponse(
             score=fallback["score"],
             ats_score=fallback["score"],
+            parameter_breakdown=fallback["parameter_breakdown"],
             skills=fallback["extracted_skills"],
             extracted_skills=fallback["extracted_skills"],
             missingKeywords=fallback["missing_keywords"],
