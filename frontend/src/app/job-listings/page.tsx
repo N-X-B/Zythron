@@ -26,7 +26,7 @@ export default function AestheticJobListingsPage() {
   const [userName, setUserName] = useState("Engineer");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [jobListings] = useState([
+  const [jobListings, setJobListings] = useState([
     {
       id: "j1",
       title: "Senior Full-Stack Systems Engineer",
@@ -92,6 +92,29 @@ export default function AestheticJobListingsPage() {
     } catch (e) {
       console.error(e);
     }
+
+    // Fetch dynamic jobs from backend
+    fetch("http://localhost:8000/api/jobs")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.jobs && Array.isArray(data.jobs) && data.jobs.length > 0) {
+          const apiJobs = data.jobs.map((j: any, index: number) => ({
+            id: j.id || `api-j${index}`,
+            title: j.title || "Software Engineer",
+            company: j.company || "Tech Company",
+            companyLogo: index % 2 === 0 ? "⚡" : "❇️",
+            location: j.location || "Remote",
+            salaryRange: "$150,000 – $220,000",
+            medianSalary: "$175,000",
+            skillPremium: "+$20,000 (Core Competencies)",
+            matchScore: Math.min(95, 80 + (index * 3)),
+            skills: Array.isArray(j.skills) ? j.skills : ["Python", "FastAPI", "React"],
+            description: j.description || "Building scalable high-throughput engineering systems."
+          }));
+          setJobListings(apiJobs);
+        }
+      })
+      .catch((err) => console.warn("Using default job listings:", err));
   }, []);
 
   const handleSignOut = () => {

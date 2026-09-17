@@ -420,6 +420,48 @@ class MockInterviewResponse(BaseModel):
     feedback: str
     model_config = {"extra": "allow"}
 
+class ResumeAnalyzeRequest(BaseModel):
+    resume_text: Optional[str] = ""
+    target_role: Optional[str] = "Software Engineer"
+    text: Optional[str] = None
+    role: Optional[str] = None
+    model_config = {"extra": "allow"}
+
+    def get_text(self) -> str:
+        for val in (self.resume_text, self.text):
+            if val and str(val).strip():
+                return str(val).strip()
+        extra = getattr(self, "model_extra", None) or getattr(self, "__pydantic_extra__", None) or {}
+        if isinstance(extra, dict):
+            for k in ("resume_text", "text", "resume", "content"):
+                if extra.get(k) and str(extra[k]).strip():
+                    return str(extra[k]).strip()
+        return ""
+
+    def get_role(self) -> str:
+        for val in (self.target_role, self.role):
+            if val and str(val).strip():
+                return str(val).strip()
+        extra = getattr(self, "model_extra", None) or getattr(self, "__pydantic_extra__", None) or {}
+        if isinstance(extra, dict):
+            for k in ("target_role", "role", "job_role"):
+                if extra.get(k) and str(extra[k]).strip():
+                    return str(extra[k]).strip()
+        return "Software Engineer"
+
+class ResumeAnalyzeResponse(BaseModel):
+    score: int
+    ats_score: int
+    skills: List[str]
+    extracted_skills: List[str]
+    missingKeywords: List[str]
+    missing_keywords: List[str]
+    redFlags: List[str]
+    red_flags: List[str]
+    recommendations: List[str]
+    model_config = {"extra": "allow"}
+
+
 
 class JoinMeetingRequest(BaseModel):
     meeting_url: str
@@ -896,6 +938,69 @@ def generate_fallback_interview_feedback(role: str, answer: str) -> Dict[str, An
                 "3. Refine brevity to communicate high-density insights without rambling."
             )
         }
+
+def generate_fallback_resume_analysis(role: str, text: str) -> Dict[str, Any]:
+    txt_lower = (text or "").lower()
+    
+    tech_candidates = [
+        "React", "TypeScript", "JavaScript", "Next.js", "Python", "FastAPI",
+        "Docker", "Kubernetes", "PostgreSQL", "MongoDB", "Redis", "AWS",
+        "GCP", "Git", "CI/CD", "GraphQL", "REST API", "System Design",
+        "PyTorch", "TensorFlow", "Pandas", "Scikit-Learn", "Tailwind"
+    ]
+    extracted = [t for t in tech_candidates if re.search(r"\b" + re.escape(t.lower()) + r"\b", txt_lower)]
+    if not extracted:
+        extracted = ["Software Engineering", "Problem Solving", "Git", "REST APIs"]
+
+    missing_by_role = {
+        "software engineer": ["System Design", "CI/CD Pipelines", "Kubernetes", "GraphQL", "Performance Profiling"],
+        "product manager": ["A/B Testing", "OKRs & KPIs", "User Roadmap", "Product Analytics", "Agile/Scrum"],
+        "data scientist": ["Feature Engineering", "A/B Testing", "Distributed Training", "MLOps", "Model Deployment"],
+        "ui/ux designer": ["Design Systems", "Figma Components", "User Research", "Wireframing", "Usability Testing"]
+    }
+
+    role_key = (role or "").lower()
+    missing = missing_by_role.get(role_key, ["System Architecture", "Automated Testing", "Cloud Deployment", "CI/CD"])
+    missing = [m for m in missing if m.lower() not in [e.lower() for e in extracted]]
+    if not missing:
+        missing = ["Distributed Caching", "Zero-Trust Security"]
+
+    red_flags = []
+    if not re.search(r"\b\d+%\b|\b\d+x\b|\$\d+|\b\d+\s*(ms|sec|users|req)\b", txt_lower):
+        red_flags.append("Missing quantifiable metrics (percentages, speedups, revenue, scale) in experience bullet points.")
+    if len(text.split("\n")) < 8:
+        red_flags.append("Resume content appears brief; expand detailed accomplishment descriptions.")
+    if not any(k in txt_lower for k in ["github", "linkedin", "http", "@"]):
+        red_flags.append("Missing portfolio or professional profile links (GitHub, LinkedIn, contact info).")
+    if not red_flags:
+        red_flags.append("Minor formatting inconsistency in technical skill categories.")
+
+    recommendations = [
+        f"Incorporate missing keywords ({', '.join(missing[:3])}) naturally into work experience bullet points.",
+        "Quantify your achievements using metrics (e.g., 'Reduced API latency by 35%' or 'Managed 10k+ daily active users').",
+        f"Add a targeted summary section emphasizing experience tailored specifically for {role} positions."
+    ]
+
+    base_score = 78
+    if len(extracted) >= 5:
+        base_score += 8
+    if len(red_flags) == 1:
+        base_score += 4
+    elif len(red_flags) >= 3:
+        base_score -= 12
+    score = max(50, min(95, base_score))
+
+    return {
+        "score": score,
+        "ats_score": score,
+        "skills": extracted,
+        "extracted_skills": extracted,
+        "missingKeywords": missing,
+        "missing_keywords": missing,
+        "redFlags": red_flags,
+        "red_flags": red_flags,
+        "recommendations": recommendations
+    }
 
 # --- ENDPOINTS ---
 
@@ -1478,5 +1583,117 @@ User's Message: {request.message}
     except Exception as e:
         return {"reply": f"AI Engine Error: {str(e)}", "language_detected": request.language}
 
+@app.post("/api/resume-analyze", response_model=ResumeAnalyzeResponse)
+def analyze_resume(request: ResumeAnalyzeRequest):
+    """
+    ATS Resume Scanner Endpoint
+    Uses Gemini (gemini-1.5-flash) to evaluate resume text against target role.
+    Returns ATS score, extracted skills, missing keywords, red flags, and actionable recommendations.
+    """
+    try:
+        role = request.get_role()
+        text = request.get_text()
+
+        score = None
+        extracted_skills = []
+        missing_keywords = []
+        red_flags = []
+        recommendations = []
+
+        if is_online() and text:
+            try:
+                model = get_llm_model()
+                if model:
+                    prompt = f"""You are an expert ATS (Applicant Tracking System) & Resume Screener.
+Evaluate the following resume text for a candidate targeting the role: '{role}'.
+
+Resume Text:
+{text[:6000]}
+
+Analyze the resume thoroughly and provide:
+1. Overall ATS Compatibility Score (integer 0-100).
+2. List of Extracted Technical Skills present in the text.
+3. List of Critical Missing Keywords/Skills required for a top-tier '{role}'.
+4. ATS Red Flags or Formatting/Structural Issues.
+5. Actionable Recommendations for improvement.
+
+Respond ONLY with valid JSON having the following exact keys:
+{{
+  "ats_score": <integer 0-100>,
+  "extracted_skills": [<string>, ...],
+  "missing_keywords": [<string>, ...],
+  "red_flags": [<string>, ...],
+  "recommendations": [<string>, ...]
+}}
+"""
+                    response = model.generate_content(prompt)
+                    if response and response.text:
+                        parsed = extract_json(response.text)
+                        if isinstance(parsed, dict):
+                            s = parse_score(parsed.get("ats_score") or parsed.get("score"))
+                            if s is not None:
+                                score = s
+                            extracted_skills = parsed.get("extracted_skills") or parsed.get("skills") or []
+                            missing_keywords = parsed.get("missing_keywords") or parsed.get("missingKeywords") or []
+                            red_flags = parsed.get("red_flags") or parsed.get("redFlags") or []
+                            recommendations = parsed.get("recommendations") or []
+            except Exception as e:
+                print(f"Gemini resume analysis error: {e}")
+
+        # Fallback if offline or parsing failed
+        if score is None or not extracted_skills or not recommendations:
+            fallback = generate_fallback_resume_analysis(role, text)
+            if score is None:
+                score = fallback["score"]
+            if not extracted_skills:
+                extracted_skills = fallback["extracted_skills"]
+            if not missing_keywords:
+                missing_keywords = fallback["missing_keywords"]
+            if not red_flags:
+                red_flags = fallback["red_flags"]
+            if not recommendations:
+                recommendations = fallback["recommendations"]
+
+        score = max(0, min(100, int(score)))
+
+        return ResumeAnalyzeResponse(
+            score=score,
+            ats_score=score,
+            skills=extracted_skills,
+            extracted_skills=extracted_skills,
+            missingKeywords=missing_keywords,
+            missing_keywords=missing_keywords,
+            redFlags=red_flags,
+            red_flags=red_flags,
+            recommendations=recommendations
+        )
+    except Exception as e:
+        print(f"Resume analyze handler error: {e}")
+        fallback = generate_fallback_resume_analysis(request.get_role(), request.get_text())
+        return ResumeAnalyzeResponse(
+            score=fallback["score"],
+            ats_score=fallback["score"],
+            skills=fallback["extracted_skills"],
+            extracted_skills=fallback["extracted_skills"],
+            missingKeywords=fallback["missing_keywords"],
+            missing_keywords=fallback["missing_keywords"],
+            redFlags=fallback["red_flags"],
+            red_flags=fallback["red_flags"],
+            recommendations=fallback["recommendations"]
+        )
+
+@app.get("/api/jobs")
+def get_jobs():
+    """
+    Expose current ingested jobs and demo seed jobs for frontend display.
+    """
+    with _job_store_lock:
+        return {
+            "status": "success",
+            "count": len(DEMO_JOB_STORE),
+            "jobs": DEMO_JOB_STORE
+        }
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+

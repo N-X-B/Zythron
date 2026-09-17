@@ -569,6 +569,31 @@ async def run_asgi_tests() -> bool:
     print(" PASS: Lengthy low-depth response provided coherent feedback without falsely claiming it is 'far too brief'!")
     passed_tests += 1
 
+    # 35. RESUME ANALYZER ENDPOINT
+    total_tests += 1
+    print("\n--- Testing Resume Analyzer: POST /api/resume-analyze ---")
+    resume_payload = {
+        "target_role": "Software Engineer",
+        "resume_text": "Experienced software developer skilled in React, TypeScript, Python, FastAPI, PostgreSQL, Docker. Built REST APIs handling 10k daily requests."
+    }
+    status_res, data_res = await asgi_client("POST", "/api/resume-analyze", resume_payload)
+    assert status_res == 200, f"Expected 200, got {status_res}"
+    assert "score" in data_res or "ats_score" in data_res
+    assert len(data_res.get("skills", []) or data_res.get("extracted_skills", [])) > 0
+    assert len(data_res.get("recommendations", [])) > 0
+    print(f" PASS: Status {status_res}, ATS Score: {data_res.get('score') or data_res.get('ats_score')}, Skills Extracted: {data_res.get('skills')}")
+    passed_tests += 1
+
+    # 36. JOB LISTINGS ENDPOINT
+    total_tests += 1
+    print("\n--- Testing Job Listings: GET /api/jobs ---")
+    status_jobs, data_jobs = await asgi_client("GET", "/api/jobs")
+    assert status_jobs == 200, f"Expected 200, got {status_jobs}"
+    assert data_jobs.get("status") == "success"
+    assert len(data_jobs.get("jobs", [])) > 0
+    print(f" PASS: Status {status_jobs}, Job Count: {data_jobs.get('count')}")
+    passed_tests += 1
+
     print("\n" + "=" * 65)
     print(f"FINAL RESULT: {passed_tests}/{total_tests} Tests Passed")
     print("=" * 65)
@@ -577,5 +602,6 @@ async def run_asgi_tests() -> bool:
 if __name__ == "__main__":
     success = asyncio.run(run_asgi_tests())
     sys.exit(0 if success else 1)
+
 
 

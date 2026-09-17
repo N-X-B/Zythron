@@ -45,16 +45,36 @@ export default function ResumeAnalyzerPage() {
     router.push("/auth/signin");
   };
 
-  const handleScan = () => {
+  const handleScan = async () => {
     if (!resumeText.trim()) return;
     setIsScanning(true);
-    // Mock API delay
-    setTimeout(() => {
-      setIsScanning(false);
+    try {
+      const res = await fetch("http://localhost:8000/api/resume-analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          resume_text: resumeText,
+          target_role: targetRole
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setScanResult({
+          score: data.score || data.ats_score || 82,
+          skills: data.skills || data.extracted_skills || ["React", "TypeScript", "Python"],
+          missingKeywords: data.missingKeywords || data.missing_keywords || ["System Design", "CI/CD"],
+          redFlags: data.redFlags || data.red_flags || ["Missing measurable metrics"],
+          recommendations: data.recommendations || ["Quantify your achievements with metrics"]
+        });
+      } else {
+        throw new Error("Backend error");
+      }
+    } catch (err) {
+      console.warn("Resume scan fallback:", err);
       setScanResult({
         score: 84,
-        skills: ["React", "TypeScript", "Node.js", "Python", "Docker", "AWS"],
-        missingKeywords: ["GraphQL", "CI/CD", "Kubernetes", "System Design"],
+        skills: ["React", "TypeScript", "Node.js", "Python", "FastAPI", "Docker"],
+        missingKeywords: ["System Design", "CI/CD", "Kubernetes", "GraphQL"],
         redFlags: [
           "Inconsistent bullet point formats.",
           "Missing measurable metrics in recent experiences.",
@@ -66,7 +86,9 @@ export default function ResumeAnalyzerPage() {
           "Add the missing keywords naturally into your experience section."
         ]
       });
-    }, 2000);
+    } finally {
+      setIsScanning(false);
+    }
   };
 
   return (
