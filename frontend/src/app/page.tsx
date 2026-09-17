@@ -35,12 +35,11 @@ export default function LandingPage() {
         @keyframes float2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-20px,30px) scale(1.08)} }
         @keyframes pulse-ring { 0%{transform:scale(.95);opacity:.6} 50%{transform:scale(1.05);opacity:.3} 100%{transform:scale(.95);opacity:.6} }
         @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        @keyframes grid-fade { 0%{opacity:0.03} 50%{opacity:0.06} 100%{opacity:0.03} }
         .grid-bg {
           background-image: linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
                             linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
           background-size: 60px 60px;
-          animation: grid-fade 8s ease infinite;
+          opacity: 1 !important;
         }
         .blob-1 { animation: float1 12s ease-in-out infinite; }
         .blob-2 { animation: float2 15s ease-in-out infinite; }
@@ -102,8 +101,8 @@ export default function LandingPage() {
       {/* ─── HERO ─── */}
       <section className="relative min-h-screen flex items-center justify-center grid-bg">
         {/* Floating gradient orbs */}
-        <div className="blob-1 absolute top-[15%] left-[10%] w-[400px] h-[400px] rounded-full bg-zinc-800/20 blur-[120px] pointer-events-none" />
-        <div className="blob-2 absolute bottom-[10%] right-[10%] w-[350px] h-[350px] rounded-full bg-zinc-700/15 blur-[100px] pointer-events-none" />
+        <div className="blob-1 absolute top-[15%] left-[10%] w-[450px] h-[450px] rounded-full bg-white/10 blur-[120px] pointer-events-none" />
+        <div className="blob-2 absolute bottom-[10%] right-[10%] w-[400px] h-[400px] rounded-full bg-zinc-200/10 blur-[100px] pointer-events-none" />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <Reveal>
