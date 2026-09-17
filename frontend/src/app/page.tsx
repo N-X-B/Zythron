@@ -341,7 +341,7 @@ export default function LandingPage() {
             {[
               { title: "Voice-Native Sessions", desc: "Real-time, low-latency voice conversation that listens, waits, and responds naturally." },
               { title: "Role-Aware Questions", desc: "System architecture, coding algorithms, and system design drawn from real industry data." },
-              { title: "Smart Follow-ups", desc: "Each answer steers the next question, exactly like a sharp principal hiring engineer would." },
+              { title: "LeetCode Code Arena", desc: "Multi-language Python/TypeScript IDE with test runners and Big-O algorithmic profiler." },
               { title: "Structured Feedback", desc: "A comprehensive report scoring technical correctness, trade-offs, and communication." },
               { title: "Pinecone RAG Search", desc: "Live job database matching to show you real-world gaps for target tech companies." },
               { title: "Practice on Repeat", desc: "Practice at 2 AM the night before your big interview, as many times as you need." },

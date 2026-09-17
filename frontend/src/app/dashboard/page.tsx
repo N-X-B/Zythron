@@ -1043,8 +1043,35 @@ export default function HyperPersonalizedCareerGuidance() {
 
           </div>
 
-          {/* ─── RIGHT COLUMN: 3-PHASE CURRICULUM & INSPECTOR (8 Cols) ─── */}
+          {/* ─── RIGHT COLUMN: 3-PHASE CURRICULUM & CODE ARENA WORKSTATION (8 Cols) ─── */}
           <div className="lg:col-span-8 space-y-6">
+
+            {/* 🚀 PROMINENT CODE ARENA WORKSTATION CARD */}
+            <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-cyan-950/40 p-6 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono relative overflow-hidden group">
+              <div className="space-y-1 z-10">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                    Interactive IDE Workstation
+                  </span>
+                  <span className="text-[10px] text-zinc-400">Python & TypeScript Sandbox</span>
+                </div>
+                <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+                  <Code2 className="h-5 w-5 text-cyan-400" />
+                  LeetCode & System Design Code Arena
+                </h3>
+                <p className="text-xs text-zinc-300 font-sans max-w-lg leading-relaxed">
+                  Practice live data structure algorithms, token bucket rate limiters, and vector similarity metrics with AI test runners and Big-O complexity profiling.
+                </p>
+              </div>
+
+              <Link
+                href="/code-arena"
+                className="z-10 bg-white text-black font-extrabold px-5 py-3 rounded-2xl text-xs hover:bg-zinc-200 transition-all flex items-center gap-2 shrink-0 shadow-lg group-hover:scale-105"
+              >
+                <span>Launch Code Arena</span>
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
 
             {/* 3 Phase Cards Header */}
             <div className="flex items-center justify-between">
