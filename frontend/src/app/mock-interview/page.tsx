@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { interviewerProfile } from "../../config/voiceProfile";
-import { LogOut, ArrowRight, Zap, Camera, CameraOff, AlertTriangle } from "lucide-react";
+import { LogOut, ArrowRight, Zap, Camera, CameraOff, AlertTriangle, X } from "lucide-react";
 
 type InterviewState = "setup" | "interview" | "report";
 
@@ -57,6 +57,7 @@ export default function MockInterview() {
   // Camera Access State
   const [cameraPermissionStatus, setCameraPermissionStatus] = useState<"prompt" | "granted" | "denied">("prompt");
   const [cameraErrorMessage, setCameraErrorMessage] = useState<string>("");
+  const [showCameraGuideModal, setShowCameraGuideModal] = useState<boolean>(false);
 
   const [aiTranscript, setAiTranscript] = useState(
     "Hello! I'm your AI interviewer. Whenever you're ready, select a domain track to begin."
@@ -618,17 +619,108 @@ ${interviewerProfile.sensibility}`;
 
       {/* Camera Access Refused Alert Banner */}
       {cameraPermissionStatus === "denied" && (
-        <div className="bg-amber-500/10 border-b border-amber-500/20 px-8 py-3 flex items-center justify-between animate-fade-up z-40">
+        <div className="bg-amber-500/10 border-b border-amber-500/20 px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-3 animate-fade-up z-40">
           <div className="flex items-center gap-3 text-amber-200 text-sm font-medium">
             <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-            <span>Camera access was refused or blocked. Click to re-request camera permission.</span>
+            <span>Camera access is blocked by browser permissions. Allow camera in site settings to enable video.</span>
           </div>
-          <button
-            onClick={requestCameraPermission}
-            className="px-4 py-1.5 bg-amber-400 text-black font-semibold text-xs rounded-full hover:bg-amber-300 transition-all shadow-sm flex items-center gap-1.5"
-          >
-            <Camera className="w-3.5 h-3.5" /> Request Camera Access
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={requestCameraPermission}
+              className="px-3.5 py-1.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-full border border-white/15 transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Camera className="w-3.5 h-3.5" /> Retry Request
+            </button>
+            <button
+              onClick={() => setShowCameraGuideModal(true)}
+              className="px-4 py-1.5 bg-amber-400 text-black font-extrabold text-xs rounded-full hover:bg-amber-300 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              ⚙️ How to Allow Manually
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Camera Unblock Guide Modal */}
+      {showCameraGuideModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fade-up">
+          <div className="bg-[#0e0e12] border border-white/15 rounded-3xl max-w-lg w-full p-6 md:p-8 space-y-6 shadow-2xl relative">
+            <button
+              onClick={() => setShowCameraGuideModal(false)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="space-y-2 border-b border-white/10 pb-4 pr-8">
+              <div className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full font-bold">
+                <AlertTriangle className="h-3 w-3" /> Browser Security Unblock Guide
+              </div>
+              <h2 className="text-2xl font-extrabold text-white">How to Allow Camera Access</h2>
+              <p className="text-xs text-zinc-400">
+                When a browser blocks camera permission once, JavaScript cannot force prompt again until you enable it in site settings.
+              </p>
+            </div>
+
+            <div className="space-y-4 font-sans text-xs">
+              
+              {/* Step 1 */}
+              <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                  1
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Click the Lock / Site Settings Icon</h3>
+                  <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                    Look at your browser address bar at the top left (next to <code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">http://localhost:3002</code>). Click the <strong>🔒 Lock</strong> or <strong>tune/settings icon</strong>.
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                  2
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Change Camera Permission to "Allow"</h3>
+                  <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                    In the dropdown menu, locate <strong>Camera</strong> and toggle it from <strong>Block / Ask</strong> to <strong>Allow</strong>.
+                  </p>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="flex items-start gap-3.5 bg-white/[0.03] p-4 rounded-2xl border border-white/10">
+                <div className="w-7 h-7 bg-white text-black font-extrabold rounded-full flex items-center justify-center shrink-0 text-xs font-mono">
+                  3
+                </div>
+                <div>
+                  <h3 className="font-bold text-white text-sm">Reload Page</h3>
+                  <p className="text-zinc-300 text-xs mt-1 leading-relaxed">
+                    Click the <strong>Reload Page</strong> button below or press <code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">Cmd + R</code> (<code className="bg-black px-1.5 py-0.5 rounded text-white font-mono">Ctrl + R</code>).
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-3">
+              <button
+                onClick={() => setShowCameraGuideModal(false)}
+                className="px-4 py-2.5 rounded-xl border border-white/20 text-zinc-300 hover:text-white text-xs font-semibold"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-2.5 bg-white text-black font-extrabold text-xs rounded-xl hover:bg-zinc-200 transition-all shadow-lg flex items-center gap-2 cursor-pointer"
+              >
+                <span>🔄 Reload Page Now</span>
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
 
