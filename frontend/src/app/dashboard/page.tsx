@@ -39,7 +39,8 @@ import {
   TrendingUp,
   Layers,
   HelpCircle,
-  MessageSquare
+  MessageSquare,
+  Search
 } from "lucide-react";
 
 interface SkillItem {
@@ -563,6 +564,21 @@ export default function HyperPersonalizedCareerGuidance() {
     }
   };
 
+  // Cyber Command Palette (Cmd+K) State
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [commandSearch, setCommandSearch] = useState("");
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // AI RAG State
   const [isGeneratingRoadmap, setIsGeneratingRoadmap] = useState(false);
   const [aiRoadmapOutput, setAiRoadmapOutput] = useState<string>("");
@@ -738,11 +754,16 @@ export default function HyperPersonalizedCareerGuidance() {
       {/* ─── TOP NAVBAR ─── */}
       <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/80 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2 font-mono">
-            <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
-              <Zap className="h-4 w-4 text-white" />
+          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2.5 font-mono group">
+            <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center group-hover:border-cyan-400/50 transition-colors">
+              <Zap className="h-4 w-4 text-white group-hover:text-cyan-300 transition-colors" />
             </div>
-            ZYTHRON
+            <span>ZYTHRON</span>
+            <span className="flex items-center gap-0.5 ml-1">
+              <span className="w-1 h-3 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-1 h-4 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-1 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+            </span>
           </Link>
 
           {/* Standardized Pill Navigation */}
@@ -766,7 +787,17 @@ export default function HyperPersonalizedCareerGuidance() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs">
+          {/* Cmd+K Quick Launch Button */}
+          <button
+            onClick={() => setCommandPaletteOpen(true)}
+            className="hidden lg:flex items-center gap-2 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3 py-1.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white transition-all cursor-pointer"
+          >
+            <Search className="h-3.5 w-3.5 text-zinc-400" />
+            <span>Search</span>
+            <kbd className="text-[9px] bg-white/10 text-zinc-300 px-1.5 py-0.5 rounded border border-white/20">⌘K</kbd>
+          </button>
+
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono">
             <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
             <span className="text-zinc-300 font-medium">{userName}</span>
           </div>
@@ -785,17 +816,20 @@ export default function HyperPersonalizedCareerGuidance() {
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-6 md:p-8 backdrop-blur-2xl shadow-2xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span className="text-[10px] uppercase font-mono tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Synced Profile: {userName}
                 </span>
-                <span className="text-xs text-zinc-400 font-mono">Onboarding Baseline Loaded</span>
+                <span className="text-[10px] uppercase font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1 rounded-full flex items-center gap-1">
+                  <Award className="h-3 w-3 text-cyan-300" />
+                  Level 3 Trajectory Rank (450 XP)
+                </span>
               </div>
               <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
                 Career Trajectory: <span className="text-zinc-200">{preferredRole}</span>
               </h1>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs text-zinc-400 mt-1 font-mono">
                 Targeting {targetCompanyTier} • {experienceLevel} Tier • {weeklyCommitmentHours}h/week Commitment Horizon
               </p>
             </div>
@@ -1399,6 +1433,126 @@ export default function HyperPersonalizedCareerGuidance() {
           </button>
         )}
       </div>
+
+      {/* ─── CYBER COMMAND PALETTE (CMD+K) OVERLAY ─── */}
+      {commandPaletteOpen && (
+        <div
+          onClick={() => setCommandPaletteOpen(false)}
+          className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/85 backdrop-blur-md"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-xl bg-[#0a0a0d] border border-white/20 rounded-3xl p-5 text-zinc-100 shadow-2xl space-y-4 font-mono relative animate-in fade-in zoom-in-95 duration-150"
+          >
+            <div className="flex items-center gap-3 bg-black/60 border border-white/10 px-4 py-3.5 rounded-2xl">
+              <Search className="h-4 w-4 text-zinc-400" />
+              <input
+                type="text"
+                value={commandSearch}
+                onChange={(e) => setCommandSearch(e.target.value)}
+                placeholder="Type a command or page (e.g. mock, scan, RAG)..."
+                className="w-full bg-transparent text-xs text-white focus:outline-none placeholder:text-zinc-500"
+                autoFocus
+              />
+              <kbd className="text-[10px] bg-white/10 px-2 py-0.5 rounded border border-white/20 text-zinc-300">ESC</kbd>
+            </div>
+
+            <div className="space-y-1.5 text-xs">
+              <span className="text-[10px] text-zinc-500 uppercase px-3 block mb-1">Quick Autonomous Modules</span>
+              
+              <Link
+                href="/dashboard"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center gap-3 text-white">
+                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
+                    <Zap className="h-4 w-4 text-cyan-400" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">(01) Career Match Workstation</span>
+                    <span className="text-[10px] text-zinc-400">RAG Roadmaps, Skill Matrix & Auto-Grader</span>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-cyan-300" />
+              </Link>
+
+              <Link
+                href="/mock-interview"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center gap-3 text-white">
+                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
+                    <Terminal className="h-4 w-4 text-emerald-400" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">(02) Voice AI Technical Interview</span>
+                    <span className="text-[10px] text-zinc-400">0-100 Score Gauge & Feedback Rubric</span>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-emerald-300" />
+              </Link>
+
+              <Link
+                href="/record-meeting"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center gap-3 text-white">
+                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
+                    <Activity className="h-4 w-4 text-purple-400" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">(03) Autonomous Meeting Recorder Bot</span>
+                    <span className="text-[10px] text-zinc-400">Live Notetaker & Action Item Extractor</span>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-purple-300" />
+              </Link>
+
+              <Link
+                href="/resume-analyzer"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center gap-3 text-white">
+                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
+                    <FileText className="h-4 w-4 text-amber-400" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">(04) AI ATS Resume Scanner</span>
+                    <span className="text-[10px] text-zinc-400">Metric Density & Keyword Gap Analysis</span>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-amber-300" />
+              </Link>
+
+              <Link
+                href="/job-listings"
+                onClick={() => setCommandPaletteOpen(false)}
+                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center gap-3 text-white">
+                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
+                    <Briefcase className="h-4 w-4 text-cyan-300" />
+                  </div>
+                  <div>
+                    <span className="font-bold block">(05) Job Listings & Salary Benchmarks</span>
+                    <span className="text-[10px] text-zinc-400">Market Rates & High-Value Skill Boosts</span>
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-cyan-300" />
+              </Link>
+            </div>
+
+            <div className="pt-2 border-t border-white/10 flex justify-between text-[10px] text-zinc-500 px-2">
+              <span>Press ⌘K anytime to toggle command menu</span>
+              <span>Zythron OS v1.0</span>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
