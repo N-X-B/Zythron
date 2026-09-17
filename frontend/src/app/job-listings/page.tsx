@@ -10,70 +10,74 @@ import {
   DollarSign,
   TrendingUp,
   Search,
-  Filter,
   Zap,
   UserCheck,
   LogOut,
   Sparkles,
-  ExternalLink,
-  ArrowRight
+  ArrowRight,
+  ShieldCheck,
+  CheckCircle2,
+  Globe
 } from "lucide-react";
 
-export default function JobListingsPage() {
+export default function AestheticJobListingsPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [userName, setUserName] = useState("Engineer");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedRoleFilter, setSelectedRoleFilter] = useState("All");
 
-  const [jobListings, setJobListings] = useState([
+  const [jobListings] = useState([
     {
       id: "j1",
       title: "Senior Full-Stack Systems Engineer",
       company: "Stripe",
-      location: "San Francisco, CA / Remote",
-      salaryRange: "$160,000 - $220,000 / yr",
+      companyLogo: "⚡",
+      location: "San Francisco, CA • Remote",
+      salaryRange: "$160,000 – $220,000",
       medianSalary: "$180,000",
-      skillPremium: "+$22,000 (Kubernetes & Vector Search)",
+      skillPremium: "+$22,000 (Kubernetes & Vector RAG)",
       matchScore: 92,
       skills: ["TypeScript", "Next.js", "Python", "FastAPI", "PostgreSQL", "Docker"],
-      description: "Architect high-throughput financial infrastructure, streaming APIs, and asynchronous microservices.",
+      description: "Architect high-throughput financial infrastructure, streaming APIs, and asynchronous microservices handling millions of daily operations.",
     },
     {
       id: "j2",
       title: "AI / ML Platform Infrastructure Engineer",
       company: "OpenAI",
-      location: "Remote / US National",
-      salaryRange: "$190,000 - $320,000 / yr",
+      companyLogo: "❇️",
+      location: "San Francisco, CA • Remote",
+      salaryRange: "$190,000 – $320,000",
       medianSalary: "$240,000",
       skillPremium: "+$35,000 (Pinecone RAG & PyTorch)",
       matchScore: 88,
       skills: ["Python", "FastAPI", "Pinecone", "PyTorch", "CUDA", "Docker"],
-      description: "Build low-latency LLM inference pipelines, KV-cache eviction engines, and GPU cluster orchestration.",
+      description: "Build low-latency LLM inference pipelines, KV-cache eviction engines, and GPU cluster orchestration for generative AI models.",
     },
     {
       id: "j3",
       title: "Backend Python Microservices Engineer",
       company: "Vercel",
-      location: "Remote",
-      salaryRange: "$150,000 - $210,000 / yr",
+      companyLogo: "▲",
+      location: "Remote • US / Europe",
+      salaryRange: "$150,000 – $210,000",
       medianSalary: "$175,000",
       skillPremium: "+$18,000 (AsyncIO & PostgreSQL)",
       matchScore: 85,
       skills: ["Python", "FastAPI", "PostgreSQL", "Redis", "Kafka"],
-      description: "Develop resilient API endpoints, database caching layers, and real-time telemetry pipelines.",
+      description: "Develop resilient edge API endpoints, database caching layers, and real-time telemetry streaming pipelines.",
     },
     {
       id: "j4",
       title: "DevOps & Cloud Systems Architect",
       company: "Datadog",
-      location: "New York, NY / Remote",
-      salaryRange: "$145,000 - $195,000 / yr",
+      companyLogo: "🐕",
+      location: "New York, NY • Remote",
+      salaryRange: "$145,000 – $195,000",
       medianSalary: "$165,000",
       skillPremium: "+$20,000 (Terraform & AWS)",
       matchScore: 81,
       skills: ["Docker", "Kubernetes", "Linux", "AWS", "Terraform"],
-      description: "Manage zero-downtime Kubernetes deployments, observability agents, and multi-region failover.",
+      description: "Manage zero-downtime Kubernetes deployments, observability agents, and multi-region automated failover infrastructure.",
     },
   ]);
 
@@ -98,51 +102,64 @@ export default function JobListingsPage() {
   if (!mounted) return null;
 
   const filteredJobs = jobListings.filter((job) => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.skills.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesSearch;
+    const query = searchQuery.toLowerCase();
+    return (
+      job.title.toLowerCase().includes(query) ||
+      job.company.toLowerCase().includes(query) ||
+      job.skills.some((s) => s.toLowerCase().includes(query))
+    );
   });
 
   return (
-    <div className="h-full overflow-y-auto bg-[#0e0e12] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
+    <div className="h-full overflow-y-auto bg-[#0a0a0d] text-zinc-100 font-sans selection:bg-white selection:text-black">
       
-      {/* ─── TOP NAVBAR (Unified Exact Font Size text-xs font-medium Across All 5 Tabs) ─── */}
-      <header className="h-16 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2 font-mono">
-            <Zap className="h-4 w-4 text-white" />
+      {/* ─── ATMOSPHERIC LIGHTING & GRID ─── */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.05),transparent_70%)] pointer-events-none" />
+
+      {/* ─── SLEEK MINIMAL NAVBAR ─── */}
+      <header className="h-16 border-b border-white/[0.08] bg-[#0a0a0d]/80 backdrop-blur-xl sticky top-0 z-50 px-6 flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Link href="/dashboard" className="text-base font-bold tracking-[0.2em] text-white flex items-center gap-2 font-mono hover:opacity-90 transition-opacity">
+            <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
+              <Zap className="h-4 w-4 text-white" />
+            </div>
             ZYTHRON
           </Link>
 
-          {/* 5 Tabs - Standardized text-xs font-medium */}
-          <nav className="hidden md:flex items-center gap-1.5 font-mono text-xs overflow-x-auto no-scrollbar">
-            <Link href="/dashboard" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
-              (01) CAREER MATCH
-            </Link>
-            <Link href="/mock-interview" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
-              (02) MOCK INTERVIEW
-            </Link>
-            <Link href="/record-meeting" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
-              (03) RECORD MEETING
-            </Link>
-            <Link href="/resume-analyzer" className="rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-900 transition-all">
-              (04) RESUME SCANNER
-            </Link>
-            <Link href="/job-listings" className="rounded-full px-3.5 py-1.5 text-xs font-semibold bg-white text-black transition-all">
-              (05) JOB LISTINGS
-            </Link>
+          {/* Standardized Pill Navigation */}
+          <nav className="hidden md:flex items-center gap-1 font-mono text-xs">
+            {[
+              { label: "(01) CAREER MATCH", href: "/dashboard" },
+              { label: "(02) MOCK INTERVIEW", href: "/mock-interview" },
+              { label: "(03) RECORD MEETING", href: "/record-meeting" },
+              { label: "(04) RESUME SCANNER", href: "/resume-analyzer" },
+              { label: "(05) JOB LISTINGS", href: "/job-listings", active: true },
+            ].map((tab) => (
+              <Link
+                key={tab.label}
+                href={tab.href}
+                className={`px-3.5 py-1.5 rounded-full text-xs transition-all ${
+                  tab.active
+                    ? "bg-white text-black font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                    : "text-zinc-400 hover:text-white hover:bg-white/[0.06]"
+                }`}
+              >
+                {tab.label}
+              </Link>
+            ))}
           </nav>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs">
-            <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-zinc-300 font-medium">{userName}</span>
           </div>
 
-          <button onClick={handleSignOut} className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full transition-colors">
+          <button
+            onClick={handleSignOut}
+            className="text-xs text-zinc-400 hover:text-white flex items-center gap-1.5 bg-white/[0.04] hover:bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-full transition-colors cursor-pointer"
+          >
             <LogOut className="h-3.5 w-3.5" />
             Sign out
           </button>
@@ -150,84 +167,101 @@ export default function JobListingsPage() {
       </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 md:p-8 space-y-8">
+      <main className="max-w-6xl w-full mx-auto p-6 md:p-10 space-y-8 relative z-10">
         
-        {/* Header Banner */}
-        <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 p-6 rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <span className="text-xs uppercase tracking-widest text-emerald-400 font-semibold px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-800/50">
-              Pinecone RAG Job Feed & Compensation Benchmarks
-            </span>
-            <h1 className="text-2xl font-bold text-white mt-3 mb-1">Live Job Listings & Salary Index</h1>
-            <p className="text-xs text-zinc-400">Verified vector job postings enriched with salary market benchmarks and skill premiums.</p>
-          </div>
+        {/* Header Hero Strip */}
+        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-8 backdrop-blur-2xl shadow-2xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-[120px] pointer-events-none rounded-full" />
+          
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+            <div>
+              <div className="inline-flex items-center gap-2 text-[10px] uppercase font-mono tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full mb-3">
+                <Globe className="h-3 w-3" />
+                Pinecone Vector Job Feed • Live Market Benchmarks
+              </div>
+              <h1 className="text-3xl font-extrabold text-white tracking-tight">Verified Engineering Roles</h1>
+              <p className="text-sm text-zinc-400 mt-1 max-w-xl">
+                Real-time job postings with skill gap matching, verified compensation ranges, and AI learning roadmaps.
+              </p>
+            </div>
 
-          {/* Search Box */}
-          <div className="relative w-full sm:w-72">
-            <Search className="h-4 w-4 text-zinc-500 absolute left-3 top-3" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search jobs or skills..."
-              className="w-full bg-zinc-950 border border-zinc-700 pl-9 pr-4 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-white font-mono"
-            />
+            {/* Glass Search Bar */}
+            <div className="relative w-full md:w-80">
+              <Search className="h-4 w-4 text-zinc-400 absolute left-4 top-3.5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search jobs, tech, or skills..."
+                className="w-full bg-black/50 border border-white/10 pl-10 pr-4 py-3 rounded-2xl text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/40 transition-all font-mono shadow-inner"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Job Listings Grid */}
-        <div className="space-y-4">
+        {/* Job Cards Stack */}
+        <div className="space-y-5">
           {filteredJobs.map((job) => (
-            <div key={job.id} className="bg-zinc-900/60 border border-zinc-800 p-6 rounded-2xl shadow-lg hover:border-zinc-700 transition-all space-y-4">
-              
-              {/* Job Header */}
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-bold text-white">{job.company}</span>
-                    <span className="text-zinc-600 font-mono">•</span>
-                    <span className="text-xs text-zinc-400 flex items-center gap-1">
-                      <MapPin className="h-3 w-3 text-cyan-400" />
-                      {job.location}
-                    </span>
+            <div
+              key={job.id}
+              className="group relative rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.04] to-transparent p-6 md:p-8 backdrop-blur-xl hover:border-white/20 transition-all duration-300 shadow-xl"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
+                
+                {/* Company & Title */}
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+                    {job.companyLogo}
                   </div>
-                  <h3 className="text-xl font-bold text-white leading-tight">{job.title}</h3>
+                  <div>
+                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1">
+                      <span className="font-semibold text-white">{job.company}</span>
+                      <span>•</span>
+                      <span className="flex items-center gap-1 font-mono text-zinc-400">
+                        <MapPin className="h-3 w-3 text-zinc-500" />
+                        {job.location}
+                      </span>
+                    </div>
+                    <h2 className="text-xl font-bold text-white group-hover:text-zinc-100 transition-colors">{job.title}</h2>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="bg-emerald-950/60 border border-emerald-800/50 px-3.5 py-1.5 rounded-xl text-right">
-                    <p className="text-[10px] uppercase text-emerald-400 font-mono">Match Rating</p>
-                    <p className="text-lg font-bold font-mono text-emerald-400">{job.matchScore}%</p>
-                  </div>
+                {/* Match Rating Badge */}
+                <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-2xl self-start md:self-auto">
+                  <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest font-semibold">AI Match</span>
+                  <span className="text-lg font-bold font-mono text-emerald-400">{job.matchScore}%</span>
                 </div>
               </div>
 
-              <p className="text-xs text-zinc-300 leading-relaxed">{job.description}</p>
+              {/* Description */}
+              <p className="text-xs md:text-sm text-zinc-300 leading-relaxed mb-6 font-normal">
+                {job.description}
+              </p>
 
-              {/* Embedded Salary Benchmark Bar */}
-              <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800/80 grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-xs">
+              {/* Glass Compensation & Skill Premium Strip */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-black/40 border border-white/[0.06] p-4 rounded-2xl mb-6 font-mono text-xs">
                 <div>
-                  <span className="text-[10px] uppercase text-zinc-500 block">Verified Salary Range</span>
-                  <span className="text-sm font-bold text-white flex items-center gap-1">
-                    <DollarSign className="h-3.5 w-3.5 text-emerald-400" />
-                    {job.salaryRange}
-                  </span>
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1">Salary Range</span>
+                  <span className="text-sm font-bold text-white tracking-tight">{job.salaryRange} / yr</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase text-zinc-500 block">Median Market Benchmark</span>
-                  <span className="text-sm font-bold text-zinc-200">{job.medianSalary}</span>
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1">Median Benchmark</span>
+                  <span className="text-sm font-bold text-zinc-300">{job.medianSalary}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase text-zinc-500 block">Skill Premium Boost</span>
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-wider block mb-1">Skill Premium Boost</span>
                   <span className="text-xs font-bold text-emerald-400">{job.skillPremium}</span>
                 </div>
               </div>
 
-              {/* Skills & Action */}
-              <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-                <div className="flex flex-wrap gap-1.5">
+              {/* Footer: Tags & Action */}
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/[0.06]">
+                <div className="flex flex-wrap gap-2">
                   {job.skills.map((s) => (
-                    <span key={s} className="text-[11px] bg-zinc-800 text-zinc-300 px-3 py-1 rounded-full border border-zinc-700">
+                    <span
+                      key={s}
+                      className="text-[11px] font-mono bg-white/[0.04] text-zinc-300 px-3 py-1 rounded-full border border-white/10"
+                    >
                       {s}
                     </span>
                   ))}
@@ -235,9 +269,9 @@ export default function JobListingsPage() {
 
                 <Link
                   href="/dashboard"
-                  className="text-xs bg-white text-black px-4 py-2 rounded-xl font-semibold hover:bg-zinc-200 transition-colors flex items-center gap-1"
+                  className="inline-flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-full text-xs font-semibold hover:bg-zinc-200 transition-all hover:scale-[1.02] shadow-lg"
                 >
-                  Generate AI Roadmap for Job →
+                  Generate AI Roadmap →
                 </Link>
               </div>
 
