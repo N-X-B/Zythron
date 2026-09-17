@@ -68,7 +68,7 @@ export default function ResumeAnalyzerPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0e0e12] text-white font-sans selection:bg-indigo-500/30 flex flex-col">
+    <div className="h-full overflow-y-auto bg-[#0e0e12] text-white font-sans selection:bg-indigo-500/30 flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-between px-8 py-6 border-b border-white/10 sticky top-0 bg-[#0e0e12]/80 backdrop-blur-md z-50">
         <div className="flex items-center gap-12">

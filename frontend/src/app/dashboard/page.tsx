@@ -272,7 +272,7 @@ export default function SleekExecutiveDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0e0e12] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
+    <div className="h-full overflow-y-auto bg-[#0e0e12] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
       
       {/* ─── TOP NAVIGATION (48px) ─── */}
       <header className="h-12 border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">

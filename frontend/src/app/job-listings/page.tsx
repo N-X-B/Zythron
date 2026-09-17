@@ -106,7 +106,7 @@ export default function JobListingsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0e0e12] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
+    <div className="h-full overflow-y-auto bg-[#0e0e12] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
       
       {/* ─── TOP NAVBAR (Unified Exact Font Size text-xs font-medium Across All 5 Tabs) ─── */}
       <header className="h-16 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 px-6 flex items-center justify-between">
