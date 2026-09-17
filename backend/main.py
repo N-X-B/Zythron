@@ -51,10 +51,39 @@ class ChatRequest(BaseModel):
     message: str
     language: str = "en"
 
+class JoinMeetingRequest(BaseModel):
+    meeting_url: str
+    bot_name: str = "Career Agent Bot"
+
 # --- ENDPOINTS ---
 @app.get("/")
 def health_check():
     return {"status": "ok", "message": "Career Agent Core Engine is running."}
+
+@app.post("/api/join-meeting")
+def join_meeting(request: JoinMeetingRequest):
+    import requests
+    api_key = os.getenv("MEETING_BAAS_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="MEETING_BAAS_API_KEY not configured in backend.")
+    
+    url = "https://api.meetingbaas.com/v2/bots"
+    headers = {
+        "x-meeting-baas-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "meeting_url": request.meeting_url,
+        "bot_name": request.bot_name,
+        "transcription_enabled": True
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"MeetingBaaS Error: {str(e)}")
 
 @app.post("/api/match-jobs", response_model=List[JobRecommendation])
 def match_jobs(profile: UserProfile):
@@ -72,7 +101,7 @@ def chat_with_agent(request: ChatRequest):
     try:
         # 1. Turn user message into a vector using Gemini Embeddings
         embedding_resp = genai.embed_content(
-            model="models/text-embedding-004",
+            model="models/gemini-embedding-2",
             content=request.message,
             task_type="retrieval_query"
         )
