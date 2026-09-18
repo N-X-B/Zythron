@@ -1,0 +1,37 @@
+services:
+  # --------------------------------------------------
+  # Backend Service: FastAPI Python Backend
+  # --------------------------------------------------
+  - type: web
+    name: zythron-backend
+    env: python
+    region: singapore
+    rootDir: backend
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_ENVIRONMENT
+        value: us-east-1
+      - key: PINECONE_INDEX_NAME
+        value: hackathon-jobs
+
+  # --------------------------------------------------
+  # Frontend Service: Next.js Web App
+  # --------------------------------------------------
+  - type: web
+    name: zythron-frontend
+    env: node
+    region: singapore
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: zythron-backend
+          property: host
