@@ -1,2183 +1,376 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  ShieldCheck,
   Compass,
   CheckCircle2,
-  Clock,
   ChevronRight,
   Code2,
-  Cpu,
-  Globe,
-  Database,
-  Terminal,
-  Target,
-  BarChart3,
-  ExternalLink,
-  Laptop,
-  Check,
-  RotateCcw,
-  Plus,
-  X,
-  FileText,
-  ShieldCheck,
-  Sliders,
-  Calendar,
-  UserCheck,
-  BookOpen,
-  Server,
-  Lock,
-  Send,
-  Briefcase,
-  Activity,
-  Award,
   Sparkles,
-  Zap,
+  Award,
+  ArrowRight,
+  GraduationCap,
+  Briefcase,
   LogOut,
-  TrendingUp,
+  ExternalLink,
+  BookOpen,
   Layers,
-  HelpCircle,
-  MessageSquare,
-  Search
+  Zap,
+  Clock,
+  Terminal,
+  Server
 } from "lucide-react";
 
-interface SkillItem {
+interface UserProfile {
   name: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  email: string;
 }
 
-interface RoadmapMilestone {
-  id: string;
-  title: string;
-  description: string;
-  workloadHours: number;
-  resources: { name: string; url: string; category: string }[];
-  projectPrompt: string;
-  requiredSkills: string[];
-  syllabusPoints?: string[];
+interface StudentProfile {
+  role: string;
+  collegeYear: string;
+  major: string;
+  skills: string[];
+  goal: string;
+  commitment: string;
 }
 
-interface RoadmapPhase {
-  id: number;
-  title: string;
-  description: string;
-  badge: string;
-  icon: React.ComponentType<{ className?: string }>;
-  milestones: RoadmapMilestone[];
-}
-
-const ROADMAP_PHASES: RoadmapPhase[] = [
-  {
-    id: 1,
-    title: "Phase 1: Web Standards & Type Systems",
-    description: "Strict TypeScript development, modern ECMAScript standards, and component architecture.",
-    badge: "Prerequisite",
-    icon: Globe,
-    milestones: [
-      {
-        id: "fs1",
-        title: "Strict TypeScript & Component Composition",
-        description: "Advanced generics, utility types, discriminating unions, and strict compiler configurations.",
-        workloadHours: 40,
-        requiredSkills: ["TypeScript", "React"],
-        syllabusPoints: [
-          "Conditional types, mapped types, and recursive generics",
-          "Discriminated union state machines in UI components",
-          "Configuring strict tsconfig flags for zero implicit any",
-          "Profiling React render trees and memoization boundaries"
-        ],
-        resources: [
-          { name: "TypeScript Handbook", url: "https://www.typescriptlang.org/docs/", category: "Reference" },
-          { name: "React Documentation", url: "https://react.dev", category: "Docs" },
-        ],
-        projectPrompt: "Implement a fully typed design system component library with strict prop validation and zero runtime any types.",
-      },
-      {
-        id: "fs2",
-        title: "Next.js App Router Architecture",
-        description: "Server Actions, streaming server-side rendering, route handlers, and revalidation strategies.",
-        workloadHours: 50,
-        requiredSkills: ["Next.js", "TypeScript"],
-        syllabusPoints: [
-          "React Server Components vs Client Component boundary contracts",
-          "Parallel and intercepting route hierarchies",
-          "Cache revalidation using tag invalidation and revalidatePath",
-          "Streaming SSR with Suspense boundaries and partial prerendering"
-        ],
-        resources: [
-          { name: "Next.js Documentation", url: "https://nextjs.org/docs", category: "Docs" },
-        ],
-        projectPrompt: "Construct a multi-tenant dashboard with server-side data fetching and streaming loading skeletons.",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "Phase 2: Microservices & Relational Data",
-    description: "Pydantic validation, FastAPI async handlers, PostgreSQL schema design, and ORM mapping.",
-    badge: "Backend",
-    icon: Server,
-    milestones: [
-      {
-        id: "fs3",
-        title: "Asynchronous Services with FastAPI",
-        description: "Pydantic validation schemas, dependency injection, OAuth2 authentication, and background workers.",
-        workloadHours: 55,
-        requiredSkills: ["Python", "FastAPI"],
-        syllabusPoints: [
-          "Asynchronous route handlers and event loop concurrency",
-          "Custom dependency injection chains for request authentication",
-          "Pydantic v2 data serialization and field validators",
-          "OpenAPI schema generation and automated test fixtures"
-        ],
-        resources: [
-          { name: "FastAPI Reference", url: "https://fastapi.tiangolo.com/", category: "Reference" },
-        ],
-        projectPrompt: "Develop an asynchronous REST microservice with rate limiting, JWT auth, and structured logging.",
-      },
-      {
-        id: "fs4",
-        title: "Relational Database Design with PostgreSQL",
-        description: "Normalization, indexing strategies (B-Tree, GIN), connection pooling, and ORM integration.",
-        workloadHours: 45,
-        requiredSkills: ["PostgreSQL"],
-        syllabusPoints: [
-          "Third normal form schema decomposition and foreign key constraints",
-          "Query optimization with EXPLAIN ANALYZE and partial indexes",
-          "ACID transaction isolation levels and optimistic locking",
-          "Connection pool tuning with PgBouncer under high concurrency"
-        ],
-        resources: [
-          { name: "PostgreSQL Docs", url: "https://www.postgresql.org/docs/", category: "Docs" },
-        ],
-        projectPrompt: "Design an audit-logged transaction database schema capable of handling high-frequency mutations.",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "Phase 3: Infrastructure, Security & Operations",
-    description: "Docker multi-stage builds, CI/CD pipeline automation, and production observability.",
-    badge: "Operations",
-    icon: Terminal,
-    milestones: [
-      {
-        id: "fs5",
-        title: "Containerization & Multi-Stage Builds",
-        description: "Docker build optimization, non-root user security contexts, and local multi-service orchestration.",
-        workloadHours: 35,
-        requiredSkills: ["Docker", "Linux"],
-        syllabusPoints: [
-          "Multi-stage Dockerfile design for minimal container image footprints",
-          "Managing environment variable secrets and non-root runtime users",
-          "Docker Compose multi-container networking and volume mounts",
-          "Container health check probes and graceful shutdown signals"
-        ],
-        resources: [
-          { name: "Docker Documentation", url: "https://docs.docker.com/", category: "Docs" },
-        ],
-        projectPrompt: "Write multi-stage Dockerfiles reducing production container size below 100MB with automated security scanning.",
-      },
-    ],
-  },
-];
-
-const ROLE_SKILL_MAP: Record<string, string[]> = {
-  "ai": ["Python", "PyTorch", "TensorFlow", "FastAPI", "Vector DB", "Pinecone", "LangChain", "Docker", "GPU Clusters", "Transformers"],
-  "ml": ["Python", "PyTorch", "Scikit-Learn", "FastAPI", "Pandas", "MLflow", "Docker", "Vector DB", "PostgreSQL", "CUDA"],
-  "data": ["Python", "SQL", "Spark", "Pandas", "Airflow", "Snowflake", "dbt", "PostgreSQL", "Kafka", "Docker"],
-  "mobile": ["Swift", "SwiftUI", "Kotlin", "React Native", "Flutter", "REST API", "GraphQL", "Firebase", "Xcode", "Git"],
-  "ios": ["Swift", "SwiftUI", "Objective-C", "Xcode", "Combine", "REST API", "CoreData", "Git", "TestFlight", "CocoaPods"],
-  "android": ["Kotlin", "Android SDK", "Jetpack Compose", "Coroutines", "Room DB", "REST API", "Git", "Gradle", "Firebase", "Unit Testing"],
-  "devops": ["Kubernetes", "Docker", "Terraform", "AWS", "CI/CD", "Prometheus", "Linux", "Python", "Golang", "Ansible"],
-  "cloud": ["AWS", "Kubernetes", "Docker", "Terraform", "Cloud Architecture", "Python", "Linux", "Networking", "IAM", "PostgreSQL"],
-  "backend": ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "Node.js", "Go", "gRPC", "Microservices", "Kafka"],
-  "frontend": ["TypeScript", "React", "Next.js", "Tailwind CSS", "Redux", "GraphQL", "Web Performance", "HTML5/CSS3", "Jest", "Git"],
-  "full-stack": ["TypeScript", "React", "Next.js", "Python", "FastAPI", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Kafka"],
-  "fullstack": ["TypeScript", "React", "Next.js", "Python", "FastAPI", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Kafka"],
-  "security": ["Python", "Linux", "Networking", "SIEM", "Penetration Testing", "Cryptography", "OAuth2", "Docker", "AWS", "Bash"],
-  "quantum": ["Qiskit", "Cirq", "Quantum Circuit Design", "Q#", "Linear Algebra", "Python", "Quantum Error Correction", "VQE Algorithm", "Docker", "PyTorch"],
-  "product": ["Product Strategy", "User Research", "Agile/Scrum", "SQL", "A/B Testing", "Figma", "Data Analytics", "Roadmapping", "System Architecture", "KPI Tracking"],
-};
-
-function getRequiredSkillsForRole(roleText: string): string[] {
-  const r = roleText.toLowerCase();
-  for (const key of Object.keys(ROLE_SKILL_MAP)) {
-    if (r.includes(key)) {
-      return ROLE_SKILL_MAP[key];
-    }
-  }
-  return ["TypeScript", "React", "Python", "FastAPI", "PostgreSQL", "Docker", "Kubernetes", "System Design", "Git", "Cloud"];
-}
-
-function getDynamicPhases(roleText: string): RoadmapPhase[] {
-  const r = roleText.toLowerCase();
-
-  if (r.includes("quantum") || r.includes("qiskit") || r.includes("qubit")) {
-    return [
-      {
-        id: 1,
-        title: "Phase 1: Quantum Circuit Mechanics & Qubit States",
-        description: "Superposition, Bloch Sphere representations, Hadamard gates, CNOT entanglement, and state vectors.",
-        badge: "Quantum Core",
-        icon: Cpu,
-        milestones: [
-          {
-            id: "q1",
-            title: "Qiskit Quantum Circuit Simulation & Entanglement",
-            description: "Constructing quantum state vectors, Bell states, single & multi-qubit gate operations.",
-            workloadHours: 45,
-            requiredSkills: ["Qiskit", "Python"],
-            syllabusPoints: [
-              "Bloch sphere rotations and unitary matrix transformations",
-              "Hadamard and Pauli-X/Y/Z single-qubit gate mechanics",
-              "Controlled-NOT (CNOT) 2-qubit entanglement & Bell state verification",
-              "Statevector execution & quantum measurement sampling"
-            ],
-            resources: [
-              { name: "Qiskit Textbook", url: "https://qiskit.org/textbook", category: "Book" }
-            ],
-            projectPrompt: "Implement a 3-qubit quantum teleportation protocol simulation using Qiskit."
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "Phase 2: Quantum Algorithms & Variational Solvers",
-        description: "Shor's factoring, Grover's search, Quantum Fourier Transform (QFT), and VQE for molecular energy.",
-        badge: "Algorithms",
-        icon: Zap,
-        milestones: [
-          {
-            id: "q2",
-            title: "VQE & Quantum Approximate Optimization (QAOA)",
-            description: "Hybrid quantum-classical optimization loops, Ansatz design, and noisy intermediate-scale quantum (NISQ) execution.",
-            workloadHours: 50,
-            requiredSkills: ["Cirq", "Linear Algebra"],
-            syllabusPoints: [
-              "Quantum Fourier Transform (QFT) and phase estimation mechanics",
-              "Variational Quantum Eigensolver (VQE) expectation value measurement",
-              "Parameterized quantum circuits & classical optimizer gradient updates",
-              "Combinatorial optimization via QAOA on graph max-cut problems"
-            ],
-            resources: [
-              { name: "IBM Quantum Learning", url: "https://learning.quantum.ibm.com/", category: "Course" }
-            ],
-            projectPrompt: "Build a VQE algorithm solver predicting hydrogen molecule ground-state energy."
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Phase 3: Quantum Error Correction & QPU Execution",
-        description: "Surface codes, decoherence mitigation, zero-noise extrapolation, and real IBM Quantum hardware submission.",
-        badge: "Hardware Ops",
-        icon: ShieldCheck,
-        milestones: [
-          {
-            id: "q3",
-            title: "Fault-Tolerant Error Mitigation & Cloud QPU",
-            description: "Error mitigation techniques, pulse-level control, and remote execution on superconducting QPUs.",
-            workloadHours: 40,
-            requiredSkills: ["Quantum Error Correction", "Python"],
-            syllabusPoints: [
-              "T1 relaxation and T2 dephasing time profile analysis",
-              "Zero-noise extrapolation (ZNE) and probabilistic error cancellation",
-              "Surface code syndrome extraction and stabilizer measurements",
-              "Submitting quantum jobs to IBM Eagle 127-qubit QPUs"
-            ],
-            resources: [
-              { name: "Qiskit Runtime Docs", url: "https://docs.quantum.ibm.com/", category: "Docs" }
-            ],
-            projectPrompt: "Deploy a noise-mitigated quantum circuit job on real IBM Quantum hardware via Qiskit Runtime."
-          }
-        ]
-      }
-    ];
-  }
-
-  if (r.includes("ai") || r.includes("ml") || r.includes("machine learning") || r.includes("intelligence")) {
-    return [
-      {
-        id: 1,
-        title: "Phase 1: PyTorch & Vector Mathematics",
-        description: "Tensor transformations, embedding spaces, cosine metrics, and neural network foundations.",
-        badge: "AI Math",
-        icon: Cpu,
-        milestones: [
-          {
-            id: "ai1",
-            title: "PyTorch Tensor Pipeline & Matrix Calculus",
-            description: "Building autograd models, loss optimization, and GPU acceleration with CUDA.",
-            workloadHours: 45,
-            requiredSkills: ["Python", "PyTorch"],
-            syllabusPoints: [
-              "Autograd engine and custom autograd Functions",
-              "Vector embeddings and high-dimensional cosine distance",
-              "Batch normalization and learning rate schedulers",
-              "GPU memory optimization with mixed precision (fp16)"
-            ],
-            resources: [
-              { name: "PyTorch Documentation", url: "https://pytorch.org/docs/", category: "Docs" },
-            ],
-            projectPrompt: "Train a custom neural transformer classifier on high-dimensional text embeddings.",
-          },
-          {
-            id: "ai2",
-            title: "Pinecone Vector Search & RAG Architecture",
-            description: "Pinecone index configuration, chunking strategies, semantic retrieval, and prompt context enrichment.",
-            workloadHours: 50,
-            requiredSkills: ["Vector DB", "Pinecone", "LangChain"],
-            syllabusPoints: [
-              "HNSW vector indexing and cosine distance partitioning",
-              "Recursive semantic document chunking and token budgeting",
-              "Prompt augmentation with top-K similarity search results",
-              "Evaluation metrics for RAG hallucination reduction"
-            ],
-            resources: [
-              { name: "Pinecone Docs", url: "https://docs.pinecone.io", category: "Docs" },
-            ],
-            projectPrompt: "Build a production RAG search engine over 100,000 domain PDF documents with Pinecone.",
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "Phase 2: LLM Fine-Tuning & Prompt Engineering",
-        description: "LoRA parameter-efficient fine-tuning, system prompt engineering, and structured JSON output control.",
-        badge: "LLMs",
-        icon: Sparkles,
-        milestones: [
-          {
-            id: "ai3",
-            title: "LoRA & QLoRA Model Adaptation",
-            description: "Fine-tuning open-weights models (Llama/Mistral) with PEFT techniques.",
-            workloadHours: 60,
-            requiredSkills: ["Python", "Transformers"],
-            syllabusPoints: [
-              "Quantization methods (4-bit NF4 vs 8-bit integers)",
-              "Rank matrix decomposition (LoRA r=16 alpha=32)",
-              "Instruction tuning dataset formatting (SFT Trainer)",
-              "Model evaluation with BLEU, ROUGE, and LLM-as-a-judge"
-            ],
-            resources: [
-              { name: "Hugging Face PEFT Docs", url: "https://huggingface.co/docs/peft", category: "Docs" },
-            ],
-            projectPrompt: "Fine-tune a 7B parameter open-source LLM for domain-specific JSON extraction.",
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Phase 3: Production Model Serving & GPU Operations",
-        description: "vLLM serving, Triton inference server, Docker containerization, and rate-limited API gateways.",
-        badge: "Operations",
-        icon: Terminal,
-        milestones: [
-          {
-            id: "ai4",
-            title: "High-Throughput Model Serving with vLLM",
-            description: "Continuous batching, PagedAttention memory management, and async streaming HTTP APIs.",
-            workloadHours: 40,
-            requiredSkills: ["FastAPI", "Docker"],
-            syllabusPoints: [
-              "PagedAttention KV cache memory allocation",
-              "Asynchronous token streaming over Server-Sent Events (SSE)",
-              "Multi-GPU tensor parallelism configuration",
-              "Monitoring inference latency (TTFT and throughput token/sec)"
-            ],
-            resources: [
-              { name: "vLLM Documentation", url: "https://docs.vllm.ai", category: "Docs" },
-            ],
-            projectPrompt: "Deploy a high-concurrency LLM inference API microservice handling 500 requests/sec.",
-          }
-        ]
-      }
-    ];
-  }
-
-  if (r.includes("devops") || r.includes("cloud") || r.includes("infrastructure") || r.includes("sre")) {
-    return [
-      {
-        id: 1,
-        title: "Phase 1: Linux Kernel, Networking & Containers",
-        description: "Container runtime primitives, Linux namespaces, cgroups, and multi-stage Docker builds.",
-        badge: "Containers",
-        icon: Terminal,
-        milestones: [
-          {
-            id: "do1",
-            title: "Container Internals & Docker Security",
-            description: "Linux process isolation, seccomp profiles, multi-stage image optimization, and rootless runtimes.",
-            workloadHours: 40,
-            requiredSkills: ["Docker", "Linux"],
-            syllabusPoints: [
-              "Cgroups v2 resource limiting and network namespaces",
-              "Multi-stage Dockerfile caching and zero-vulnerability base images",
-              "Container runtime security with Trivy and Grype scanning",
-              "Container network overlay bridge and host networking"
-            ],
-            resources: [
-              { name: "Docker Documentation", url: "https://docs.docker.com", category: "Docs" },
-            ],
-            projectPrompt: "Architect a hardened multi-stage Docker pipeline with distroless base images under 50MB.",
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "Phase 2: Kubernetes Orchestration & Infrastructure as Code",
-        description: "Declarative cluster specs, Helm charts, Terraform HCL modules, and ingress controllers.",
-        badge: "K8s & IaC",
-        icon: Server,
-        milestones: [
-          {
-            id: "do2",
-            title: "Kubernetes Cluster Architecture & Helm",
-            description: "Deployments, StatefulSets, ingress routing, secret management, and Horizontal Pod Autoscalers.",
-            workloadHours: 55,
-            requiredSkills: ["Kubernetes", "Terraform"],
-            syllabusPoints: [
-              "Kube-apiserver control plane and etcd state consistency",
-              "Ingress NGINX routing, TLS termination, and cert-manager",
-              "Terraform AWS EKS cluster provision with HCL modules",
-              "Horizontal Pod Autoscaler (HPA) driven by custom Prometheus metrics"
-            ],
-            resources: [
-              { name: "Kubernetes Docs", url: "https://kubernetes.io/docs/", category: "Docs" },
-            ],
-            projectPrompt: "Provision a multi-AZ Kubernetes cluster using Terraform with automated SSL certificate renewal.",
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Phase 3: CI/CD Automation & Full Observability",
-        description: "GitHub Actions runner matrices, Prometheus metrics scraping, Grafana dashboards, and Jaeger tracing.",
-        badge: "Observability",
-        icon: Activity,
-        milestones: [
-          {
-            id: "do3",
-            title: "GitOps Pipelines & Prometheus Observability",
-            description: "ArgoCD automated cluster syncing, SLI/SLO tracking, and distributed tracing.",
-            workloadHours: 45,
-            requiredSkills: ["CI/CD", "Prometheus"],
-            syllabusPoints: [
-              "ArgoCD GitOps continuous deployment reconciliation loop",
-              "Prometheus PromQL queries and Alertmanager notification rules",
-              "Grafana dashboard design for RED metrics (Rate, Errors, Duration)",
-              "OpenTelemetry distributed trace propagation"
-            ],
-            resources: [
-              { name: "Prometheus Docs", url: "https://prometheus.io/docs/", category: "Docs" },
-            ],
-            projectPrompt: "Construct an automated GitOps deployment pipeline with canary releases and instant rollback on error spike.",
-          }
-        ]
-      }
-    ];
-  }
-
-  if (r.includes("mobile") || r.includes("ios") || r.includes("android") || r.includes("flutter") || r.includes("react native")) {
-    return [
-      {
-        id: 1,
-        title: "Phase 1: Native Mobile Architecture & Declarative UI",
-        description: "SwiftUI / Jetpack Compose component trees, reactive state management, and touch interactions.",
-        badge: "Mobile UI",
-        icon: Laptop,
-        milestones: [
-          {
-            id: "mb1",
-            title: "Declarative UI & Reactive State Pipelines",
-            description: "State machines, observable objects, layout constraints, and smooth animations.",
-            workloadHours: 40,
-            requiredSkills: ["SwiftUI", "React Native"],
-            syllabusPoints: [
-              "Declarative view lifecycles and diffing algorithms",
-              "Combine / Reactive state streams and debounced search",
-              "Custom gesture recognizers and 60fps fluid motion",
-              "Dark mode theme tokens and accessible dynamic font scaling"
-            ],
-            resources: [
-              { name: "Apple Developer Docs", url: "https://developer.apple.com/documentation/swiftui", category: "Docs" },
-            ],
-            projectPrompt: "Build a responsive native mobile design system with fluid drag-and-drop interactive gestures.",
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "Phase 2: Networking, Offline Caching & Local DB",
-        description: "REST & GraphQL client layers, SQLite / CoreData encryption, and push notification handlers.",
-        badge: "Networking",
-        icon: Globe,
-        milestones: [
-          {
-            id: "mb2",
-            title: "Offline-First Synchronization Engine",
-            description: "Background task fetching, local database encryption, and automatic sync reconciliation.",
-            workloadHours: 50,
-            requiredSkills: ["REST API", "Firebase"],
-            syllabusPoints: [
-              "Encrypted SQLite storage and migration schemas",
-              "Background HTTP queue runner with retry backoff",
-              "FCM Push Notification payload handling in background",
-              "Optimistic UI updates with rollbacks on network timeout"
-            ],
-            resources: [
-              { name: "Firebase Docs", url: "https://firebase.google.com/docs", category: "Docs" },
-            ],
-            projectPrompt: "Create an offline-first messaging app with background syncing and push notifications.",
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Phase 3: App Security, Testing & Store Publishing",
-        description: "Keychain security, certificate pinning, automated UI tests, and App Store / Play Store deployment.",
-        badge: "Release",
-        icon: ShieldCheck,
-        milestones: [
-          {
-            id: "mb3",
-            title: "App Store Publishing & Biometric Security",
-            description: "FaceID / Biometric auth, SSL pinning, Xcode Cloud / Fastlane automated releases.",
-            workloadHours: 35,
-            requiredSkills: ["Xcode", "Git"],
-            syllabusPoints: [
-              "Secure enclave storage for JWT auth tokens",
-              "SSL pinning to prevent man-in-the-middle inspection",
-              "Fastlane automated screenshot generation and TestFlight release",
-              "Crashlytics crash reporting and symbolication"
-            ],
-            resources: [
-              { name: "Fastlane Docs", url: "https://docs.fastlane.tools", category: "Docs" },
-            ],
-            projectPrompt: "Configure an automated Fastlane deployment pipeline with security audits and TestFlight beta distribution.",
-          }
-        ]
-      }
-    ];
-  }
-
-  if (r.includes("backend") || r.includes("microservices") || r.includes("python") || r.includes("golang") || r.includes("node")) {
-    return [
-      {
-        id: 1,
-        title: "Phase 1: Asynchronous Handlers & Pydantic Validation",
-        description: "Event loop concurrency, Pydantic v2 schemas, Dependency Injection, and JWT authentication.",
-        badge: "Async APIs",
-        icon: Server,
-        milestones: [
-          {
-            id: "be1",
-            title: "Async I/O Multiplexing & OAuth2 Security",
-            description: "High-throughput route handlers, password hashing with bcrypt, and rate-limiting middleware.",
-            workloadHours: 45,
-            requiredSkills: ["Python", "FastAPI"],
-            syllabusPoints: [
-              "Async event loop blocking avoidance & threadpool delegators",
-              "OAuth2 Bearer token verification & Scopes authorization",
-              "Pydantic v2 model field validators & JSON schema export",
-              "FastAPI yield dependency injection teardowns"
-            ],
-            resources: [
-              { name: "FastAPI Documentation", url: "https://fastapi.tiangolo.com/", category: "Docs" }
-            ],
-            projectPrompt: "Develop an asynchronous REST microservice with rate limiting, JWT auth, and structured logging."
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "Phase 2: Relational Schema & Query Plan Optimization",
-        description: "PostgreSQL normalization, EXPLAIN ANALYZE profiling, B-Tree/GIN indexes, and connection pooling.",
-        badge: "PostgreSQL",
-        icon: Database,
-        milestones: [
-          {
-            id: "be2",
-            title: "Database Performance & Connection Pool Sizing",
-            description: "ACID transaction isolation levels, PgBouncer pool configuration, and zero-downtime migrations.",
-            workloadHours: 50,
-            requiredSkills: ["PostgreSQL", "Redis"],
-            syllabusPoints: [
-              "Partial indexes, composite index column order, and GIN JSONB indexing",
-              "Alembic auto-generated schema migration scripts",
-              "PgBouncer transaction-level connection pooling under high concurrency",
-              "Redis Token Bucket rate limiting and TTL caching invalidation"
-            ],
-            resources: [
-              { name: "PostgreSQL Docs", url: "https://www.postgresql.org/docs/", category: "Docs" }
-            ],
-            projectPrompt: "Design an audit-logged transaction database schema capable of handling high-frequency mutations."
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Phase 3: Microservices Communication & Event Streams",
-        description: "Kafka event streams, gRPC Protobuf serialization, Docker orchestration, and Redis caching.",
-        badge: "Distributed",
-        icon: Terminal,
-        milestones: [
-          {
-            id: "be3",
-            title: "Event-Driven Architecture with Kafka & gRPC",
-            description: "Publish/subscribe messaging, consumer groups, dead letter queues, and protocol buffers.",
-            workloadHours: 40,
-            requiredSkills: ["Docker", "Kubernetes"],
-            syllabusPoints: [
-              "Kafka partition keys, consumer group rebalancing, and ISR replication",
-              "gRPC HTTP/2 bidirectional streaming & Protobuf message contracts",
-              "Distributed tracing with OpenTelemetry and Jaeger",
-              "Docker Compose local cluster orchestration for microservices"
-            ],
-            resources: [
-              { name: "Apache Kafka Docs", url: "https://kafka.apache.org/documentation/", category: "Docs" }
-            ],
-            projectPrompt: "Build an event-driven payment processing pipeline with Kafka dead-letter queue recovery."
-          }
-        ]
-      }
-    ];
-  }
-
-  if (r.includes("security") || r.includes("pentest") || r.includes("cyber") || r.includes("infosec")) {
-    return [
-      {
-        id: 1,
-        title: "Phase 1: Network Security & Vulnerability Auditing",
-        description: "TCP/IP handshake analysis, Wireshark packet dissection, Nmap scanning, and OWASP Top 10.",
-        badge: "Network Sec",
-        icon: ShieldCheck,
-        milestones: [
-          {
-            id: "sec1",
-            title: "OWASP Vulnerability Assessment & Penetration Testing",
-            description: "SQL injection, XSS, SSRF, IDOR, and broken access control exploits.",
-            workloadHours: 45,
-            requiredSkills: ["Linux", "Networking"],
-            syllabusPoints: [
-              "Burp Suite HTTP request intercepting and payload fuzzing",
-              "Blind SQL injection and parameterized query mitigations",
-              "SSRF internal metadata endpoint exploitation & VPC defense",
-              "Content Security Policy (CSP) header enforcement"
-            ],
-            resources: [
-              { name: "OWASP Top 10", url: "https://owasp.org/www-project-top-ten/", category: "Reference" }
-            ],
-            projectPrompt: "Conduct a full security audit against a vulnerable web application and draft a CVE remediation report."
-          }
-        ]
-      }
-    ];
-  }
-
-  return ROADMAP_PHASES;
-}
-
-export default function HyperPersonalizedCareerGuidance() {
+export default function DashboardPage() {
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-  const [userName, setUserName] = useState("Engineer");
-  const [userEmail, setUserEmail] = useState("");
-
-  // User Profile Data (Loaded from Onboarding)
-  const [preferredRole, setPreferredRole] = useState("Full-Stack Systems Engineer");
-  const [experienceLevel, setExperienceLevel] = useState<"Junior" | "Mid" | "Senior">("Mid");
-  const [targetCompanyTier, setTargetCompanyTier] = useState<"Tier 1 Big Tech" | "AI Unicorn" | "High-Growth">("Tier 1 Big Tech");
-  const [userSkills, setUserSkills] = useState<SkillItem[]>([
-    { name: "TypeScript", level: "Intermediate" },
-    { name: "React", level: "Intermediate" },
-    { name: "Python", level: "Intermediate" },
-    { name: "FastAPI", level: "Intermediate" },
-  ]);
-  const [skillInput, setSkillInput] = useState("");
-  const [weeklyCommitmentHours, setWeeklyCommitmentHours] = useState(15);
-  const [targetTimelineMonths, setTargetTimelineMonths] = useState(6);
-
-  // Checkpoints & Inspector Modal
-  const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>({ fs1: true });
-  const [activeModalMilestone, setActiveModalMilestone] = useState<RoadmapMilestone | null>(null);
-  const [activeModalPhase, setActiveModalPhase] = useState<RoadmapPhase | null>(null);
-
-  // Custom Dynamic Phases State
-  const [customPhases, setCustomPhases] = useState<RoadmapPhase[]>([]);
-  const [showAddPhaseModal, setShowAddPhaseModal] = useState<boolean>(false);
-  const [newPhaseTitle, setNewPhaseTitle] = useState<string>("");
-  const [newPhaseBadge, setNewPhaseBadge] = useState<string>("Specialization");
-  const [newPhaseDesc, setNewPhaseDesc] = useState<string>("");
-  const [newPhaseSkill, setNewPhaseSkill] = useState<string>("");
-
-  const handleAddCustomPhase = () => {
-    if (!newPhaseTitle.trim()) return;
-    const nextId = (activeRoadmapPhases.length || 3) + 1;
-    const phaseToAdd: RoadmapPhase = {
-      id: nextId,
-      title: `Phase ${nextId}: ${newPhaseTitle.trim()}`,
-      description: newPhaseDesc.trim() || "Advanced domain specialization and hands-on production engineering.",
-      badge: newPhaseBadge.trim() || "Advanced",
-      icon: Sparkles,
-      milestones: [
-        {
-          id: `custom_p${nextId}`,
-          title: `${newPhaseTitle.trim()} Verification Milestone`,
-          description: `Mastery and hands-on verification of ${newPhaseSkill.trim() || "advanced concepts"}.`,
-          workloadHours: 40,
-          requiredSkills: [newPhaseSkill.trim() || "System Design"],
-          syllabusPoints: [
-            `Core principles and low-level mechanics of ${newPhaseTitle.trim()}`,
-            "Hands-on integration with zero runtime type assertions",
-            "Performance benchmarking and load profiling under concurrency",
-            "Production security review and error recovery strategies"
-          ],
-          resources: [
-            { name: "Official Technical Docs", url: "https://docs.github.com", category: "Docs" }
-          ],
-          projectPrompt: `Build and deploy a production-grade module demonstrating ${newPhaseTitle.trim()} integration.`
-        }
-      ]
-    };
-    setCustomPhases((prev) => [...prev, phaseToAdd]);
-    setNewPhaseTitle("");
-    setNewPhaseDesc("");
-    setNewPhaseSkill("");
-    setShowAddPhaseModal(false);
-  };
-
-  // Hardcore Proof-of-Skill Capstone Auto-Grader State
-  const [capstoneCodeInput, setCapstoneCodeInput] = useState("");
-  const [isAuditingCode, setIsAuditingCode] = useState(false);
-  const [codeAuditResult, setCodeAuditResult] = useState<{
-    score: number;
-    complexity: string;
-    verdict: string;
-    feedback: string;
-  } | null>(null);
-
-  const handleAuditCapstoneCode = async () => {
-    if (!capstoneCodeInput.trim() || !activeModalMilestone) return;
-    setIsAuditingCode(true);
-    try {
-      const res = await fetch("http://localhost:8000/api/mock-interview", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          job_role: preferredRole,
-          candidate_answer: `CAPSTONE CODE AUDIT FOR ${activeModalMilestone.title}:\n${capstoneCodeInput}`,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const sc = data.score || 92;
-        setCodeAuditResult({
-          score: sc,
-          complexity: "O(N) Time / O(1) Space",
-          verdict: sc >= 70 ? "PASSED VERIFIED" : "NEEDS REFACTOR",
-          feedback: data.feedback || "Code structure verified. Type safety constraints met with minimal allocation overhead.",
-        });
-        if (sc >= 70) {
-          toggleMilestone(activeModalMilestone.id);
-        }
-      } else {
-        setCodeAuditResult({
-          score: 88,
-          complexity: "O(N log N) Algorithmic Complexity",
-          verdict: "PASSED VERIFIED",
-          feedback: "Clean architecture design. Memory allocation boundaries are well-managed and strict typing is preserved.",
-        });
-        toggleMilestone(activeModalMilestone.id);
-      }
-    } catch (e) {
-      setCodeAuditResult({
-        score: 90,
-        complexity: "O(N) Efficient Pipeline",
-        verdict: "PASSED VERIFIED",
-        feedback: "Verified proof-of-skill capstone solution. Clean async handling and edge case validation.",
-      });
-      toggleMilestone(activeModalMilestone.id);
-    } finally {
-      setIsAuditingCode(false);
-    }
-  };
-
-  // Cyber Command Palette (Cmd+K) State
-  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [commandSearch, setCommandSearch] = useState("");
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
+  const [activeTab, setActiveTab] = useState<"roadmap" | "audit" | "projects">("roadmap");
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setCommandPaletteOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  // AI RAG State
-  const [isGeneratingRoadmap, setIsGeneratingRoadmap] = useState(false);
-  const [aiRoadmapOutput, setAiRoadmapOutput] = useState<string>("");
-  const [topJobMatch, setTopJobMatch] = useState<any>(null);
-
-  // Markdown Formatter Helper for AI Synthesis Output
-  const renderBoldText = (str: string) => {
-    const parts = str.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith("**") && part.endsWith("**")) {
-        return (
-          <strong key={i} className="text-white font-semibold">
-            {part.slice(2, -2)}
-          </strong>
-        );
-      }
-      return part;
-    });
-  };
-
-  const renderFormattedRoadmap = (rawText: string) => {
-    if (!rawText) return null;
-    const lines = rawText.split("\n");
-
-    return (
-      <div className="space-y-2 text-xs font-sans leading-relaxed text-zinc-300">
-        {lines.map((line, idx) => {
-          const trimmed = line.trim();
-          if (!trimmed) return <div key={idx} className="h-1" />;
-
-          if (trimmed === "---" || trimmed === "***" || trimmed === "___") {
-            return <hr key={idx} className="border-white/10 my-3" />;
-          }
-
-          if (trimmed.startsWith("# ")) {
-            const content = trimmed.replace(/^#\s+/, "");
-            return (
-              <h3 key={idx} className="text-sm md:text-base font-extrabold text-white font-sans tracking-tight border-b border-white/10 pb-2 mt-3 mb-2">
-                {renderBoldText(content)}
-              </h3>
-            );
-          }
-
-          if (trimmed.startsWith("## ")) {
-            const content = trimmed.replace(/^##\s+/, "");
-            return (
-              <h4 key={idx} className="text-xs md:text-sm font-bold text-white font-mono mt-3 mb-1.5 tracking-tight flex items-center gap-2">
-                {renderBoldText(content)}
-              </h4>
-            );
-          }
-
-          if (trimmed.startsWith("### ")) {
-            const content = trimmed.replace(/^###\s+/, "");
-            return (
-              <h5 key={idx} className="text-xs font-semibold text-zinc-200 font-mono mt-2.5 mb-1">
-                {renderBoldText(content)}
-              </h5>
-            );
-          }
-
-          if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-            const content = trimmed.replace(/^[-*]\s+/, "");
-            return (
-              <div key={idx} className="flex items-start gap-2 text-xs text-zinc-300 my-1 pl-1">
-                <span className="text-zinc-500 font-bold shrink-0 mt-0.5">•</span>
-                <span>{renderBoldText(content)}</span>
-              </div>
-            );
-          }
-
-          return (
-            <p key={idx} className="text-xs text-zinc-300">
-              {renderBoldText(trimmed)}
-            </p>
-          );
-        })}
-      </div>
-    );
-  };
-
-  // AI Chat Assistant State
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatInput, setChatInput] = useState("");
-  const [chatMessages, setChatMessages] = useState<{ sender: "user" | "ai"; text: string }[]>([
-    { sender: "ai", text: "Zythron AI Career Advisor online. Ask me any question about your skill gap analysis, target role requirements, or interview prep!" }
-  ]);
-  const [isChatLoading, setIsChatLoading] = useState(false);
-  const [verifiedSkills, setVerifiedSkills] = useState<string[]>([]);
-
-  // Load Onboarding Data
-  useEffect(() => {
-    setMounted(true);
     try {
       const storedUser = localStorage.getItem("zythron_user");
-      if (storedUser) {
-        const u = JSON.parse(storedUser);
-        if (u.name) setUserName(u.name);
-        if (u.email) setUserEmail(u.email);
+      if (!storedUser) {
+        router.push("/signin");
+        return;
       }
-      const storedVerified = localStorage.getItem("zythron_verified_skills");
-      if (storedVerified) {
-        try {
-          const parsed = JSON.parse(storedVerified);
-          if (Array.isArray(parsed)) setVerifiedSkills(parsed);
-        } catch (err) {}
-      }
+      setUser(JSON.parse(storedUser));
+
       const storedProfile = localStorage.getItem("zythron_profile");
       if (storedProfile) {
-        const p = JSON.parse(storedProfile);
-        if (p.role) setPreferredRole(p.role);
-        if (p.experience) {
-          const exp = p.experience.toLowerCase();
-          if (exp.includes("junior")) setExperienceLevel("Junior");
-          else if (exp.includes("senior")) setExperienceLevel("Senior");
-          else setExperienceLevel("Mid");
-        }
-        if (Array.isArray(p.skills) && p.skills.length > 0) {
-          setUserSkills(p.skills.map((sk: string) => ({ name: sk, level: "Intermediate" })));
-        }
-        if (p.commitment) {
-          const hrs = parseInt(p.commitment.replace(/\D/g, ""), 10);
-          if (!isNaN(hrs) && hrs > 0) setWeeklyCommitmentHours(hrs);
-        }
-        if (p.timeline) {
-          if (p.timeline.includes("3")) setTargetTimelineMonths(3);
-          else if (p.timeline.includes("6")) setTargetTimelineMonths(6);
-          else if (p.timeline.includes("1 Year") || p.timeline.includes("12")) setTargetTimelineMonths(12);
-        }
+        setProfile(JSON.parse(storedProfile));
+      } else {
+        setProfile({
+          role: "Full-Stack & AI Systems",
+          collegeYear: "Junior (Year 3)",
+          major: "Computer Science",
+          skills: ["Python", "Data Structures", "React", "FastAPI"],
+          goal: "Build AI-Resilient Engineering Depth",
+          commitment: "10-15 hrs/wk",
+        });
       }
     } catch (e) {
       console.error(e);
+      router.push("/signin");
     }
-  }, []);
-
-  // Sync state edits to localStorage whenever configuration changes
-  useEffect(() => {
-    if (!mounted) return;
-    try {
-      const existing = localStorage.getItem("zythron_profile");
-      let current = existing ? JSON.parse(existing) : {};
-      current = {
-        ...current,
-        role: preferredRole,
-        experience: experienceLevel,
-        tier: targetCompanyTier,
-        skills: userSkills.map((s) => s.name),
-        commitment: `${weeklyCommitmentHours}h`,
-        timeline: `${targetTimelineMonths} Months`,
-      };
-      localStorage.setItem("zythron_profile", JSON.stringify(current));
-    } catch (err) {
-      console.error(err);
-    }
-  }, [preferredRole, experienceLevel, targetCompanyTier, userSkills, weeklyCommitmentHours, targetTimelineMonths, mounted]);
-
-  // Formatted Role Title for crisp presentation
-  const formattedRoleTitle = useMemo(() => {
-    if (!preferredRole.trim()) return "Full-Stack Systems Engineer";
-    return preferredRole
-      .split(" ")
-      .map((word) => (word.length > 0 ? word[0].toUpperCase() + word.slice(1) : ""))
-      .join(" ");
-  }, [preferredRole]);
-
-  // Calculate Dynamic Role Requirements & Dynamic Phases
-  const requiredRoleSkills = useMemo(() => getRequiredSkillsForRole(preferredRole), [preferredRole]);
-  const activeRoadmapPhases = useMemo(() => [...getDynamicPhases(preferredRole), ...customPhases], [preferredRole, customPhases]);
-
-  const userSkillNames = new Set(userSkills.map((s) => s.name.toLowerCase()));
-
-  const acquiredSkills = userSkills.map((s) => s.name);
-  const missingSkills = requiredRoleSkills.filter((s) => !userSkillNames.has(s.toLowerCase()));
-  const skillMatchPercent = Math.min(100, Math.round((userSkills.filter(s => requiredRoleSkills.map(r => r.toLowerCase()).includes(s.name.toLowerCase())).length / Math.max(1, requiredRoleSkills.length)) * 100));
-
-  const totalMilestones = useMemo(() => activeRoadmapPhases.flatMap((p) => p.milestones).length || 3, [activeRoadmapPhases]);
-  const completedCount = Object.values(completedMilestones).filter(Boolean).length;
-  const progressPercent = Math.min(100, Math.round((completedCount / totalMilestones) * 100));
-
-  // Dynamic Salary Uplift Estimate based on missing skills & tier
-  const estimatedSalaryUplift = useMemo(() => {
-    let base = 25000;
-    if (targetCompanyTier === "Tier 1 Big Tech") base += 15000;
-    if (experienceLevel === "Senior") base += 20000;
-    return base;
-  }, [targetCompanyTier, experienceLevel]);
-
-  const toggleMilestone = (id: string) => {
-    setCompletedMilestones((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const handleAddSkill = () => {
-    if (!skillInput.trim()) return;
-    if (!userSkills.some((s) => s.name.toLowerCase() === skillInput.trim().toLowerCase())) {
-      setUserSkills([...userSkills, { name: skillInput.trim(), level: "Intermediate" }]);
-    }
-    setSkillInput("");
-  };
-
-  const handleRemoveSkill = (skillName: string) => {
-    setUserSkills(userSkills.filter((s) => s.name !== skillName));
-  };
-
-  const handleSynthesizeAIRoadmap = async () => {
-    setIsGeneratingRoadmap(true);
-    try {
-      const response = await fetch("http://localhost:8000/api/match-jobs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          skills: acquiredSkills,
-          experience_level: experienceLevel,
-          preferred_role: preferredRole,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setTopJobMatch(data.top_match || null);
-        setAiRoadmapOutput(data.roadmap || "");
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsGeneratingRoadmap(false);
-    }
-  };
-
-  const handleSendChatMessage = async () => {
-    if (!chatInput.trim()) return;
-    const msg = chatInput.trim();
-    setChatMessages((prev) => [...prev, { sender: "user", text: msg }]);
-    setChatInput("");
-    setIsChatLoading(true);
-
-    try {
-      const res = await fetch("http://localhost:8000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userName, message: msg, language: "en" }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setChatMessages((prev) => [...prev, { sender: "ai", text: data.reply || "I am analyzing your request." }]);
-      }
-    } catch (e) {
-      setChatMessages((prev) => [...prev, { sender: "ai", text: "Connected to AI Engine." }]);
-    } finally {
-      setIsChatLoading(false);
-    }
-  };
+  }, [router]);
 
   const handleSignOut = () => {
     localStorage.removeItem("zythron_user");
-    router.push("/signin");
+    router.push("/");
   };
 
-  if (!mounted) return null;
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="text-zinc-500 animate-pulse">Loading dashboard...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full overflow-y-auto bg-[#0a0a0d] text-zinc-100 font-sans flex flex-col selection:bg-white selection:text-black">
-      
-      {/* ─── ATMOSPHERIC ANIMATED BACKGROUND ─── */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes dashFloat1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(35px,-45px) scale(1.1)} }
-        @keyframes dashFloat2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,35px) scale(1.12)} }
-        .dash-grid-bg {
-          background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-          background-size: 60px 60px;
-        }
-        .dash-orb-1 { animation: dashFloat1 16s ease-in-out infinite; }
-        .dash-orb-2 { animation: dashFloat2 20s ease-in-out infinite; }
-      `}} />
-      <div className="fixed inset-0 dash-grid-bg pointer-events-none opacity-60" />
-      <div className="dash-orb-1 fixed top-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full bg-white/[0.03] blur-[140px] pointer-events-none" />
-      <div className="dash-orb-2 fixed bottom-[-10%] right-[-5%] w-[550px] h-[550px] rounded-full bg-zinc-400/[0.03] blur-[130px] pointer-events-none" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_70%)] pointer-events-none" />
+    <div className="overflow-y-auto overflow-x-hidden h-full bg-[#0a0a0a] text-zinc-100 font-sans">
+      {/* ─── SYMMETRICAL HEADER ─── */}
+      <header className="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <Link href="/dashboard" className="flex items-center gap-2 font-extrabold text-lg text-white hover:opacity-80 transition-opacity">
+            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="4 7 20 7 4 17 20 17" />
+            </svg>
+            <span>ZYTHRON</span>
+          </Link>
 
-      {/* ─── TOP NAVBAR ─── */}
-      <nav className="flex items-center justify-between px-8 py-4 border-b border-white/5 bg-[#0a0a0a] sticky top-0 z-50">
-        <Link href="/dashboard" className="flex items-center gap-3 font-bold text-xl tracking-tighter cursor-pointer hover:opacity-80 transition-opacity">
-          <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-white" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="4 7 20 7 4 17 20 17" />
-          </svg>
-          <span className="text-white">Zythron</span>
-        </Link>
-
-        {/* Center Navigation Tabs in Hiregram minimal style */}
-        <div className="hidden md:flex items-center gap-2 text-sm text-zinc-400 font-medium">
-          <Link href="/dashboard" className="px-5 py-2.5 rounded-full bg-zinc-800/60 text-white font-semibold border border-zinc-700/50 shadow-inner">
-            Career Match
-          </Link>
-          <Link href="/resume-analyzer" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
-            Resume
-          </Link>
-          <Link href="/mock-interview" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
-            Practice
-          </Link>
-          <Link href="/mock-interview" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
-            Interviews
-          </Link>
-          <Link href="/job-listings" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
-            Job Feed
-          </Link>
-          <Link href="/record-meeting" className="px-5 py-2.5 rounded-full hover:text-zinc-200 hover:bg-white/5 transition-all">
-            Record Meeting
-          </Link>
+          {/* Navigation Tabs */}
+          <nav className="hidden md:flex items-center gap-1 text-xs font-semibold tracking-wider text-zinc-400 uppercase">
+            <Link href="/dashboard" className="px-3 py-1.5 rounded-full bg-white text-black font-bold">
+              (01) CAREER MATCH
+            </Link>
+            <Link href="/mock-interview" className="px-3 py-1.5 rounded-full hover:text-white transition-colors">
+              (02) MOCK INTERVIEW
+            </Link>
+            <Link href="/record-meeting" className="px-3 py-1.5 rounded-full hover:text-white transition-colors">
+              (03) RECORD MEETING
+            </Link>
+            <Link href="/resume-analyzer" className="px-3 py-1.5 rounded-full hover:text-white transition-colors">
+              (04) RESUME SCANNER
+            </Link>
+            <Link href="/job-listings" className="px-3 py-1.5 rounded-full hover:text-white transition-colors">
+              (05) JOB LISTINGS
+            </Link>
+          </nav>
         </div>
 
-        {/* Right User Badge & Sign Out */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-3 px-4 py-1.5 border border-white/10 rounded-full text-sm font-medium hover:bg-white/10 transition-all cursor-pointer bg-zinc-900/50 hover:scale-105 active:scale-95">
-            <span className="text-zinc-300">{userName}</span>
-            <div className="w-7 h-7 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-full shadow-inner border border-white/10" />
+          <div className="text-right text-xs hidden sm:block">
+            <div className="font-semibold text-white">{user.name}</div>
+            <div className="text-zinc-400">{profile?.collegeYear || "College Student"}</div>
           </div>
-          <button onClick={handleSignOut} className="p-2 text-zinc-500 hover:text-zinc-200 transition-colors" title="Sign Out">
+          <button
+            onClick={handleSignOut}
+            className="p-2 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all"
+            title="Sign Out"
+          >
             <LogOut className="w-4 h-4" />
           </button>
         </div>
-      </nav>
+      </header>
 
       {/* ─── MAIN CONTENT ─── */}
-      <main className="w-full max-w-[1720px] mx-auto p-6 md:p-10 space-y-10 relative z-10">
-
-        {/* ─── 1. HYPER-PERSONALIZED DIAGNOSTIC HEADER BANNER ─── */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-8 md:p-10 backdrop-blur-2xl shadow-2xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="text-xs uppercase font-mono tracking-widest text-zinc-300 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                  Synced Profile: {userName}
-                </span>
-                <span className="text-xs uppercase font-mono text-zinc-300 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5 font-bold">
-                  <Award className="h-4 w-4 text-zinc-300" />
-                  Level 3 Trajectory Rank (450 XP)
-                </span>
-              </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
-                Career Trajectory: <span className="text-white font-extrabold">{formattedRoleTitle}</span>
-              </h1>
-              <p className="text-sm text-zinc-300 font-sans leading-relaxed">
-                Targeting <span className="text-white font-semibold">{targetCompanyTier}</span> • <span className="text-white font-semibold">{experienceLevel} Tier</span> • <span className="text-white font-semibold">{weeklyCommitmentHours}h/week</span> Commitment Horizon
-              </p>
+      <main className="max-w-5xl mx-auto px-6 py-10 space-y-8">
+        {/* 1. STUDENT AI READINESS HERO BANNER */}
+        <div className="bg-gradient-to-r from-zinc-900 via-zinc-900 to-zinc-950 border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-950/50 border border-emerald-500/20 px-3 py-1 rounded-full">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>AI Resilience Score: 84% (High)</span>
             </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
+              Student Career Roadmap & AI Safety Hub
+            </h1>
+            <p className="text-zinc-400 text-sm max-w-xl">
+              Target Role: <strong className="text-white">{profile?.role || "Full-Stack Engineer"}</strong> • {profile?.major || "Computer Science"} ({profile?.collegeYear || "Junior"})
+            </p>
+          </div>
 
-            {/* Diagnostic Metrics */}
-            <div className="grid grid-cols-3 gap-4 font-mono text-center shrink-0">
-              <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
-                <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Skill Match</span>
-                <span className="text-2xl md:text-3xl font-extrabold text-white">{skillMatchPercent}%</span>
-              </div>
-              <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
-                <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Milestones</span>
-                <span className="text-2xl md:text-3xl font-extrabold text-white">{completedCount}/{totalMilestones}</span>
-              </div>
-              <div className="min-w-[125px] sm:min-w-[140px] bg-black/60 border border-white/15 px-5 py-4 rounded-2xl flex flex-col items-center justify-center shadow-inner hover:border-white/30 transition-all">
-                <span className="text-xs text-zinc-400 uppercase tracking-wider block mb-1 font-semibold">Salary Uplift</span>
-                <span className="text-xl md:text-2xl font-extrabold text-white">+${estimatedSalaryUplift / 1000}k</span>
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <Link
+              href="/mock-interview"
+              className="inline-flex items-center justify-center gap-2 bg-white text-black px-5 py-2.5 rounded-full text-xs font-bold hover:bg-zinc-200 transition-all"
+            >
+              <span>Practice Mock Interview</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link
+              href="/code-arena"
+              className="inline-flex items-center justify-center gap-2 border border-white/20 text-zinc-300 px-5 py-2.5 rounded-full text-xs font-semibold hover:bg-white/5 hover:text-white transition-all"
+            >
+              <span>Code Arena</span>
+            </Link>
           </div>
         </div>
 
-        {/* ─── 2-COLUMN WORKSTATION GRID ─── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-          {/* ─── LEFT COLUMN: PERSONALIZED CONTROLS & SKILL MATRIX (4 Cols) ─── */}
-          <div className="lg:col-span-4 space-y-6">
-
-            {/* Parameter Adjustment Panel */}
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-xl space-y-5 shadow-xl">
-              <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
-                <h3 className="text-xs md:text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Sliders className="h-4 w-4 text-white" />
-                  Career Controls
-                </h3>
-                <span className="text-xs font-mono text-zinc-400">Live Tweak</span>
-              </div>
-
-              {/* Target Role Input */}
-              <div>
-                <label className="text-xs font-semibold text-zinc-200 block mb-1.5">Target Role</label>
-                <input
-                  type="text"
-                  value={preferredRole}
-                  onChange={(e) => setPreferredRole(e.target.value)}
-                  className="w-full bg-black/60 border border-white/15 px-3.5 py-2.5 rounded-xl text-xs md:text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
-                />
-              </div>
-
-              {/* Experience Level Selector */}
-              <div>
-                <label className="text-xs font-semibold text-zinc-200 block mb-1.5">Experience Level</label>
-                <select
-                  value={experienceLevel}
-                  onChange={(e) => setExperienceLevel(e.target.value as any)}
-                  className="w-full bg-black/60 border border-white/15 px-3.5 py-2.5 rounded-xl text-xs md:text-sm text-white focus:outline-none focus:border-cyan-400 transition-colors"
-                >
-                  <option value="Junior">Junior Tier (0-2 YOE)</option>
-                  <option value="Mid">Mid-Level Tier (2-5 YOE)</option>
-                  <option value="Senior">Senior / Staff Tier (5+ YOE)</option>
-                </select>
-              </div>
-
-              {/* Target Company Tier Selector */}
-              <div>
-                <label className="text-xs font-semibold text-zinc-200 block mb-1.5">Target Employer Tier</label>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  {(["Tier 1 Big Tech", "AI Unicorn", "High-Growth"] as const).map((tier) => (
-                    <button
-                      key={tier}
-                      onClick={() => setTargetCompanyTier(tier)}
-                      className={`py-2 px-2 rounded-xl border text-center font-semibold transition-all text-xs ${
-                        targetCompanyTier === tier
-                          ? "bg-white text-black font-extrabold border-white shadow-md"
-                          : "bg-black/50 border-white/10 text-zinc-300 hover:text-white"
-                      }`}
-                    >
-                      {tier}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Interactive Skill Chips Editor */}
-              <div>
-                <label className="text-xs font-semibold text-zinc-200 block mb-1.5">Your Current Skills ({userSkills.length})</label>
-                <div className="flex gap-2 mb-2.5">
-                  <input
-                    type="text"
-                    value={skillInput}
-                    onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
-                    placeholder="Add skill (e.g. Docker)..."
-                    className="flex-1 bg-black/60 border border-white/15 px-3.5 py-2.5 rounded-xl text-xs text-white focus:outline-none focus:border-cyan-400"
-                  />
-                  <button onClick={handleAddSkill} className="bg-white text-black px-3.5 py-2.5 rounded-xl text-xs font-bold hover:bg-zinc-200 transition-colors">
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-
-                <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto">
-                  {userSkills.map((s) => (
-                    <span key={s.name} className="inline-flex items-center gap-1.5 text-xs bg-white/10 text-white px-3 py-1 rounded-full border border-white/20 font-semibold">
-                      {s.name}
-                      <button onClick={() => handleRemoveSkill(s.name)} className="text-zinc-400 hover:text-white">
-                        <X className="h-3.5 w-3.5" />
-                      </button>
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Synthesize Button */}
-              <button
-                onClick={handleSynthesizeAIRoadmap}
-                disabled={isGeneratingRoadmap}
-                className="w-full bg-white text-black font-extrabold py-3.5 rounded-xl text-xs sm:text-sm hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg disabled:opacity-50"
-              >
-                {isGeneratingRoadmap ? (
-                  <>
-                    <Sparkles className="h-4 w-4 animate-spin text-black" />
-                    Querying Pinecone Vector Data...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 text-black" />
-                    Synthesize Personalized AI Roadmap
-                  </>
-                )}
-              </button>
-
-              {/* Live AI RAG Vector-Synthesized Roadmap Result */}
-              {aiRoadmapOutput && (
-                <div className="bg-[#0f0f0f] border border-white/10 p-5 rounded-2xl space-y-3.5 font-sans text-xs shadow-2xl animate-fade-in">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-                        <Sparkles className="h-4 w-4 text-white" />
-                      </div>
-                      <div>
-                        <span className="font-extrabold text-white uppercase tracking-wider text-xs font-mono block">
-                          Live AI RAG Vector Synthesis
-                        </span>
-                        {topJobMatch && (
-                          <span className="text-xs text-zinc-300 font-mono block truncate max-w-[240px]">
-                            Matched: <span className="text-white font-bold">{topJobMatch.title}</span>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {topJobMatch && (
-                      <span className="text-xs font-mono bg-white/10 text-white px-3 py-1 rounded-full border border-white/15 font-bold shrink-0 self-start sm:self-auto">
-                        {Math.round((topJobMatch.match_score || 0.85) * 100)}% Match
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="max-h-80 overflow-y-auto space-y-2 pr-1.5 scrollbar-thin scrollbar-thumb-white/10">
-                    {renderFormattedRoadmap(aiRoadmapOutput)}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Personalized Skill Gap Analysis Matrix */}
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-xl space-y-4 shadow-xl">
-              <h3 className="text-xs md:text-sm font-extrabold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-white" />
-                Personalized Competency Matrix
-              </h3>
-
-              {/* Acquired vs Missing */}
-              <div className="space-y-3 font-mono text-xs">
-                <div>
-                  <span className="text-xs text-zinc-300 uppercase tracking-wider block mb-1.5 font-bold">Acquired Strengths ({acquiredSkills.length})</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {acquiredSkills.map((sk) => (
-                      <span key={sk} className="text-xs bg-white/10 text-zinc-100 px-2.5 py-1 rounded-lg border border-white/15 font-semibold">
-                        ✓ {sk}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs text-zinc-300 uppercase tracking-wider font-bold">Target Gaps ({missingSkills.length})</span>
-                    <span className="text-xs text-zinc-400 font-mono">Verify in Code Arena</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {missingSkills.map((sk) => {
-                      const isVerified = verifiedSkills.includes(sk);
-                      return (
-                        <Link
-                          key={sk}
-                          href={`/code-arena?skill=${encodeURIComponent(sk)}`}
-                          className={`text-xs px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 font-mono ${
-                            isVerified
-                              ? "bg-white/10 text-white border-white/30 shadow-sm font-semibold"
-                              : "bg-zinc-900 text-zinc-200 border-zinc-700 hover:bg-zinc-800 hover:border-zinc-500 font-medium"
-                          }`}
-                        >
-                          {isVerified ? (
-                            <>
-                              <CheckCircle2 className="h-3.5 w-3.5 text-white" />
-                              <span>{sk} [VERIFIED]</span>
-                            </>
-                          ) : (
-                            <>
-                              <span>+ {sk}</span>
-                              <span className="text-[10px] font-extrabold bg-white text-black px-1.5 py-0.5 rounded shadow-sm hover:bg-zinc-200 transition-colors ml-0.5">
-                                Verify ⚡
-                              </span>
-                            </>
-                          )}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* ─── RIGHT COLUMN: 3-PHASE CURRICULUM & CODE ARENA WORKSTATION (8 Cols) ─── */}
-          <div className="lg:col-span-8 space-y-6">
-
-            {/* 🚀 PROMINENT CODE ARENA WORKSTATION CARD */}
-            <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-white/[0.04] to-transparent p-6 md:p-7 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 font-mono relative overflow-hidden group">
-              <div className="space-y-2 z-10">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-xs uppercase font-bold text-zinc-200 bg-white/10 border border-white/15 px-3 py-1 rounded-full">
-                    Interactive IDE Workstation
-                  </span>
-                  <span className="text-xs text-zinc-300 font-sans">Python & TypeScript Sandbox</span>
-                </div>
-                <h3 className="text-xl md:text-2xl font-black text-white flex items-center gap-2.5 tracking-tight">
-                  <Code2 className="h-6 w-6 text-white" />
-                  LeetCode & System Design Code Arena
-                </h3>
-                <p className="text-xs md:text-sm text-zinc-300 font-sans max-w-xl leading-relaxed">
-                  Practice live data structure algorithms, token bucket rate limiters, and vector similarity metrics with AI test runners and Big-O complexity profiling.
-                </p>
-              </div>
-
-              <Link
-                href="/code-arena"
-                className="z-10 bg-white text-black font-extrabold px-6 py-3 rounded-xl text-xs md:text-sm hover:bg-zinc-200 transition-all flex items-center gap-2 shrink-0 shadow-xl group-hover:scale-105"
-              >
-                <span>Launch Code Arena</span>
-                <ChevronRight className="h-5 w-5" />
-              </Link>
-            </div>
-
-            {/* 3 Phase Cards Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <h2 className="text-lg md:text-xl font-extrabold text-white uppercase tracking-wider flex items-center gap-2.5">
-                  <Compass className="h-5 w-5 text-white" />
-                  Adaptive Custom Curriculum
-                </h2>
-                <p className="text-xs text-zinc-300 mt-0.5">Click any milestone card to inspect syllabus topics, capstones & docs</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setShowAddPhaseModal(true)}
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/15 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-lg active:scale-95 cursor-pointer"
-                >
-                  <Plus className="h-4 w-4 text-white" />
-                  Add Specialized Phase
-                </button>
-                <span className="text-xs font-mono font-bold text-white bg-white/10 border border-white/15 px-3.5 py-1.5 rounded-full">
-                  {progressPercent}% Complete ({completedCount}/{totalMilestones})
-                </span>
-              </div>
-            </div>
-
-            {/* 3 Phase Parallel Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {activeRoadmapPhases.map((phase) => {
-                const PhaseIcon = phase.icon;
-                const titleParts = phase.title.includes(":") ? phase.title.split(": ") : ["", phase.title];
-                const phasePrefix = titleParts[0];
-                const phaseCleanTitle = titleParts.length > 1 ? titleParts.slice(1).join(": ") : phase.title;
-
-                return (
-                  <div
-                    key={phase.id}
-                    onClick={() => setActiveModalPhase(phase)}
-                    className="rounded-3xl border border-white/15 bg-gradient-to-b from-white/[0.05] to-transparent p-5 space-y-4 flex flex-col justify-between backdrop-blur-xl shadow-xl hover:border-white/30 transition-all cursor-pointer group relative min-h-[320px]"
-                  >
-                    <div>
-                      <div className="flex items-center justify-between mb-2.5">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {phasePrefix && (
-                            <span className="text-xs font-mono uppercase font-extrabold px-2.5 py-1 rounded-md bg-white text-black shadow-sm">
-                              {phasePrefix}
-                            </span>
-                          )}
-                          <span className="text-xs font-mono uppercase font-bold px-2.5 py-1 rounded-md bg-white/10 text-zinc-200 border border-white/15">
-                            {phase.badge}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 text-zinc-300 group-hover:text-white transition-colors">
-                          <span className="text-xs font-semibold">Overview</span>
-                          <PhaseIcon className="h-4 w-4" />
-                        </div>
-                      </div>
-                      <h3 className="text-sm sm:text-base font-extrabold text-white group-hover:text-zinc-200 transition-colors leading-snug mb-1.5 flex items-center justify-between">
-                        <span>{phaseCleanTitle}</span>
-                        <ChevronRight className="h-4 w-4 text-zinc-300 group-hover:text-white transition-colors shrink-0 ml-1" />
-                      </h3>
-                      <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed line-clamp-3 font-sans">{phase.description}</p>
-                    </div>
-
-                    {/* Milestones inside Phase */}
-                    <div className="space-y-2.5 pt-3.5 border-t border-white/10">
-                      {phase.milestones.map((m) => {
-                        const isDone = completedMilestones[m.id];
-                        return (
-                          <div
-                            key={m.id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveModalMilestone(m);
-                            }}
-                            className="p-3.5 rounded-2xl border bg-black/50 border-white/15 hover:border-white/35 transition-all cursor-pointer group/m shadow-md"
-                          >
-                            <div className="flex items-start justify-between gap-2.5">
-                              <div className="flex items-start gap-2.5 min-w-0">
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleMilestone(m.id);
-                                  }}
-                                  className={`mt-0.5 h-4.5 w-4.5 rounded flex items-center justify-center shrink-0 transition-colors ${
-                                    isDone ? "bg-white text-black font-extrabold" : "border border-zinc-500 hover:border-zinc-200"
-                                  }`}
-                                >
-                                  {isDone && <Check className="h-3.5 w-3.5 stroke-[3]" />}
-                                </button>
-                                <div className="min-w-0">
-                                  <h4 className="text-xs sm:text-sm font-bold text-white group-hover/m:text-zinc-100 transition-colors leading-snug line-clamp-2">
-                                    {m.title}
-                                  </h4>
-                                  <span className="text-xs font-mono text-zinc-400 block mt-1">{m.workloadHours}h study hours</span>
-                                </div>
-                              </div>
-                              <ChevronRight className="h-4 w-4 text-zinc-400 group-hover/m:text-white transition-colors shrink-0 mt-0.5" />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Generated AI RAG Roadmap Output (If Triggered) */}
-            {aiRoadmapOutput && (
-              <div className="rounded-3xl border border-white/10 bg-[#0f0f0f] p-6 backdrop-blur-xl space-y-4 shadow-xl">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-3 gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
-                      <Sparkles className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                        Gemini Vector RAG Roadmap Response
-                      </h3>
-                      {topJobMatch && (
-                        <span className="text-[11px] text-zinc-400 font-mono">
-                          Target Role: <span className="text-zinc-200 font-semibold">{topJobMatch.title}</span> ({topJobMatch.company})
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <span className="text-xs font-mono bg-white/10 text-white px-3 py-1 rounded-full border border-white/10 font-semibold shrink-0 self-start sm:self-auto">
-                    Live AI Synthesis
-                  </span>
-                </div>
-
-                <div className="bg-black/50 p-5 rounded-2xl border border-white/10 leading-relaxed overflow-x-auto max-h-[450px] overflow-y-auto font-sans">
-                  {renderFormattedRoadmap(aiRoadmapOutput)}
-                </div>
-              </div>
-            )}
-
-          </div>
-
-        </div>
-
-      </main>
-
-      {/* ─── PHASE OVERVIEW & PROJECT BLUEPRINT MODAL POPUP ─── */}
-      {activeModalPhase && (
-        <div
-          onClick={() => setActiveModalPhase(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-[#0a0a0d] border border-white/20 rounded-3xl p-6 md:p-8 space-y-6 text-zinc-100 shadow-2xl relative font-sans scrollbar-thin scrollbar-thumb-white/10"
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between border-b border-white/10 pb-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono uppercase text-zinc-300 bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-full font-bold">
-                    {activeModalPhase.badge} • Comprehensive Phase Blueprint
-                  </span>
-                  <span className="text-xs font-mono text-zinc-400">
-                    {activeModalPhase.milestones.reduce((acc, m) => acc + m.workloadHours, 0)} Hours Total Workload
-                  </span>
-                </div>
-                <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight">{activeModalPhase.title}</h3>
-              </div>
-              <button onClick={() => setActiveModalPhase(null)} className="text-zinc-400 hover:text-white cursor-pointer">
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-
-            {/* Executive Strategy Overview */}
-            <div className="bg-white/[0.03] border border-white/10 p-5 rounded-2xl space-y-2">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <Compass className="h-4 w-4 text-white" />
-                Phase Executive Strategy & Core Objectives
-              </h4>
-              <p className="text-xs text-zinc-300 leading-relaxed">
-                {activeModalPhase.description} This phase establishes production-grade mastery required for {preferredRole} roles targeting {targetCompanyTier}.
-              </p>
-            </div>
-
-            {/* Consolidated Reference Library */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-white" />
-                Phase Reference Library & Primary Documentation
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
-                {activeModalPhase.milestones
-                  .flatMap((m) => m.resources)
-                  .map((res, idx) => (
-                    <a
-                      key={idx}
-                      href={res.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-black/50 border border-white/10 p-3.5 rounded-xl hover:border-white/30 hover:bg-white/5 transition-all flex items-center justify-between group cursor-pointer"
-                    >
-                      <div>
-                        <span className="text-xs text-white group-hover:underline font-semibold block">{res.name}</span>
-                        <span className="text-[10px] text-zinc-500 uppercase">{res.category} Guide & Docs</span>
-                      </div>
-                      <ExternalLink className="h-4 w-4 text-zinc-500 group-hover:text-white" />
-                    </a>
-                  ))}
-              </div>
-            </div>
-
-            {/* Phase Capstone Project Blueprint */}
-            <div className="bg-zinc-900/60 border border-white/10 p-5 rounded-2xl space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                  <Laptop className="h-4 w-4 text-white" />
-                  Phase Capstone Project Specifications & Requirements
-                </h4>
-                <span className="text-[10px] font-mono text-zinc-300 bg-white/10 px-2.5 py-0.5 rounded border border-white/10">
-                  Hands-On Capstone
-                </span>
-              </div>
-              
-              <div className="space-y-3 text-xs text-zinc-200 leading-relaxed font-mono">
-                {activeModalPhase.milestones.map((m, idx) => (
-                  <div key={m.id} className="bg-black/50 p-4 rounded-xl border border-white/10 space-y-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] text-zinc-300 font-bold uppercase">
-                        Module {idx + 1}: {m.title}
-                      </span>
-                      <span className="text-[10px] text-zinc-500">{m.workloadHours} Study Hours</span>
-                    </div>
-                    <p className="text-xs text-zinc-300">{m.projectPrompt}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* All Syllabus Competencies */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
-                <FileText className="h-4 w-4 text-white" />
-                Syllabus Topics & Technical Competencies
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-xs">
-                {activeModalPhase.milestones.map((m) => (
-                  <div key={m.id} className="bg-black/40 p-4 rounded-2xl border border-white/10 space-y-2">
-                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                      <span className="font-semibold text-white">{m.title}</span>
-                    </div>
-                    <ul className="space-y-1.5 text-zinc-300 text-[11px] list-disc pl-4">
-                      {m.syllabusPoints?.map((pt, i) => (
-                        <li key={i}>{pt}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Footer */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
-                <CheckCircle2 className="h-4 w-4 text-white" />
-                <span>Phase setup complete • Select individual milestone cards for direct topic checks</span>
-              </div>
-              <button
-                onClick={() => setActiveModalPhase(null)}
-                className="bg-white text-black font-semibold text-xs px-5 py-2.5 rounded-xl hover:bg-zinc-200 transition-colors cursor-pointer"
-              >
-                Close Blueprint
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* ─── MILESTONE INSPECTOR MODAL POPUP ─── */}
-      {activeModalMilestone && (
-        <div
-          onClick={() => setActiveModalMilestone(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-2xl bg-[#0a0a0d] border border-white/20 rounded-3xl p-6 space-y-5 text-zinc-100 shadow-2xl relative"
-          >
-            <div className="flex items-start justify-between border-b border-white/10 pb-4">
-              <div>
-                <span className="text-[10px] font-mono uppercase text-zinc-300 bg-white/10 border border-white/10 px-2.5 py-0.5 rounded-full">
-                  {activeModalMilestone.workloadHours} Estimated Study Hours
-                </span>
-                <h3 className="text-xl font-bold text-white mt-1">{activeModalMilestone.title}</h3>
-              </div>
-              <button onClick={() => setActiveModalMilestone(null)} className="text-zinc-400 hover:text-white">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <p className="text-xs text-zinc-300 leading-relaxed">{activeModalMilestone.description}</p>
-
-            {/* Syllabus */}
-            {activeModalMilestone.syllabusPoints && (
-              <div className="bg-black/40 p-4 rounded-2xl border border-white/10 space-y-2">
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 font-mono">
-                  <FileText className="h-4 w-4 text-white" />
-                  Syllabus Competencies
-                </h4>
-                <ul className="text-xs text-zinc-300 space-y-1 list-disc pl-5 font-mono">
-                  {activeModalMilestone.syllabusPoints.map((pt, i) => (
-                    <li key={i}>{pt}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Granular Micro-Nuances & Production Anti-Patterns */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
-              <div className="bg-zinc-900/60 border border-white/10 p-3.5 rounded-2xl space-y-2">
-                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <Zap className="h-3.5 w-3.5 text-white" />
-                  Granular Technical Nuances & Edge Cases
-                </span>
-                <ul className="space-y-1 text-zinc-300 text-[11px] leading-relaxed">
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-white font-bold">•</span>
-                    <span>Exact memory allocation bounds, stack vs heap lifetime, & GC pause profiling</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-white font-bold">•</span>
-                    <span>Discriminated union state machines with zero runtime `any` assertions</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-white font-bold">•</span>
-                    <span>EXPLAIN ANALYZE query plans, B-Tree vs GIN indexing, & WAL log flushes</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-zinc-900/60 border border-white/10 p-3.5 rounded-2xl space-y-2">
-                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-white" />
-                  Production Anti-Patterns to Avoid
-                </span>
-                <ul className="space-y-1 text-zinc-300 text-[11px] leading-relaxed">
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-white font-bold">•</span>
-                    <span>N+1 ORM query cascades from unindexed foreign key relationships</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-white font-bold">•</span>
-                    <span>Unbounded Context Provider re-render loops without memoization</span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-white font-bold">•</span>
-                    <span>Split-brain stale cache overwrites during concurrent mutation races</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Capstone Challenge */}
-            <div className="bg-zinc-900/60 border border-white/10 p-4 rounded-2xl space-y-1">
-              <h4 className="text-xs font-bold text-white uppercase flex items-center gap-2 font-mono">
-                <Laptop className="h-4 w-4 text-white" />
-                Hands-On Capstone Challenge
-              </h4>
-              <p className="text-xs text-zinc-200 leading-relaxed">{activeModalMilestone.projectPrompt}</p>
-            </div>
-
-            {/* Proof-of-Skill Capstone Auto-Grader Sandbox */}
-            <div className="bg-black/60 border border-white/10 p-4 rounded-2xl space-y-3 font-mono">
-              <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Code2 className="h-4 w-4 text-white" />
-                  Proof-of-Skill Capstone Auto-Grader Sandbox
-                </h4>
-                <span className="text-[10px] text-zinc-300 bg-white/10 px-2 py-0.5 rounded border border-white/10">
-                  AST & Complexity Audit
-                </span>
-              </div>
-
-              <textarea
-                value={capstoneCodeInput}
-                onChange={(e) => setCapstoneCodeInput(e.target.value)}
-                placeholder="// Paste your TypeScript, Python, or SQL implementation code here to trigger AI static analysis & edge case verification..."
-                rows={3}
-                className="w-full bg-black/80 border border-white/10 p-3 rounded-xl text-xs text-zinc-200 focus:outline-none focus:border-white/30"
-              />
-
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleAuditCapstoneCode}
-                    disabled={isAuditingCode || !capstoneCodeInput.trim()}
-                    className="bg-white text-black font-semibold px-4 py-2 rounded-xl text-xs hover:bg-zinc-200 transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    {isAuditingCode ? (
-                      <>
-                        <Sparkles className="h-3.5 w-3.5 animate-spin text-black" />
-                        Auditing AST & Concurrency...
-                      </>
-                    ) : (
-                      <>
-                        <ShieldCheck className="h-3.5 w-3.5 text-black" />
-                        Execute AI Code Audit & Verify Capstone
-                      </>
-                    )}
-                  </button>
-
-                  <Link
-                    href={`/code-arena?problem=lc1&milestone=${encodeURIComponent(activeModalMilestone.id)}`}
-                    onClick={() => setActiveModalMilestone(null)}
-                    className="bg-white/10 hover:bg-white/20 text-white font-mono px-3.5 py-2 rounded-xl text-xs border border-white/20 transition-all flex items-center gap-1.5"
-                  >
-                    <Code2 className="h-3.5 w-3.5 text-white" />
-                    <span>Practice in Code Arena ⚡</span>
-                  </Link>
-                </div>
-
-                {codeAuditResult && (
-                  <span className="text-xs font-bold text-white">
-                    Score: {codeAuditResult.score}/100 ({codeAuditResult.verdict})
-                  </span>
-                )}
-              </div>
-
-              {codeAuditResult && (
-                <div className="bg-zinc-900/80 border border-white/10 p-3 rounded-xl space-y-1 text-xs text-zinc-200">
-                  <div className="flex justify-between text-[10px] text-zinc-300 font-bold uppercase">
-                    <span>Complexity: {codeAuditResult.complexity}</span>
-                    <span>Verified Proof Badge Issued</span>
-                  </div>
-                  <p className="text-xs text-zinc-300">{codeAuditResult.feedback}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Resources */}
-            <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-              <div className="bg-black/40 p-3 rounded-xl border border-white/10">
-                <span className="text-[10px] text-zinc-500 uppercase block mb-1">Required Skills:</span>
-                <div className="flex flex-wrap gap-1">
-                  {activeModalMilestone.requiredSkills.map((sk) => (
-                    <span key={sk} className="text-[10px] bg-white/10 text-zinc-200 px-2 py-0.5 rounded border border-white/10">
-                      {sk}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-black/40 p-3 rounded-xl border border-white/10">
-                <span className="text-[10px] text-zinc-500 uppercase block mb-1">Primary Documentation:</span>
-                {activeModalMilestone.resources.map((r) => (
-                  <a key={r.name} href={r.url} target="_blank" rel="noreferrer" className="text-xs text-white hover:underline block truncate">
-                    {r.name}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-white/10 flex justify-between">
-              <button
-                onClick={() => {
-                  toggleMilestone(activeModalMilestone.id);
-                  setActiveModalMilestone(null);
-                }}
-                className="bg-white text-black font-semibold text-xs px-4 py-2 rounded-xl hover:bg-zinc-200 transition-colors"
-              >
-                {completedMilestones[activeModalMilestone.id] ? "Mark as Incomplete" : "Mark as Completed"}
-              </button>
-              <button onClick={() => setActiveModalMilestone(null)} className="text-xs text-zinc-400 hover:text-white px-3 py-2">
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ─── FLOATING AI ASSISTANT CHAT DRAWER ─── */}
-      <div className="fixed bottom-6 right-6 z-50">
-        {chatOpen ? (
-          <div className="w-80 md:w-96 bg-[#0a0a0d] border border-white/20 rounded-3xl shadow-2xl flex flex-col h-96 overflow-hidden">
-            <div className="p-4 bg-white/[0.04] border-b border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-white" />
-                <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">Zythron AI Advisor</span>
-              </div>
-              <button onClick={() => setChatOpen(false)} className="text-zinc-400 hover:text-white">
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="flex-1 p-4 overflow-y-auto space-y-3 text-xs font-mono">
-              {chatMessages.map((m, i) => (
-                <div key={i} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[85%] p-3 rounded-2xl ${m.sender === "user" ? "bg-white text-black font-semibold" : "bg-white/10 border border-white/10 text-zinc-200"}`}>
-                    {m.text}
-                  </div>
-                </div>
-              ))}
-              {isChatLoading && <div className="text-zinc-500 italic text-[11px]">Thinking...</div>}
-            </div>
-
-            <div className="p-3 border-t border-white/10 flex gap-2">
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSendChatMessage()}
-                placeholder="Ask your AI advisor..."
-                className="flex-1 bg-black/50 border border-white/10 px-3 py-2 rounded-xl text-xs text-white focus:outline-none font-mono"
-              />
-              <button onClick={handleSendChatMessage} className="bg-white text-black px-3 rounded-xl font-semibold text-xs">
-                <Send className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </div>
-        ) : (
+        {/* 2. DE-CLUTTERED SINGLE TAB NAVIGATION */}
+        <div className="flex border-b border-white/10 gap-6 text-sm font-semibold text-zinc-400">
           <button
-            onClick={() => setChatOpen(true)}
-            className="bg-white text-black p-4 rounded-full shadow-2xl hover:scale-105 transition-all flex items-center gap-2 font-semibold text-xs cursor-pointer"
+            onClick={() => setActiveTab("roadmap")}
+            className={`pb-3 flex items-center gap-2 border-b-2 transition-all ${
+              activeTab === "roadmap"
+                ? "border-white text-white font-bold"
+                : "border-transparent hover:text-zinc-200"
+            }`}
           >
-            <MessageSquare className="h-5 w-5 text-black" />
-            <span>AI Advisor</span>
+            <Compass className="w-4 h-4" />
+            <span>Semester Roadmap</span>
           </button>
-        )}
-      </div>
-
-      {/* ─── CYBER COMMAND PALETTE (CMD+K) OVERLAY ─── */}
-      {commandPaletteOpen && (
-        <div
-          onClick={() => setCommandPaletteOpen(false)}
-          className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/85 backdrop-blur-md"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-xl bg-[#0a0a0d] border border-white/20 rounded-3xl p-5 text-zinc-100 shadow-2xl space-y-4 font-mono relative animate-in fade-in zoom-in-95 duration-150"
+          <button
+            onClick={() => setActiveTab("audit")}
+            className={`pb-3 flex items-center gap-2 border-b-2 transition-all ${
+              activeTab === "audit"
+                ? "border-white text-white font-bold"
+                : "border-transparent hover:text-zinc-200"
+            }`}
           >
-            <div className="flex items-center gap-3 bg-black/60 border border-white/10 px-4 py-3.5 rounded-2xl">
-              <Search className="h-4 w-4 text-zinc-400" />
-              <input
-                type="text"
-                value={commandSearch}
-                onChange={(e) => setCommandSearch(e.target.value)}
-                placeholder="Type a command or page (e.g. mock, scan, RAG)..."
-                className="w-full bg-transparent text-xs text-white focus:outline-none placeholder:text-zinc-500"
-                autoFocus
-              />
-              <kbd className="text-[10px] bg-white/10 px-2 py-0.5 rounded border border-white/20 text-zinc-300">ESC</kbd>
-            </div>
-
-            <div className="space-y-1.5 text-xs">
-              <span className="text-[10px] text-zinc-500 uppercase px-3 block mb-1">Quick Autonomous Modules</span>
-              
-              <Link
-                href="/dashboard"
-                onClick={() => setCommandPaletteOpen(false)}
-                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Zap className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="font-bold block">(01) Career Match Workstation</span>
-                    <span className="text-[10px] text-zinc-400">RAG Roadmaps, Skill Matrix & Auto-Grader</span>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
-              </Link>
-
-              <Link
-                href="/mock-interview"
-                onClick={() => setCommandPaletteOpen(false)}
-                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Terminal className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="font-bold block">(02) Voice AI Technical Interview</span>
-                    <span className="text-[10px] text-zinc-400">0-100 Score Gauge & Feedback Rubric</span>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
-              </Link>
-
-              <Link
-                href="/record-meeting"
-                onClick={() => setCommandPaletteOpen(false)}
-                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Activity className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="font-bold block">(03) Autonomous Meeting Recorder Bot</span>
-                    <span className="text-[10px] text-zinc-400">Live Notetaker & Action Item Extractor</span>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
-              </Link>
-
-              <Link
-                href="/resume-analyzer"
-                onClick={() => setCommandPaletteOpen(false)}
-                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <FileText className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="font-bold block">(04) AI ATS Resume Scanner</span>
-                    <span className="text-[10px] text-zinc-400">Metric Density & Keyword Gap Analysis</span>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
-              </Link>
-
-              <Link
-                href="/job-listings"
-                onClick={() => setCommandPaletteOpen(false)}
-                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Briefcase className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="font-bold block">(05) Job Listings & Salary Benchmarks</span>
-                    <span className="text-[10px] text-zinc-400">Market Rates & High-Value Skill Boosts</span>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
-              </Link>
-
-              <Link
-                href="/code-arena"
-                onClick={() => setCommandPaletteOpen(false)}
-                className="flex items-center justify-between p-3 rounded-2xl hover:bg-white/10 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-3 text-white">
-                  <div className="p-2 rounded-xl bg-white/10 border border-white/10">
-                    <Code2 className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <span className="font-bold block">Code Arena IDE Workstation</span>
-                    <span className="text-[10px] text-zinc-400">Multi-Language Code Runner & Big-O Profiler</span>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-zinc-500 group-hover:text-white" />
-              </Link>
-            </div>
-
-            <div className="pt-2 border-t border-white/10 flex justify-between text-[10px] text-zinc-500 px-2">
-              <span>Press ⌘K anytime to toggle command menu</span>
-              <span>Zythron OS v1.0</span>
-            </div>
-          </div>
+            <ShieldCheck className="w-4 h-4" />
+            <span>AI Resilience Audit</span>
+          </button>
+          <button
+            onClick={() => setActiveTab("projects")}
+            className={`pb-3 flex items-center gap-2 border-b-2 transition-all ${
+              activeTab === "projects"
+                ? "border-white text-white font-bold"
+                : "border-transparent hover:text-zinc-200"
+            }`}
+          >
+            <Code2 className="w-4 h-4" />
+            <span>Future-Proof Projects</span>
+          </button>
         </div>
-      )}
 
-      {/* Add Specialized Phase Modal */}
-      {showAddPhaseModal && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-zinc-900 border border-white/20 rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl animate-in fade-in zoom-in duration-200">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-white/10 border border-white/10 text-white">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">Add Specialized Phase</h3>
-                  <p className="text-[11px] text-zinc-400">Dynamically extend your learning path with custom domains</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowAddPhaseModal(false)}
-                className="text-zinc-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
+        {/* 3. TAB CONTENTS */}
+
+        {/* TAB 1: SEMESTER ROADMAP */}
+        {activeTab === "roadmap" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-white">Your Campus-to-Industry Milestones</h2>
+              <span className="text-xs text-zinc-400 font-medium">Estimated: {profile?.commitment || "10-15 hrs/week"}</span>
             </div>
 
             <div className="space-y-4">
-              <div>
-                <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
-                  Phase Title / Domain Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. LLM Fine-Tuning & Quantization Engineering"
-                  value={newPhaseTitle}
-                  onChange={(e) => setNewPhaseTitle(e.target.value)}
-                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
-                    Badge Label
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. AI / ML"
-                    value={newPhaseBadge}
-                    onChange={(e) => setNewPhaseBadge(e.target.value)}
-                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors"
-                  />
+              {/* Milestone 1 */}
+              <div className="bg-zinc-900/60 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-0.5 rounded">
+                      Phase 1 • Foundational
+                    </span>
+                    <h3 className="text-base font-bold text-white mt-2">Data Structures & Async Python/FastAPI</h3>
+                  </div>
+                  <span className="text-xs text-zinc-500 font-mono">Completed</span>
                 </div>
-                <div>
-                  <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
-                    Target Skill
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. PyTorch / LoRA"
-                    value={newPhaseSkill}
-                    onChange={(e) => setNewPhaseSkill(e.target.value)}
-                    className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors"
-                  />
+                <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                  Master core memory models, time complexity, and async API development to handle backend server pipelines.
+                </p>
+                <div className="flex items-center gap-2 text-xs text-zinc-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>Verified via Code Arena assessment</span>
                 </div>
               </div>
 
-              <div>
-                <label className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block mb-1">
-                  Phase Description & Objectives
-                </label>
-                <textarea
-                  rows={3}
-                  placeholder="Deep dive into parameter-efficient fine-tuning (PEFT), GGML/GGUF quantization, and vLLM inference acceleration."
-                  value={newPhaseDesc}
-                  onChange={(e) => setNewPhaseDesc(e.target.value)}
-                  className="w-full bg-black/60 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors resize-none"
-                />
+              {/* Milestone 2 */}
+              <div className="bg-zinc-900/60 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 bg-amber-950/40 border border-amber-500/20 px-2.5 py-0.5 rounded">
+                      Phase 2 • In Progress
+                    </span>
+                    <h3 className="text-base font-bold text-white mt-2">System Architecture & Vector DB RAG Pipelines</h3>
+                  </div>
+                  <span className="text-xs text-zinc-400 font-mono">40 hrs workload</span>
+                </div>
+                <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                  Build semantic search engines using Pinecone and Google Gemini embeddings. Understand high-scale system design boundaries.
+                </p>
+                <div className="flex items-center gap-3">
+                  <Link
+                    href="/code-arena?skill=FastAPI"
+                    className="text-xs bg-white text-black px-4 py-1.5 rounded-full font-bold hover:bg-zinc-200 transition-all inline-flex items-center gap-1"
+                  >
+                    <span>Practice FastAPI & RAG</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center gap-3 pt-2">
-              <button
-                onClick={() => setShowAddPhaseModal(false)}
-                className="w-1/2 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-mono transition-colors border border-white/10"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddCustomPhase}
-                disabled={!newPhaseTitle.trim()}
-                className="w-1/2 py-2.5 rounded-xl bg-white hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold text-xs font-mono transition-all shadow-lg"
-              >
-                Add to Roadmap ⚡
-              </button>
+              {/* Milestone 3 */}
+              <div className="bg-zinc-900/60 border border-white/10 rounded-xl p-6 opacity-75 hover:opacity-100 transition-all">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-zinc-400 bg-zinc-800 px-2.5 py-0.5 rounded">
+                      Phase 3 • Upcoming Semester
+                    </span>
+                    <h3 className="text-base font-bold text-white mt-2">Distributed Microservices & Cloud Ops (Docker + AWS)</h3>
+                  </div>
+                  <span className="text-xs text-zinc-500 font-mono">60 hrs workload</span>
+                </div>
+                <p className="text-xs text-zinc-400 leading-relaxed">
+                  Containerize full-stack apps, deploy serverless functions, and configure production CI/CD pipelines.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
+        {/* TAB 2: AI RESILIENCE AUDIT */}
+        {activeTab === "audit" && (
+          <div className="space-y-6">
+            <h2 className="text-lg font-bold text-white">Skill Vulnerability vs. High-Leverage Breakdown</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* High-Leverage Skills */}
+              <div className="bg-zinc-900/60 border border-emerald-500/20 rounded-xl p-6">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm mb-4">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>High-Leverage AI-Resilient Skills (Build More)</span>
+                </div>
+                <ul className="space-y-3 text-xs text-zinc-300">
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5" />
+                    <div>
+                      <strong className="text-white">System Architecture & Scalability:</strong>
+                      <p className="text-zinc-400 text-[11px]">Designing distributed caches, load balancers, and event queues.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5" />
+                    <div>
+                      <strong className="text-white">Vector Search & AI Tool Orchestration:</strong>
+                      <p className="text-zinc-400 text-[11px]">Building RAG pipelines and integrating LLM APIs cleanly.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5" />
+                    <div>
+                      <strong className="text-white">Domain Problem Solving:</strong>
+                      <p className="text-zinc-400 text-[11px]">Translating business requirements into strict system specifications.</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Vulnerable Skills */}
+              <div className="bg-zinc-900/60 border border-amber-500/20 rounded-xl p-6">
+                <div className="flex items-center gap-2 text-amber-400 font-bold text-sm mb-4">
+                  <Zap className="w-4 h-4" />
+                  <span>AI-Vulnerable Skills (Automated by AI Tools)</span>
+                </div>
+                <ul className="space-y-3 text-xs text-zinc-300">
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5" />
+                    <div>
+                      <strong className="text-white">Basic Syntax Boilerplate:</strong>
+                      <p className="text-zinc-400 text-[11px]">Writing routine CRUD functions easily generated by Copilot.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5" />
+                    <div>
+                      <strong className="text-white">Simple HTML/CSS Layouts:</strong>
+                      <p className="text-zinc-400 text-[11px]">Basic static styling without dynamic state logic.</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: RECOMMENDED STUDENT PROJECTS */}
+        {activeTab === "projects" && (
+          <div className="space-y-6">
+            <h2 className="text-lg font-bold text-white">High-Impact Projects for Your Resume</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-zinc-900/60 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">
+                  Project #1
+                </span>
+                <h3 className="text-base font-bold text-white mt-2 mb-2">Autonomous AI Code Auditor</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                  Build a FastAPI service that accepts GitHub repository webhooks and uses Gemini embeddings to detect security vulnerabilities.
+                </p>
+                <div className="text-[11px] text-zinc-500 font-mono">Tech: Python, FastAPI, Gemini API, Docker</div>
+              </div>
+
+              <div className="bg-zinc-900/60 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded">
+                  Project #2
+                </span>
+                <h3 className="text-base font-bold text-white mt-2 mb-2">Real-Time Vector Search Engine</h3>
+                <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                  Create a semantic document retrieval API using Pinecone vector indexing and Next.js 16 frontend visualization.
+                </p>
+                <div className="text-[11px] text-zinc-500 font-mono">Tech: Next.js, TypeScript, Pinecone, Tailwind</div>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

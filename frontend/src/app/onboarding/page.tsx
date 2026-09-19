@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
+import { GraduationCap, ShieldAlert, Sparkles, ArrowRight, ArrowLeft, Check } from "lucide-react";
 
 interface UserProfile {
   name: string;
@@ -15,20 +16,19 @@ export default function OnboardingPage() {
   const [isMounted, setIsMounted] = useState(false);
 
   // Form State
-  const [role, setRole] = useState("");
-  const [experience, setExperience] = useState("");
-  const [industry, setIndustry] = useState("");
+  const [collegeYear, setCollegeYear] = useState("Junior (Year 3)");
+  const [major, setMajor] = useState("Computer Science");
+  const [targetTrack, setTargetTrack] = useState("Full-Stack & AI Systems");
 
-  const [skills, setSkills] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>(["Python", "Data Structures", "React"]);
   const [skillInput, setSkillInput] = useState("");
 
-  const [goal, setGoal] = useState("");
-  const [commitment, setCommitment] = useState("");
-  const [timeline, setTimeline] = useState("");
+  const [aiFocusGoal, setAiFocusGoal] = useState("Build AI-Resilient Engineering Depth");
+  const [weeklyHours, setWeeklyHours] = useState("10-15 hrs/week");
 
   const suggestedSkills = [
-    "React", "Python", "TypeScript", "Node.js", "FastAPI",
-    "Docker", "PostgreSQL", "AWS", "Next.js", "Git"
+    "Python", "Data Structures", "System Design", "React", "FastAPI",
+    "PyTorch", "Docker", "SQL", "TypeScript", "Git", "Cloud Architecture"
   ];
 
   useEffect(() => {
@@ -70,17 +70,16 @@ export default function OnboardingPage() {
 
   const handleSubmit = () => {
     const profileData = {
-      role,
-      experience,
-      industry,
+      role: targetTrack,
+      collegeYear,
+      major,
+      experience: collegeYear,
       skills,
-      goal,
-      commitment,
-      timeline,
+      goal: aiFocusGoal,
+      commitment: weeklyHours,
     };
     localStorage.setItem("zythron_profile", JSON.stringify(profileData));
 
-    // Mark user as onboarded in the database
     if (user) {
       const db = JSON.parse(localStorage.getItem("zythron_db") || "{}");
       if (db[user.email]) {
@@ -95,133 +94,120 @@ export default function OnboardingPage() {
 
   if (!isMounted || !user) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
         <div className="text-zinc-500 animate-pulse">Loading...</div>
       </div>
     );
   }
 
-  const progressWidth = `${((step - 1) / 2) * 100}%`;
-
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-300 font-sans overflow-y-auto selection:bg-zinc-800">
-      <div className="max-w-lg mx-auto py-16 px-6">
-        <div className="mb-12 text-center">
-          <h1 className="text-3xl font-light text-zinc-100 mb-2">Welcome, {user.name}</h1>
-          <p className="text-zinc-500">Let's set up your career profile.</p>
+    <div className="min-h-screen bg-[#0a0a0a] text-zinc-100 flex flex-col justify-between py-10 px-4">
+      {/* Header */}
+      <div className="w-full max-w-xl mx-auto flex items-center justify-between mb-8">
+        <div className="flex items-center gap-2 font-bold text-lg text-white">
+          <GraduationCap className="w-5 h-5 text-white" />
+          <span>ZYTHRON</span>
         </div>
-
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between text-xs text-zinc-500 mb-2">
-            <span>Step {step} of 3</span>
-            <span>
-              {step === 1 && "Professional Profile"}
-              {step === 2 && "Skills & Expertise"}
-              {step === 3 && "Goals & Commitment"}
-            </span>
-          </div>
-          <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-zinc-400 transition-all duration-500 ease-in-out rounded-full"
-              style={{ width: progressWidth }}
-            />
-          </div>
+        <div className="text-xs text-zinc-400 font-medium bg-zinc-900 border border-white/10 px-3 py-1 rounded-full">
+          Step {step} of 3
         </div>
+      </div>
 
-        {/* Form Steps */}
-        <div className="relative min-h-[400px]">
-          {/* Step 1 */}
-          <div
-            className={`absolute top-0 left-0 w-full transition-all duration-500 ${
-              step === 1
-                ? "opacity-100 translate-x-0 pointer-events-auto"
-                : "-translate-x-8 opacity-0 pointer-events-none"
-            }`}
-          >
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Preferred Role
-                </label>
-                <input
-                  type="text"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  placeholder="e.g. Full-Stack Developer"
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-md px-4 py-3 text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors"
-                />
-              </div>
+      {/* Progress Bar */}
+      <div className="w-full max-w-xl mx-auto mb-10 bg-zinc-900 h-1.5 rounded-full overflow-hidden">
+        <div
+          className="bg-white h-full transition-all duration-300"
+          style={{ width: `${(step / 3) * 100}%` }}
+        />
+      </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Experience Level
-                </label>
-                <select
-                  value={experience}
-                  onChange={(e) => setExperience(e.target.value)}
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-md px-4 py-3 text-zinc-300 focus:outline-none focus:border-zinc-500 transition-colors appearance-none"
-                >
-                  <option value="" disabled>Select experience...</option>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Junior">Junior</option>
-                  <option value="Mid">Mid</option>
-                  <option value="Senior">Senior</option>
-                  <option value="Lead">Lead</option>
-                </select>
-              </div>
+      {/* Card */}
+      <div className="w-full max-w-xl mx-auto bg-zinc-900/80 border border-white/10 rounded-2xl p-8 shadow-2xl backdrop-blur-md my-auto">
+        {step === 1 && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-1">Welcome, {user.name}</h2>
+              <p className="text-zinc-400 text-sm">Let's setup your college career AI resilience plan.</p>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Current Industry
-                </label>
-                <input
-                  type="text"
-                  value={industry}
-                  onChange={(e) => setIndustry(e.target.value)}
-                  placeholder="e.g. Technology, Finance"
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-md px-4 py-3 text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors"
-                />
-              </div>
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                Current Academic Year
+              </label>
+              <select
+                value={collegeYear}
+                onChange={(e) => setCollegeYear(e.target.value)}
+                className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/30"
+              >
+                <option value="Freshman (Year 1)">Freshman (Year 1)</option>
+                <option value="Sophomore (Year 2)">Sophomore (Year 2)</option>
+                <option value="Junior (Year 3)">Junior (Year 3)</option>
+                <option value="Senior (Year 4)">Senior (Year 4)</option>
+                <option value="Graduate / Master's">Graduate / Master's</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                Major / Program
+              </label>
+              <input
+                type="text"
+                value={major}
+                onChange={(e) => setMajor(e.target.value)}
+                placeholder="e.g. Computer Science, Electrical Engineering"
+                className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/30 placeholder-zinc-600"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                Target Engineering Track
+              </label>
+              <select
+                value={targetTrack}
+                onChange={(e) => setTargetTrack(e.target.value)}
+                className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/30"
+              >
+                <option value="Full-Stack & AI Systems">Full-Stack & AI Systems</option>
+                <option value="Backend Microservices & Cloud">Backend Microservices & Cloud</option>
+                <option value="AI / ML Infrastructure">AI / ML Infrastructure</option>
+                <option value="DevOps & Systems Engineering">DevOps & Systems Engineering</option>
+              </select>
             </div>
           </div>
+        )}
 
-          {/* Step 2 */}
-          <div
-            className={`absolute top-0 left-0 w-full transition-all duration-500 ${
-              step === 2
-                ? "opacity-100 translate-x-0 pointer-events-auto"
-                : step < 2
-                ? "translate-x-8 opacity-0 pointer-events-none"
-                : "-translate-x-8 opacity-0 pointer-events-none"
-            }`}
-          >
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Add Skills
-                </label>
-                <input
-                  type="text"
-                  value={skillInput}
-                  onChange={(e) => setSkillInput(e.target.value)}
-                  onKeyDown={handleSkillKeyDown}
-                  placeholder="Type a skill and press Enter"
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-md px-4 py-3 text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors"
-                />
-              </div>
+        {step === 2 && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-1">Coursework & Skills</h2>
+              <p className="text-zinc-400 text-sm">Add skills you've learned in class or self-study.</p>
+            </div>
 
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                Add Skill (Press Enter)
+              </label>
+              <input
+                type="text"
+                value={skillInput}
+                onChange={(e) => setSkillInput(e.target.value)}
+                onKeyDown={handleSkillKeyDown}
+                placeholder="e.g. React, Python, Docker"
+                className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/30 placeholder-zinc-600 mb-3"
+              />
+
+              <div className="flex flex-wrap gap-2 mb-4">
+                {skills.map((s) => (
                   <span
-                    key={skill}
-                    className="inline-flex items-center px-3 py-1 bg-zinc-700 text-zinc-300 text-sm rounded-full"
+                    key={s}
+                    className="inline-flex items-center gap-1.5 bg-zinc-800 text-zinc-200 text-xs px-3 py-1.5 rounded-full font-medium border border-white/10"
                   >
-                    {skill}
+                    {s}
                     <button
-                      type="button"
-                      onClick={() => removeSkill(skill)}
-                      className="ml-2 text-zinc-400 hover:text-zinc-100 focus:outline-none"
+                      onClick={() => removeSkill(s)}
+                      className="text-zinc-400 hover:text-white"
                     >
                       &times;
                     </button>
@@ -229,124 +215,109 @@ export default function OnboardingPage() {
                 ))}
               </div>
 
-              <div>
-                <p className="text-xs text-zinc-500 mb-3 mt-4">Suggested Skills</p>
-                <div className="flex flex-wrap gap-2">
-                  {suggestedSkills.map((skill) => (
-                    <button
-                      key={skill}
-                      type="button"
-                      onClick={() => handleAddSkill(skill)}
-                      disabled={skills.includes(skill)}
-                      className="px-3 py-1 border border-zinc-800 text-zinc-400 hover:text-zinc-300 hover:border-zinc-600 disabled:opacity-30 disabled:cursor-not-allowed text-sm rounded-full transition-colors"
-                    >
-                      {skill}
-                    </button>
-                  ))}
-                </div>
+              <div className="text-xs text-zinc-500 mb-2 font-medium">Quick Add Suggestions:</div>
+              <div className="flex flex-wrap gap-1.5">
+                {suggestedSkills.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => handleAddSkill(s)}
+                    disabled={skills.includes(s)}
+                    className={`text-xs px-2.5 py-1 rounded-full border transition-all ${
+                      skills.includes(s)
+                        ? "bg-zinc-900 border-white/5 text-zinc-600 cursor-default"
+                        : "bg-zinc-950 border-white/10 text-zinc-400 hover:text-white hover:border-white/30"
+                    }`}
+                  >
+                    + {s}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
+        )}
 
-          {/* Step 3 */}
-          <div
-            className={`absolute top-0 left-0 w-full transition-all duration-500 ${
-              step === 3
-                ? "opacity-100 translate-x-0 pointer-events-auto"
-                : "translate-x-8 opacity-0 pointer-events-none"
-            }`}
-          >
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Career Goal
-                </label>
-                <select
-                  value={goal}
-                  onChange={(e) => setGoal(e.target.value)}
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-md px-4 py-3 text-zinc-300 focus:outline-none focus:border-zinc-500 transition-colors appearance-none"
-                >
-                  <option value="" disabled>Select primary goal...</option>
-                  <option value="Get First Job">Get First Job</option>
-                  <option value="Switch Careers">Switch Careers</option>
-                  <option value="Get Promoted">Get Promoted</option>
-                  <option value="Learn New Stack">Learn New Stack</option>
-                  <option value="Freelance">Freelance</option>
-                </select>
-              </div>
+        {step === 3 && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-1">AI Career Goals</h2>
+              <p className="text-zinc-400 text-sm">Define what you want to achieve before graduation.</p>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Weekly Commitment
-                </label>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                  {["5h", "10h", "15h", "20h", "30h+"].map((hours) => (
-                    <button
-                      key={hours}
-                      type="button"
-                      onClick={() => setCommitment(hours)}
-                      className={`py-2 px-1 text-center text-sm border rounded-md transition-colors ${
-                        commitment === hours
-                          ? "bg-zinc-800 border-zinc-500 text-zinc-100"
-                          : "bg-zinc-900/50 border-zinc-800 text-zinc-400 hover:border-zinc-600"
-                      }`}
-                    >
-                      {hours}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                Primary Objective
+              </label>
+              <select
+                value={aiFocusGoal}
+                onChange={(e) => setAiFocusGoal(e.target.value)}
+                className="w-full bg-zinc-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-white/30"
+              >
+                <option value="Build AI-Resilient Engineering Depth">Build AI-Resilient Engineering Depth</option>
+                <option value="Prepare for 2026 Internships">Prepare for 2026 Internships</option>
+                <option value="Transition from Basic Syntax to System Design">Transition from Basic Syntax to System Design</option>
+                <option value="Master AI Tools & Cloud Deployment">Master AI Tools & Cloud Deployment</option>
+              </select>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-2">
-                  Target Timeline
-                </label>
-                <select
-                  value={timeline}
-                  onChange={(e) => setTimeline(e.target.value)}
-                  className="w-full bg-zinc-900/50 border border-zinc-800 rounded-md px-4 py-3 text-zinc-300 focus:outline-none focus:border-zinc-500 transition-colors appearance-none"
-                >
-                  <option value="" disabled>Select timeline...</option>
-                  <option value="3 Months">3 Months</option>
-                  <option value="6 Months">6 Months</option>
-                  <option value="1 Year">1 Year</option>
-                  <option value="2 Years">2 Years</option>
-                </select>
+            <div>
+              <label className="block text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2">
+                Weekly Time Commitment
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {["5-10 hrs/wk", "10-15 hrs/wk", "15+ hrs/wk"].map((time) => (
+                  <button
+                    key={time}
+                    onClick={() => setWeeklyHours(time)}
+                    className={`py-3 rounded-xl text-xs font-semibold border transition-all ${
+                      weeklyHours === time
+                        ? "bg-white text-black border-white"
+                        : "bg-zinc-950 text-zinc-400 border-white/10 hover:border-white/20"
+                    }`}
+                  >
+                    {time}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Actions */}
-        <div className="flex justify-between items-center mt-12 pt-6 border-t border-zinc-900">
-          <button
-            type="button"
-            onClick={handleBack}
-            className={`px-5 py-2.5 text-sm font-medium text-zinc-400 hover:text-zinc-100 transition-colors ${
-              step === 1 ? "opacity-0 pointer-events-none" : "opacity-100"
-            }`}
-          >
-            Back
-          </button>
+        {/* Buttons */}
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/10">
+          {step > 1 ? (
+            <button
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white font-medium"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+          ) : (
+            <div />
+          )}
 
           {step < 3 ? (
             <button
-              type="button"
               onClick={handleNext}
-              className="px-6 py-2.5 text-sm font-medium bg-zinc-800 text-zinc-100 rounded-md hover:bg-zinc-700 transition-colors"
+              className="inline-flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-zinc-200 transition-all ml-auto"
             >
               Next
+              <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
             <button
-              type="button"
               onClick={handleSubmit}
-              className="px-6 py-2.5 text-sm font-medium bg-zinc-200 text-zinc-900 rounded-md hover:bg-zinc-100 transition-colors"
+              className="inline-flex items-center gap-2 bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-zinc-200 transition-all ml-auto"
             >
-              Launch Dashboard
+              Launch Student Dashboard
+              <Check className="w-4 h-4" />
             </button>
           )}
         </div>
+      </div>
+
+      <div className="text-center text-xs text-zinc-600">
+        Zythron Student Career Intelligence • {new Date().getFullYear()}
       </div>
     </div>
   );
