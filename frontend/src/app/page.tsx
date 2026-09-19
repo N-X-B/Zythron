@@ -248,30 +248,23 @@ export default function LandingPage() {
         <div className="particle-3 absolute bottom-[30%] left-[30%] w-1 h-1 rounded-full bg-white/50 blur-[0.5px] pointer-events-none" />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto">
-          <Reveal>
-            <div className="inline-flex items-center gap-2 text-xs tracking-[0.3em] uppercase text-zinc-300 mb-6 font-semibold bg-zinc-950/90 border border-white/10 px-4 py-2 rounded-full shadow-inner">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              VOICE-NATIVE AI CAREER & TECHNICAL INTELLIGENCE
-            </div>
-          </Reveal>
+          <div className="inline-flex items-center gap-2 text-xs tracking-[0.3em] uppercase text-zinc-300 mb-6 font-semibold bg-zinc-950/90 border border-white/10 px-4 py-2 rounded-full shadow-inner animate-fade-in">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            VOICE-NATIVE AI CAREER & TECHNICAL INTELLIGENCE
+          </div>
 
-          <Reveal delay={0.1}>
-            <h1 className="text-6xl sm:text-8xl md:text-[6.8rem] font-extrabold tracking-[-0.04em] leading-[0.9] mb-8 text-white">
-              Interview like
-              <br />
-              <span className="shimmer-text">never before.</span>
-            </h1>
-          </Reveal>
+          <h1 className="text-6xl sm:text-8xl md:text-[6.8rem] font-extrabold tracking-[-0.04em] leading-[0.9] mb-8 text-white animate-fade-in">
+            Interview like
+            <br />
+            <span className="shimmer-text">never before.</span>
+          </h1>
 
-          <Reveal delay={0.2}>
-            <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-              An autonomous AI agent that interviews you out loud, critiques your technical depth across 6 domains,
-              generates step-by-step skill roadmaps, and prepares you for Tier-1 Big Tech bars.
-            </p>
-          </Reveal>
+          <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light animate-fade-in">
+            An autonomous AI agent that interviews you out loud, critiques your technical depth across 6 domains,
+            generates step-by-step skill roadmaps, and prepares you for Tier-1 Big Tech bars.
+          </p>
 
-          <Reveal delay={0.3}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in">
               <Link
                 href="/signup"
                 className="bg-white text-black px-8 py-3.5 rounded-full text-sm font-semibold hover:bg-zinc-200 transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
@@ -286,7 +279,6 @@ export default function LandingPage() {
                 Explore Live Demo ↓
               </Link>
             </div>
-          </Reveal>
         </div>
 
         {/* ─── HIREGRAM-STYLE LIVE INTERVIEW SIMULATOR WIDGET ─── */}
