@@ -1056,27 +1056,34 @@ export default function AestheticJobListingsPage() {
                 <span>{savedJobIds.includes(selectedJob.id) ? "Saved" : "Save Job"}</span>
               </button>
 
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-3">
                 <button
-                  onClick={() => handleNavigateWithJob("/resume-analyzer", selectedJob)}
-                  className="bg-white/10 text-white hover:bg-white/20 border border-white/20 px-4 py-2.5 rounded-xl text-xs font-bold transition-all"
+                  onClick={() => handleNavigateWithJob("/dashboard", selectedJob)}
+                  className="bg-white text-black px-6 py-3 rounded-xl text-xs font-extrabold hover:bg-zinc-200 transition-all flex items-center gap-2 shadow-lg"
                 >
-                  Tailor Resume
+                  <span>Generate Adaptive AI Roadmap</span>
+                  <ArrowRight className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => handleNavigateWithJob("/mock-interview", selectedJob)}
-                  className="bg-white/10 text-white hover:bg-white/20 border border-white/20 px-4 py-2.5 rounded-xl text-xs font-bold transition-all"
+                  className="bg-white/10 text-white hover:bg-white/20 border border-white/20 px-5 py-3 rounded-xl text-xs font-semibold transition-all"
                 >
                   Practice Interview
                 </button>
                 <button
-                  onClick={() => handleNavigateWithJob("/dashboard", selectedJob)}
-                  className="bg-white text-black px-5 py-2.5 rounded-xl text-xs font-extrabold hover:bg-zinc-200 transition-all flex items-center gap-1.5 shadow-lg"
+                  onClick={() => handleNavigateWithJob("/resume-analyzer", selectedJob)}
+                  className="bg-white/10 text-white hover:bg-white/20 border border-white/20 px-5 py-3 rounded-xl text-xs font-semibold transition-all"
                 >
-                  <span>Generate Roadmap</span>
-                  <ChevronRight className="h-4 w-4" />
+                  Scan Resume ATS
                 </button>
               </div>
+
+              <button
+                onClick={() => setSelectedJob(null)}
+                className="text-xs text-zinc-400 hover:text-white font-mono px-4 py-2"
+              >
+                Close Drawer
+              </button>
             </div>
 
           </div>
