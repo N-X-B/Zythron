@@ -113,8 +113,20 @@ export default function LandingPage() {
     <div className="overflow-y-auto overflow-x-hidden h-full bg-[#0a0a0a] text-zinc-100 font-sans selection:bg-white/20">
       {/* ─── INLINE ANIMATION STYLES MATCHING HIREGRAM ELEGANCE ─── */}
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(35px,-45px) scale(1.08)} }
-        @keyframes float2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-30px,35px) scale(1.12)} }
+        @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,-50px) scale(1.15)} }
+        @keyframes float2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-35px,40px) scale(1.2)} }
+        @keyframes float3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(25px,30px) scale(1.1)} }
+        @keyframes laser-sweep {
+          0% { top: -10%; opacity: 0; }
+          10% { opacity: 0.8; }
+          90% { opacity: 0.8; }
+          100% { top: 110%; opacity: 0; }
+        }
+        @keyframes float-particle {
+          0% { transform: translateY(0) scale(0.8); opacity: 0.2; }
+          50% { transform: translateY(-80px) scale(1.2); opacity: 0.7; }
+          100% { transform: translateY(-160px) scale(0.8); opacity: 0.2; }
+        }
         @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
         @keyframes wave-bar {
           0%, 100% { height: 6px; }
@@ -122,7 +134,7 @@ export default function LandingPage() {
         }
         @keyframes orb-pulse {
           0%, 100% { transform: scale(1); opacity: 0.8; box-shadow: 0 0 25px rgba(255,255,255,0.2); }
-          50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 60px rgba(255,255,255,0.6); }
+          50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 65px rgba(255,255,255,0.7); }
         }
         @keyframes text-shimmer {
           0% { background-position: 0% 50%; }
@@ -134,12 +146,28 @@ export default function LandingPage() {
           100% { transform: scale(2.2); opacity: 0; }
         }
         .grid-bg {
-          background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
-          background-size: 50px 50px;
+          background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+          background-size: 45px 45px;
+          mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 80%);
+          -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 80%);
         }
+        .laser-beam {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+          box-shadow: 0 0 15px rgba(255,255,255,0.6);
+          animation: laser-sweep 8s ease-in-out infinite;
+          pointer-events: none;
+        }
+        .particle-1 { animation: float-particle 7s ease-in-out infinite 0s; }
+        .particle-2 { animation: float-particle 9s ease-in-out infinite 2s; }
+        .particle-3 { animation: float-particle 11s ease-in-out infinite 4s; }
         .blob-1 { animation: float1 14s ease-in-out infinite; }
         .blob-2 { animation: float2 18s ease-in-out infinite; }
+        .blob-3 { animation: float3 22s ease-in-out infinite; }
         .voice-orb { animation: orb-pulse 2.5s ease-in-out infinite; }
         .wave-bar-1 { animation: wave-bar 1.1s ease-in-out infinite 0.1s; }
         .wave-bar-2 { animation: wave-bar 1.1s ease-in-out infinite 0.3s; }
@@ -159,31 +187,20 @@ export default function LandingPage() {
           background-clip: text;
           animation: text-shimmer 4s ease-in-out infinite;
         }
-        .step-num {
-          font-size: 6.5rem;
-          font-weight: 900;
-          line-height: 1;
-          color: rgba(255,255,255,0.05);
-          position: absolute;
-          top: -15px;
-          left: 15px;
-          user-select: none;
-          pointer-events: none;
-        }
         .feature-card {
-          background: rgba(15,15,15,0.8);
+          background: rgba(15,15,15,0.85);
           border: 1px solid rgba(255,255,255,0.08);
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .feature-card:hover {
-          background: rgba(20,20,20,0.95);
-          border-color: rgba(255,255,255,0.22);
+          background: rgba(22,22,22,0.98);
+          border-color: rgba(255,255,255,0.3);
           transform: translateY(-6px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.7), inset 0 0 20px rgba(255,255,255,0.03);
         }
         .showcase-card {
-          background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
-          border: 1px solid rgba(255,255,255,0.12);
+          background: linear-gradient(145deg, rgba(22,22,22,0.92) 0%, rgba(10,10,10,0.98) 100%);
+          border: 1px solid rgba(255,255,255,0.14);
         }
       `}} />
 
@@ -216,10 +233,19 @@ export default function LandingPage() {
       </nav>
 
       {/* ─── HERO SECTION ─── */}
-      <section className="relative min-h-screen pt-32 pb-20 flex flex-col items-center justify-center grid-bg px-6">
+      <section className="relative min-h-screen pt-32 pb-20 flex flex-col items-center justify-center grid-bg px-6 overflow-hidden">
+        {/* Animated Laser Scanline Beam */}
+        <div className="laser-beam" />
+
         {/* Floating background gradient orbs */}
         <div className="blob-1 absolute top-[12%] left-[8%] w-[500px] h-[500px] rounded-full bg-white/5 blur-[140px] pointer-events-none" />
         <div className="blob-2 absolute bottom-[15%] right-[8%] w-[450px] h-[450px] rounded-full bg-zinc-300/5 blur-[120px] pointer-events-none" />
+        <div className="blob-3 absolute top-[45%] right-[35%] w-[350px] h-[350px] rounded-full bg-white/[0.03] blur-[100px] pointer-events-none" />
+
+        {/* Cyber Floating Particles */}
+        <div className="particle-1 absolute top-[25%] left-[20%] w-1.5 h-1.5 rounded-full bg-white/40 blur-[0.5px] pointer-events-none" />
+        <div className="particle-2 absolute top-[60%] right-[25%] w-2 h-2 rounded-full bg-white/30 blur-[0.5px] pointer-events-none" />
+        <div className="particle-3 absolute bottom-[30%] left-[30%] w-1 h-1 rounded-full bg-white/50 blur-[0.5px] pointer-events-none" />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto">
           <Reveal>
