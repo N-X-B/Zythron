@@ -423,10 +423,21 @@ ${interviewerProfile.sensibility}`;
   const speakText = async (text: string) => {
     setIsAiSpeaking(true);
     try {
-      const blob = await speakWithCartesia(text);
-      playAudioBlob(blob);
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const cleanText = text.replace(/<[^>]+>/g, "").trim();
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.onend = () => setIsAiSpeaking(false);
+        utterance.onerror = () => setIsAiSpeaking(false);
+        window.speechSynthesis.speak(utterance);
+      } else {
+        const blob = await speakWithCartesia(text);
+        playAudioBlob(blob);
+      }
     } catch (err) {
-      fallbackSpeakText(text);
+      setIsAiSpeaking(false);
     }
   };
 
